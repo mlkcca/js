@@ -1,6 +1,6 @@
 var ajax = require('./ajax');
 
-class Remote {
+export default class {
     constructor(host, port, secure, headers){
     	this.host = host;
     	this.port = port,
@@ -75,5 +75,3 @@ class Remote {
 	}
 
 }
-
-module.exports = Remote;

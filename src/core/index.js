@@ -6,7 +6,7 @@ import DataStore from './datastore';
 var eventId = 0;
 export default class {
 	constructor(options) {
-
+		this.options = options;
 		this.appId = options.appId;
 		this.store = options.store;
 		if(!this.appId) throw new Error('appId required');
@@ -18,7 +18,12 @@ export default class {
 		this.host = options.host || 'pubsub1.mlkcca.com';
 		this.port = options.port || 443;
 		this.keepaliveTimeout = options.keepaliveTimeout || 300;
-
+		let headers = {};
+		if(this.accessToken) headers['Authorization'] = "Bearer " + this.accessToken;
+		this.remote = new Remote(this.host, this.port, this.useSSL, headers);
+		this.wsOptions = {
+			headers: headers
+		}
 	}
 
 	version() {
@@ -32,20 +37,47 @@ export default class {
 	connect() {
 		this.websocket = new Pubsub({
 			host: this._get_pubsub_url(this.useSSL, this.host, this.port, this.appId, this.apiKey, this.uuid),
-			logger: console
+			logger: console,
+			wsOptions: this.wsOptions
 		});
 		this.websocket.connect();
 	}
 
 	_get_pubsub_url(ssl, host, port, appId, apikey, uuid) {
-		return `ws${ssl?'s':''}://${host}:${port}/ws2/${appId}/${apikey}?uuid=${uuid}`;
+		if(apikey) return `ws${ssl?'s':''}://${host}:${port}/ws2/${appId}/${apikey}?uuid=${uuid}`;
+		else return `ws${ssl?'s':''}://${host}:${port}/ws2/${appId}?uuid=${uuid}`;
 	}
 
-	dataStore(path) {
-		return new DataStore(this.websocket, path);
+	_get_api_url(api) {
+		let appOptions = this._get_options();
+		if(appOptions.apiKey) return `/api/${api}/${appOptions.appId}/${appOptions.apiKey}`;
+		else return `/api/${api}/${appOptions.appId}`;
 	}
 
-	grant() {
+	_get_pubsub() {
+		return this.websocket;
+	}
+
+	_get_remote() {
+		return this.remote;
+	}
+
+	_get_options() {
+		return this.options;
+	}
+
+	dataStore(path, options) {
+		return new DataStore(this, path, options);
+	}
+
+	grant(options, cb) {
+		let apiUrl = this._get_api_url('grant');
+		let params = {};
+		this.remote.get(apiUrl, params).then(function(accessToken) {
+			cb(null, accessToken);
+		}).catch(function(err) {
+			cb(err);
+		});
 
 	}
 
@@ -67,108 +99,3 @@ export default class {
 
 	}
 }
-
-function getEventId() {
-	return eventId++;
-}
-
-function get_wsURL(host, appId, topic, apikey) {
-  return `http://${host}/ws2/${appId}/${apikey}?uuid=ws1`;
-}
-
-/*
-
-var recv = 0, sended = 0, diff_list = [], span = 80, span_d = -1;
-
-setInterval(function() {
-  console.log(span + "," + sended + "," + recv + "," + diff_list.reduce(function(acc, d) {return acc + d}, 0) / diff_list.length);
-  sended = 0;
-  recv = 0;
-  diff_list = [];
-  span += span_d;
-  if(span < 15) {
-  	span_d = 1;
-  	//process.exit(0);
-  }else if(span > 50) {
-  	span_d = -1;
-  }
-}, 1000);
-
-var host = "localhost:8000";
-var appId = 'Bk9_7LVYg';
-var apikey = "3mmUgPBrac35mW0R4HOq0CnerFFDg7eGp3Uw-eGi";
-//var apikey = "eAgHtkrAOCaOdcl6QWqDE3PYZNKYMgRrPjDrYEk6";
-
-Milkcocoa(host, "topic1", appId, apikey);
-
-
-
-
-function Milkcocoa(host, topic, appId, apikey) {
-	var client = new WebSocketClient();
-
-	client.on('connectFailed', function(error) {
-	    console.log('Connect Error: ' + error.toString());
-	});
-
-	client.on('connect', function(connection) {
-	    console.log('WebSocket Client Connected');
-	    connection.on('error', function(error) {
-	        console.log("Connection Error: " + error.toString());
-	    });
-	    connection.on('close', function() {
-	        console.log('echo-protocol Connection Closed');
-	    });
-	    connection.on('message', function(message) {
-	    	console.log(message);
-	    	var payload = JSON.parse(message.utf8Data);
-	    	if(payload.message) {
-		    var start = JSON.parse(payload.message);
-		    var end = new Date().getTime();
-		    var diff = end - start;
-		    diff_list.push(diff);
-		    recv++
-
-	    	}
-
-	        //console.log(message);
-	        if (message.type === 'utf8') {
-	            console.log("Received: '" + message.utf8Data + "'");
-	        }
-	        //setTimeout(sendNumber, 10);
-	    });
-
-	    function sendNumber() {
-	        if (connection.connected) {
-	        	sended++;
-	            var start = new Date().getTime();
-	            connection.sendUTF(JSON.stringify({
-		        	e: getEventId(),
-	            	p: 'topic',
-	            	_t: 'p',
-	            	_o: '_p',
-	            	v: 'value'
-	            }));
-	        }
-	        setTimeout(sendNumber, span);
-	    }
-        connection.sendUTF(JSON.stringify({
-        	e: getEventId(),
-        	p: 'topic',
-        	_t: 's',
-        	_o: '_p'
-        }));
-	    sendNumber();
-	});
-
-	client.connect(get_wsURL(host, appId, topic, apikey));
-}
-
-function getEventId() {
-	return eventId++;
-}
-
-function get_wsURL(host, appId, topic, apikey) {
-  return `http://${host}/ws2/${appId}/${apikey}?uuid=ws1`;
-}
-*/

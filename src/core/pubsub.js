@@ -22,6 +22,7 @@ export default class {
 		this.requestMap = {};
 		this.subscribers = {};
 		this.offlineQueue = [];
+		this.wsOptions = options.wsOptions;
 		this.init();
 	}
 
@@ -31,8 +32,8 @@ export default class {
 
 	connect() {
 		if(!this.connected) {
-			console.log(this.host);
-			this.client = new WebSocket(this.host);
+			console.log(this.wsOptions);
+			this.client = new WebSocket(this.host, this.wsOptions);
 			this.client.on('error', (error) => {
 				this.logger.error(error);
 				this.clean();
