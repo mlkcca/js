@@ -1,6 +1,9 @@
 # mlkcca-js
 
 
+[![CircleCI](https://circleci.com/gh/mlkcca/js.svg?style=svg)](https://circleci.com/gh/mlkcca/js)
+
+
 please see [here](https://github.com/mlkcca/js/tree/master/test).
 
 ```
