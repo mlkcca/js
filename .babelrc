@@ -1,0 +1,8 @@
+{
+    "presets": ["es2015"],
+    "comments": false,
+    "plugins": [
+        "add-module-exports"
+    ],
+    "sourceMaps": true
+}
