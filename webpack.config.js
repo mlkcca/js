@@ -6,7 +6,7 @@ module.exports = {
         web: './src/web/index.js'
     },
     output: {
-        path: path.join(__dirname, 'dist/web'),
+        path: path.join(__dirname, 'dist'),
         filename: 'milkcocoa.js',
         library: 'Milkcocoa',
         libraryTarget: 'umd'

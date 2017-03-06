@@ -1,5 +1,5 @@
 import MilkcocoaCore from '../core';
-
+import {authWithMilkcocoa} from './auth';
 
 let store = {
   get(key) {
@@ -19,7 +19,7 @@ let store = {
   }
 };
 
-export default class extends MilkcocoaCore {
+export default class Milkcocoa extends MilkcocoaCore {
 	constructor(options) {
 		options.store = store;
 		super(options);
@@ -27,5 +27,12 @@ export default class extends MilkcocoaCore {
 
 	version() {
 		return packageJSON.version;
+	}
+
+	static authWithMilkcocoa(options, callback) {
+		authWithMilkcocoa(Object.assign({}, options.authOptions, {appId: options.appId, callback: function(accessToken) {
+			console.log(accessToken);
+			callback(null, new Milkcocoa(Object.assign({}, options, {accessToken:accessToken})));
+		}}))
 	}
 }

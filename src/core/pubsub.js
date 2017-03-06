@@ -1,12 +1,5 @@
-const WebSocket = require('ws');
+let WebSocket = require('./ws');
 
-/*
-if ('browser' !== process.title) {
-	WebSocket = require('ws');
-}else{
-	WebSocket = window.WebSocket;
-}
-*/
 
 export default class {
 	constructor(options) {
@@ -32,7 +25,6 @@ export default class {
 
 	connect() {
 		if(!this.connected) {
-			console.log(this.wsOptions);
 			this.client = new WebSocket(this.host, this.wsOptions);
 			this.client.on('error', (error) => {
 				this.logger.error(error);
@@ -109,7 +101,7 @@ export default class {
 			this.client.send(JSON.stringify(message));
 		}else{
 			this.offlineQueue.push(message);
-			this.logger.warn('connection closed');
+			this.logger.log('offline send');
 		}
 	}
 

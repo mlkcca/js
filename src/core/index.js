@@ -1,3 +1,5 @@
+import querystring from 'querystring';
+import gen_uuid from 'uuid';
 import packageJSON from '../../package.json';
 import Pubsub from './pubsub';
 import Remote from './remote';
@@ -11,7 +13,7 @@ export default class {
 		this.store = options.store;
 		if(!this.appId) throw new Error('appId required');
 		if(!this.store) throw new Error('store required');
-		this.uuid = options.uuid;
+		this.uuid = this.get_uuid(options.uuid);
 		this.apiKey = options.apiKey;
 		this.accessToken = options.accessToken;
 		this.useSSL = options.hasOwnProperty('useSSL') ? options.useSSL : true;
@@ -34,18 +36,36 @@ export default class {
 		return this.appId;
 	}
 
+	get_uuid(uuid) {
+		if(uuid) {
+			this.store.set('uuid', uuid);
+		}else{
+			let current_uuid = this.store.get('uuid', uuid);
+			if(current_uuid) {
+				uuid = current_uuid;
+			}else{
+				uuid = gen_uuid();
+				this.store.set('uuid', uuid);
+			}
+		}
+		return uuid;
+	}
+
 	connect() {
 		this.websocket = new Pubsub({
-			host: this._get_pubsub_url(this.useSSL, this.host, this.port, this.appId, this.apiKey, this.uuid),
+			host: this._get_pubsub_url(this.useSSL, this.host, this.port, this.appId, this.apiKey, this.accessToken, this.uuid),
 			logger: console,
 			wsOptions: this.wsOptions
 		});
 		this.websocket.connect();
 	}
 
-	_get_pubsub_url(ssl, host, port, appId, apikey, uuid) {
-		if(apikey) return `ws${ssl?'s':''}://${host}:${port}/ws2/${appId}/${apikey}?uuid=${uuid}`;
-		else return `ws${ssl?'s':''}://${host}:${port}/ws2/${appId}?uuid=${uuid}`;
+	_get_pubsub_url(ssl, host, port, appId, apikey, accessToken, uuid) {
+
+		let base = `ws${ssl?'s':''}://${host}:${port}/ws2/${appId}/`;
+		if(apikey) return base + apikey + '?' + querystring.stringify({uuid:uuid})
+		else if(accessToken) return base + '?' + querystring.stringify({at:accessToken, uuid:uuid})
+		else return base + '?' + querystring.stringify({uuid:uuid})
 	}
 
 	_get_api_url(api) {
