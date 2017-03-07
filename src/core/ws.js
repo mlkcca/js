@@ -1,20 +1,12 @@
-let WebSocket = null;
-let isBrowser = false;
-
-if ('browser' !== process.title) {
-	WebSocket = require('ws');
-}else{
-	isBrowser = true;
-	WebSocket = window.WebSocket;
-}
+let isBrowser = ('browser' === process.title);
 
 let EventEmitter = require("events").EventEmitter;
 
 export default class extends EventEmitter {
-	constructor(host, options) {
+	constructor(Module, host, options) {
 		super();
 		if(isBrowser) {
-			this.client = new WebSocket(host);
+			this.client = new Module(host);
 			this.client.onerror = this.fire('error');
 			this.client.onclose = this.fire('close');
 			this.client.onopen = this.fire('open');
@@ -22,7 +14,7 @@ export default class extends EventEmitter {
 				this.emit('message', msg.data);
 			}
 		}else{
-			this.client = new WebSocket(host, options);
+			this.client = new Module(host, options);
 			this.client.on('error', this.fire('error'));
 			this.client.on('close', this.fire('close'));
 			this.client.on('open', this.fire('open'));

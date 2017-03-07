@@ -1,4 +1,5 @@
 import MilkcocoaCore from '../core';
+const WebSocket = require('ws');
 
 
 let dataset = {};
@@ -15,6 +16,7 @@ let store = {
 export default class extends MilkcocoaCore {
 	constructor(options) {
 		options.store = store;
+		options.WebSocket = WebSocket;
 		super(options);
 	}
 

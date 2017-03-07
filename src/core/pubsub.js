@@ -3,6 +3,7 @@ let WebSocket = require('./ws');
 
 export default class {
 	constructor(options) {
+		this.target = options.WebSocket;
 		this.host = options.host;
 		//this.client = new WebSocketClient();
 		this.connected = false;
@@ -25,7 +26,7 @@ export default class {
 
 	connect() {
 		if(!this.connected) {
-			this.client = new WebSocket(this.host, this.wsOptions);
+			this.client = new WebSocket(this.target, this.host, this.wsOptions);
 			this.client.on('error', (error) => {
 				this.logger.error(error);
 				this.clean();

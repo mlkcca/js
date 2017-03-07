@@ -55,6 +55,7 @@ export default class {
 		this.websocket = new Pubsub({
 			host: this._get_pubsub_url(this.useSSL, this.host, this.port, this.appId, this.apiKey, this.accessToken, this.uuid),
 			logger: console,
+			WebSocket: this.options.WebSocket,
 			wsOptions: this.wsOptions
 		});
 		this.websocket.connect();
