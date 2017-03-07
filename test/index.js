@@ -15,7 +15,7 @@ describe("milkcocoa", function() {
 			this.timeout(3000);
 
 		    it("no option", function(done) {
-				var ds = milkcocoa.dataStore('topic', {datatype: 'json'});
+				var ds = milkcocoa.dataStore('demo', {datatype: 'json'});
 
 				ds.history({}, function(err, messages) {
 		        	assert.equal(null, err);
@@ -25,9 +25,9 @@ describe("milkcocoa", function() {
 		    });
 
 		    it("ts", function(done) {
-				var ds = milkcocoa.dataStore('topic', {datatype: 'json'});
+				var ds = milkcocoa.dataStore('demo', {datatype: 'json'});
 
-				ds.history({ts:1488533359269,limit:2}, function(err, messages) {
+				ds.history({ts:1488901499709,limit:2}, function(err, messages) {
 		        	assert.equal(null, err);
 		        	assert.equal(true, messages.length==2);
 					done();
