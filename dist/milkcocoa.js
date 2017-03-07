@@ -9182,6 +9182,7 @@ module.exports = {
 		"node": ">=6.x"
 	},
 	"scripts": {
+		"build": "gulp compile",
 		"build:web": "webpack",
 		"build:node": "gulp babel",
 		"test": "mocha test --recursive"
@@ -9203,7 +9204,6 @@ module.exports = {
 	},
 	"homepage": "https://github.com/mlkcca/js#readme",
 	"dependencies": {
-		"babel-preset-es2015": "^6.22.0",
 		"uuid": "^3.0.1",
 		"ws": "^2.2.0"
 	},
@@ -9212,12 +9212,16 @@ module.exports = {
 		"babel-core": "^6.23.1",
 		"babel-loader": "^6.3.2",
 		"babel-plugin-add-module-exports": "^0.2.1",
+		"babel-preset-es2015": "^6.22.0",
 		"babel-preset-es2017": "^6.22.0",
 		"gulp": "^3.9.1",
 		"gulp-babel": "^6.1.2",
 		"gulp-clean": "^0.3.2",
+		"gulp-rename": "^1.2.2",
 		"gulp-sourcemaps": "^2.4.1",
+		"gulp-uglify": "^2.0.1",
 		"mocha": "^3.2.0",
+		"run-sequence": "^1.2.2",
 		"stats-webpack-plugin": "^0.5.0",
 		"webpack": "^2.2.1"
 	}
