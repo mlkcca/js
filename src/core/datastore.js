@@ -1,5 +1,6 @@
 import PushDataType from './datatypes/push';
 import SendDataType from './datatypes/send';
+import Cache from '../cache';
 
 export default class {
 	constructor(root, path, _options) {
@@ -7,6 +8,7 @@ export default class {
 		this.path = path;
 		let options = _options || {};
 		this.setDataType(options.datatype || 'json');
+		this.cache = new Cache();
 	}
 
 	setDataType(datatype) {
@@ -44,16 +46,30 @@ export default class {
 		let params = {
 			c:this.path
 		}
-		if(options.limit) params.limit = options.limit;
-		if(options.order) params.order = options.order;
-		if(options.ts) params.ts = options.ts;
+		params.limit = options.limit || 100;
+		params.order = options.order || 'desc'
+		if(options.ts) {
+			params.ts = options.ts;
+		}
 
+		let messages = null;
 
-		this.root._get_remote().get(apiUrl, params).then(function(messages) {
+		if(options.useCache && options.ts && params.order == 'desc') {
+			messages = this.cache.query(options.ts, params.limit)
+		}
+
+		if(messages !== null) {
 			cb(null, messages);
-		}).catch(function(err) {
-			cb(err);
-		});
+		}else{
+			this.root._get_remote().get(apiUrl, params).then((messages) => {
+				if(options.useCache && options.ts && params.order == 'desc') {
+			    	this.cache.add(options.ts, messages);
+				}
+				cb(null, messages);
+			}).catch(function(err) {
+				cb(err);
+			});
+		}
 	}
 
 }

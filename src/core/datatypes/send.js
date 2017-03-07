@@ -11,7 +11,7 @@ export default class {
 
 	static json(message) {
 		return {
-			v: JSON.parse(message.v)
+			value: JSON.parse(message.v)
 		}
 	}
 

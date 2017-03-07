@@ -12,8 +12,8 @@ export default class {
 	static json(message) {
 		return {
 			id: message.id,
-			t: message.t,
-			v: JSON.parse(message.v)
+			timestamp: message.t,
+			value: JSON.parse(message.v)
 		}
 	}
 
