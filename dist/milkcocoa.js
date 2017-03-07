@@ -35884,6 +35884,9 @@ module.exports = {
 	"version": "1.0.0",
 	"description": "mlkcca js sdk",
 	"main": "./lib/node/index.js",
+	"engines": {
+		"node": ">=6.x"
+	},
 	"scripts": {
 		"build:web": "webpack",
 		"build:node": "gulp babel",
