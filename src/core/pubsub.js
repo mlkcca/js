@@ -1,5 +1,34 @@
 let WebSocket = require('./ws');
+let EventEmitter = require("events").EventEmitter;
 
+class SubscriberManager extends EventEmitter {
+	constructor() {
+		super();
+		this.subscribers = {};
+	}
+
+	reg(path, op, cb) {
+		let topic = path+'/'+op;
+		this.subscribers[topic] = {path:path, op:op, cb:cb};
+		this.on(topic, cb);
+	}
+
+	unreg(path, op, cb) {
+		let topic = path+'/'+op;
+		delete this.subscribers[topic];
+		this.removeListener(topic, cb);
+	}
+
+	deliver(topic, message) {
+		this.emit(topic, message);
+	}
+
+	get() {
+		return Object.keys(this.subscribers).map((topic) => {
+			return this.subscribers[topic];
+		});
+	}
+}
 
 export default class {
 	constructor(options) {
@@ -7,21 +36,13 @@ export default class {
 		this.host = options.host;
 		//this.client = new WebSocketClient();
 		this.connected = false;
-		this.connection = null;
 		this.logger = options.logger;
-		this.messageHandler = function() {
-
-		}
 		this.requestId = 0;
 		this.requestMap = {};
-		this.subscribers = {};
+		this.subscriberMan = new SubscriberManager();
 		this.offlineQueue = [];
 		this.wsOptions = options.wsOptions;
-		this.init();
-	}
-
-	init(messageHandler, closeHandler, errorHandler) {
-
+		this.reconnectPeriod = options.reconnectPeriod || 5000;
 	}
 
 	connect() {
@@ -30,16 +51,21 @@ export default class {
 			this.client.on('error', (error) => {
 				this.logger.error(error);
 				this.clean();
+				this._setupReconnect();
 			});
 
-			this.client.on('close', () => {
-				this.logger.log('closed');
+			this.client.on('close', (e) => {
+				this.logger.log('closed', e);
 				this.clean();
+				if(e.code > 1000) this._setupReconnect();
 			});
 
 			this.client.on('open', () => {
 				this.logger.log('connected');
 				this.connected = true;
+				this.subscriberMan.get().map((s) => {
+					this._subscribe(s.path, s.op, s.cb);
+				});
 				this.flushOfflineMessage();
 			});
 
@@ -57,6 +83,20 @@ export default class {
 		}
 	}
 
+	disconnect() {
+		if(this.connected) {
+			this.client.close();
+		}else{
+			this.logger.warn('already disconnected');
+		}
+	}
+
+	_setupReconnect() {
+		setTimeout(() => {
+			this.connect();
+		}, this.reconnectPeriod);
+	}
+
 	response(message) {
 		let cb = this.requestMap[message.e];
 		if(cb) cb(message);
@@ -64,7 +104,7 @@ export default class {
 	}
 
 	deliver(message) {
-		this.subscribers[message.p](message);
+		this.subscriberMan.deliver(message.p, message);
 	}
 
 	publish(path, op, v, cb) {
@@ -79,7 +119,11 @@ export default class {
 	}
 
 	subscribe(path, op, cb, onComplete) {
-		this.subscribers[path+'/' + op] = cb;
+		this.subscriberMan.reg(path, op, cb);
+		this._subscribe(path, op, cb, onComplete);
+	}
+
+	_subscribe(path, op, cb, onComplete) {
 		this.send({
         	e: this.registerCallback(onComplete),
         	p: path,
@@ -88,7 +132,9 @@ export default class {
 		});
 	}
 
+
 	unsubscribe(path, op, cb) {
+		this.subscriberMan.unreg(path, op, cb);
 		this.send({
         	e: this.registerCallback(cb),
         	p: path,
@@ -126,8 +172,10 @@ export default class {
 	}
 
 	clean() {
+		this.client.close();
 		this.connected = false;
-		this.connection = null;
+		this.client.clean();
+		this.client = null;
 	}
 
 	registerCallback(cb) {

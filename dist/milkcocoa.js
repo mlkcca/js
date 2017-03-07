@@ -2145,7 +2145,7 @@ var processNextTick = __webpack_require__(8);
 /*</replacement>*/
 
 /*<replacement>*/
-var util = __webpack_require__(5);
+var util = __webpack_require__(6);
 util.inherits = __webpack_require__(3);
 /*</replacement>*/
 
@@ -2199,120 +2199,6 @@ function forEach(xs, f) {
 
 /***/ }),
 /* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(Buffer) {// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-// NOTE: These type checking functions intentionally don't use `instanceof`
-// because it is fragile and can be easily faked with `Object.create()`.
-
-function isArray(arg) {
-  if (Array.isArray) {
-    return Array.isArray(arg);
-  }
-  return objectToString(arg) === '[object Array]';
-}
-exports.isArray = isArray;
-
-function isBoolean(arg) {
-  return typeof arg === 'boolean';
-}
-exports.isBoolean = isBoolean;
-
-function isNull(arg) {
-  return arg === null;
-}
-exports.isNull = isNull;
-
-function isNullOrUndefined(arg) {
-  return arg == null;
-}
-exports.isNullOrUndefined = isNullOrUndefined;
-
-function isNumber(arg) {
-  return typeof arg === 'number';
-}
-exports.isNumber = isNumber;
-
-function isString(arg) {
-  return typeof arg === 'string';
-}
-exports.isString = isString;
-
-function isSymbol(arg) {
-  return typeof arg === 'symbol';
-}
-exports.isSymbol = isSymbol;
-
-function isUndefined(arg) {
-  return arg === void 0;
-}
-exports.isUndefined = isUndefined;
-
-function isRegExp(re) {
-  return objectToString(re) === '[object RegExp]';
-}
-exports.isRegExp = isRegExp;
-
-function isObject(arg) {
-  return typeof arg === 'object' && arg !== null;
-}
-exports.isObject = isObject;
-
-function isDate(d) {
-  return objectToString(d) === '[object Date]';
-}
-exports.isDate = isDate;
-
-function isError(e) {
-  return (objectToString(e) === '[object Error]' || e instanceof Error);
-}
-exports.isError = isError;
-
-function isFunction(arg) {
-  return typeof arg === 'function';
-}
-exports.isFunction = isFunction;
-
-function isPrimitive(arg) {
-  return arg === null ||
-         typeof arg === 'boolean' ||
-         typeof arg === 'number' ||
-         typeof arg === 'string' ||
-         typeof arg === 'symbol' ||  // ES6 symbol
-         typeof arg === 'undefined';
-}
-exports.isPrimitive = isPrimitive;
-
-exports.isBuffer = Buffer.isBuffer;
-
-function objectToString(o) {
-  return Object.prototype.toString.call(o);
-}
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1).Buffer))
-
-/***/ }),
-/* 6 */
 /***/ (function(module, exports) {
 
 // Copyright Joyent, Inc. and other Node contributors.
@@ -2620,6 +2506,120 @@ function isUndefined(arg) {
 
 
 /***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(Buffer) {// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+// NOTE: These type checking functions intentionally don't use `instanceof`
+// because it is fragile and can be easily faked with `Object.create()`.
+
+function isArray(arg) {
+  if (Array.isArray) {
+    return Array.isArray(arg);
+  }
+  return objectToString(arg) === '[object Array]';
+}
+exports.isArray = isArray;
+
+function isBoolean(arg) {
+  return typeof arg === 'boolean';
+}
+exports.isBoolean = isBoolean;
+
+function isNull(arg) {
+  return arg === null;
+}
+exports.isNull = isNull;
+
+function isNullOrUndefined(arg) {
+  return arg == null;
+}
+exports.isNullOrUndefined = isNullOrUndefined;
+
+function isNumber(arg) {
+  return typeof arg === 'number';
+}
+exports.isNumber = isNumber;
+
+function isString(arg) {
+  return typeof arg === 'string';
+}
+exports.isString = isString;
+
+function isSymbol(arg) {
+  return typeof arg === 'symbol';
+}
+exports.isSymbol = isSymbol;
+
+function isUndefined(arg) {
+  return arg === void 0;
+}
+exports.isUndefined = isUndefined;
+
+function isRegExp(re) {
+  return objectToString(re) === '[object RegExp]';
+}
+exports.isRegExp = isRegExp;
+
+function isObject(arg) {
+  return typeof arg === 'object' && arg !== null;
+}
+exports.isObject = isObject;
+
+function isDate(d) {
+  return objectToString(d) === '[object Date]';
+}
+exports.isDate = isDate;
+
+function isError(e) {
+  return (objectToString(e) === '[object Error]' || e instanceof Error);
+}
+exports.isError = isError;
+
+function isFunction(arg) {
+  return typeof arg === 'function';
+}
+exports.isFunction = isFunction;
+
+function isPrimitive(arg) {
+  return arg === null ||
+         typeof arg === 'boolean' ||
+         typeof arg === 'number' ||
+         typeof arg === 'string' ||
+         typeof arg === 'symbol' ||  // ES6 symbol
+         typeof arg === 'undefined';
+}
+exports.isPrimitive = isPrimitive;
+
+exports.isBuffer = Buffer.isBuffer;
+
+function objectToString(o) {
+  return Object.prototype.toString.call(o);
+}
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1).Buffer))
+
+/***/ }),
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2851,7 +2851,7 @@ module.exports = Transform;
 var Duplex = __webpack_require__(4);
 
 /*<replacement>*/
-var util = __webpack_require__(5);
+var util = __webpack_require__(6);
 util.inherits = __webpack_require__(3);
 /*</replacement>*/
 
@@ -3013,7 +3013,7 @@ var Duplex;
 Writable.WritableState = WritableState;
 
 /*<replacement>*/
-var util = __webpack_require__(5);
+var util = __webpack_require__(6);
 util.inherits = __webpack_require__(3);
 /*</replacement>*/
 
@@ -3029,7 +3029,7 @@ var Stream;
   try {
     Stream = __webpack_require__(13);
   } catch (_) {} finally {
-    if (!Stream) Stream = __webpack_require__(6).EventEmitter;
+    if (!Stream) Stream = __webpack_require__(5).EventEmitter;
   }
 })();
 /*</replacement>*/
@@ -3596,7 +3596,7 @@ if (!process.browser && process.env.READABLE_STREAM === 'disable' && Stream) {
 
 module.exports = Stream;
 
-var EE = __webpack_require__(6).EventEmitter;
+var EE = __webpack_require__(5).EventEmitter;
 var inherits = __webpack_require__(3);
 
 inherits(Stream, EE);
@@ -3729,7 +3729,7 @@ module.exports = PassThrough;
 var Transform = __webpack_require__(10);
 
 /*<replacement>*/
-var util = __webpack_require__(5);
+var util = __webpack_require__(6);
 util.inherits = __webpack_require__(3);
 /*</replacement>*/
 
@@ -3769,7 +3769,7 @@ var Duplex;
 Readable.ReadableState = ReadableState;
 
 /*<replacement>*/
-var EE = __webpack_require__(6).EventEmitter;
+var EE = __webpack_require__(5).EventEmitter;
 
 var EElistenerCount = function (emitter, type) {
   return emitter.listeners(type).length;
@@ -3782,7 +3782,7 @@ var Stream;
   try {
     Stream = __webpack_require__(13);
   } catch (_) {} finally {
-    if (!Stream) Stream = __webpack_require__(6).EventEmitter;
+    if (!Stream) Stream = __webpack_require__(5).EventEmitter;
   }
 })();
 /*</replacement>*/
@@ -3793,7 +3793,7 @@ var bufferShim = __webpack_require__(7);
 /*</replacement>*/
 
 /*<replacement>*/
-var util = __webpack_require__(5);
+var util = __webpack_require__(6);
 util.inherits = __webpack_require__(3);
 /*</replacement>*/
 
@@ -5215,6 +5215,7 @@ var _class = function () {
 		this.wsOptions = {
 			headers: headers
 		};
+		this.connect();
 	}
 
 	_createClass(_class, [{
@@ -5253,6 +5254,11 @@ var _class = function () {
 				wsOptions: this.wsOptions
 			});
 			this.websocket.connect();
+		}
+	}, {
+		key: 'disconnect',
+		value: function disconnect() {
+			this.websocket.disconnect();
 		}
 	}, {
 		key: '_get_pubsub_url',
@@ -5748,7 +5754,9 @@ var _class = function () {
 					if (options.useCache && options.ts && params.order == 'desc') {
 						_this2.cache.add(options.ts, messages);
 					}
-					cb(null, messages);
+					cb(null, messages.map(function (m) {
+						return _push2.default.decode(m, _this2.datatype);
+					}));
 				}).catch(function (err) {
 					cb(err);
 				});
@@ -5879,7 +5887,57 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var WebSocket = __webpack_require__(32);
+var EventEmitter = __webpack_require__(5).EventEmitter;
+
+var SubscriberManager = function (_EventEmitter) {
+	_inherits(SubscriberManager, _EventEmitter);
+
+	function SubscriberManager() {
+		_classCallCheck(this, SubscriberManager);
+
+		var _this = _possibleConstructorReturn(this, (SubscriberManager.__proto__ || Object.getPrototypeOf(SubscriberManager)).call(this));
+
+		_this.subscribers = {};
+		return _this;
+	}
+
+	_createClass(SubscriberManager, [{
+		key: 'reg',
+		value: function reg(path, op, cb) {
+			var topic = path + '/' + op;
+			this.subscribers[topic] = { path: path, op: op, cb: cb };
+			this.on(topic, cb);
+		}
+	}, {
+		key: 'unreg',
+		value: function unreg(path, op, cb) {
+			var topic = path + '/' + op;
+			delete this.subscribers[topic];
+			this.removeListener(topic, cb);
+		}
+	}, {
+		key: 'deliver',
+		value: function deliver(topic, message) {
+			this.emit(topic, message);
+		}
+	}, {
+		key: 'get',
+		value: function get() {
+			var _this2 = this;
+
+			return Object.keys(this.subscribers).map(function (topic) {
+				return _this2.subscribers[topic];
+			});
+		}
+	}]);
+
+	return SubscriberManager;
+}(EventEmitter);
 
 var _class = function () {
 	function _class(options) {
@@ -5889,54 +5947,72 @@ var _class = function () {
 		this.host = options.host;
 
 		this.connected = false;
-		this.connection = null;
 		this.logger = options.logger;
-		this.messageHandler = function () {};
 		this.requestId = 0;
 		this.requestMap = {};
-		this.subscribers = {};
+		this.subscriberMan = new SubscriberManager();
 		this.offlineQueue = [];
 		this.wsOptions = options.wsOptions;
-		this.init();
+		this.reconnectPeriod = options.reconnectPeriod || 5000;
 	}
 
 	_createClass(_class, [{
-		key: 'init',
-		value: function init(messageHandler, closeHandler, errorHandler) {}
-	}, {
 		key: 'connect',
 		value: function connect() {
-			var _this = this;
+			var _this3 = this;
 
 			if (!this.connected) {
 				this.client = new WebSocket(this.target, this.host, this.wsOptions);
 				this.client.on('error', function (error) {
-					_this.logger.error(error);
-					_this.clean();
+					_this3.logger.error(error);
+					_this3.clean();
+					_this3._setupReconnect();
 				});
 
-				this.client.on('close', function () {
-					_this.logger.log('closed');
-					_this.clean();
+				this.client.on('close', function (e) {
+					_this3.logger.log('closed', e);
+					_this3.clean();
+					if (e.code > 1000) _this3._setupReconnect();
 				});
 
 				this.client.on('open', function () {
-					_this.logger.log('connected');
-					_this.connected = true;
-					_this.flushOfflineMessage();
+					_this3.logger.log('connected');
+					_this3.connected = true;
+					_this3.subscriberMan.get().map(function (s) {
+						_this3._subscribe(s.path, s.op, s.cb);
+					});
+					_this3.flushOfflineMessage();
 				});
 
 				this.client.on('message', function (utf8message) {
 					var message = JSON.parse(utf8message);
 					if (message.hasOwnProperty('e')) {
-						_this.response(message);
+						_this3.response(message);
 					} else {
-						_this.deliver(message);
+						_this3.deliver(message);
 					}
 				});
 			} else {
 				this.logger.warn('already connected');
 			}
+		}
+	}, {
+		key: 'disconnect',
+		value: function disconnect() {
+			if (this.connected) {
+				this.client.close();
+			} else {
+				this.logger.warn('already disconnected');
+			}
+		}
+	}, {
+		key: '_setupReconnect',
+		value: function _setupReconnect() {
+			var _this4 = this;
+
+			setTimeout(function () {
+				_this4.connect();
+			}, this.reconnectPeriod);
 		}
 	}, {
 		key: 'response',
@@ -5948,7 +6024,7 @@ var _class = function () {
 	}, {
 		key: 'deliver',
 		value: function deliver(message) {
-			this.subscribers[message.p](message);
+			this.subscriberMan.deliver(message.p, message);
 		}
 	}, {
 		key: 'publish',
@@ -5965,7 +6041,12 @@ var _class = function () {
 	}, {
 		key: 'subscribe',
 		value: function subscribe(path, op, cb, onComplete) {
-			this.subscribers[path + '/' + op] = cb;
+			this.subscriberMan.reg(path, op, cb);
+			this._subscribe(path, op, cb, onComplete);
+		}
+	}, {
+		key: '_subscribe',
+		value: function _subscribe(path, op, cb, onComplete) {
 			this.send({
 				e: this.registerCallback(onComplete),
 				p: path,
@@ -5976,6 +6057,7 @@ var _class = function () {
 	}, {
 		key: 'unsubscribe',
 		value: function unsubscribe(path, op, cb) {
+			this.subscriberMan.unreg(path, op, cb);
 			this.send({
 				e: this.registerCallback(cb),
 				p: path,
@@ -5996,11 +6078,11 @@ var _class = function () {
 	}, {
 		key: 'flushOfflineMessage',
 		value: function flushOfflineMessage() {
-			var _this2 = this;
+			var _this5 = this;
 
 			if (this.connected) {
 				this.offlineQueue.forEach(function (m) {
-					_this2.send(m);
+					_this5.send(m);
 				});
 				this.offlineQueue = [];
 			} else {
@@ -6019,8 +6101,10 @@ var _class = function () {
 	}, {
 		key: 'clean',
 		value: function clean() {
+			this.client.close();
 			this.connected = false;
-			this.connection = null;
+			this.client.clean();
+			this.client = null;
 		}
 	}, {
 		key: 'registerCallback',
@@ -6175,7 +6259,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var isBrowser = 'browser' === process.title;
 
-var EventEmitter = __webpack_require__(6).EventEmitter;
+var EventEmitter = __webpack_require__(5).EventEmitter;
 
 var _class = function (_EventEmitter) {
 	_inherits(_class, _EventEmitter);
@@ -6216,6 +6300,19 @@ var _class = function (_EventEmitter) {
 			return function (params) {
 				_this2.emit(e, params);
 			};
+		}
+	}, {
+		key: 'close',
+		value: function close(code, reason) {
+			this.client.close(code, reason);
+		}
+	}, {
+		key: 'clean',
+		value: function clean() {
+			this.removeAllListeners('error');
+			this.removeAllListeners('close');
+			this.removeAllListeners('open');
+			this.removeAllListeners('message');
 		}
 	}]);
 

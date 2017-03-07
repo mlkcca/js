@@ -26,6 +26,7 @@ export default class {
 		this.wsOptions = {
 			headers: headers
 		}
+		this.connect();
 	}
 
 	version() {
@@ -59,6 +60,10 @@ export default class {
 			wsOptions: this.wsOptions
 		});
 		this.websocket.connect();
+	}
+
+	disconnect() {
+		this.websocket.disconnect();
 	}
 
 	_get_pubsub_url(ssl, host, port, appId, apikey, accessToken, uuid) {

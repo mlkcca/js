@@ -31,5 +31,16 @@ export default class extends EventEmitter {
 			this.emit(e, params)
 		}
 	}
+
+	close(code, reason) {
+		this.client.close(code, reason);
+	}
+
+	clean() {
+		this.removeAllListeners('error');
+		this.removeAllListeners('close');
+		this.removeAllListeners('open');
+		this.removeAllListeners('message');
+	}
 }
 

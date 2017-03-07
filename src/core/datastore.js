@@ -65,7 +65,7 @@ export default class {
 				if(options.useCache && options.ts && params.order == 'desc') {
 			    	this.cache.add(options.ts, messages);
 				}
-				cb(null, messages);
+				cb(null, messages.map((m)=>PushDataType.decode(m, this.datatype)));
 			}).catch(function(err) {
 				cb(err);
 			});
