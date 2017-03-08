@@ -74,7 +74,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 60);
+/******/ 	return __webpack_require__(__webpack_require__.s = 62);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -119,8 +119,8 @@ module.exports = g;
 
 
 
-var base64 = __webpack_require__(33)
-var ieee754 = __webpack_require__(36)
+var base64 = __webpack_require__(34)
+var ieee754 = __webpack_require__(37)
 var isArray = __webpack_require__(14)
 
 exports.Buffer = Buffer
@@ -2793,8 +2793,8 @@ function nextTick(fn, arg1, arg2, arg3) {
 "use strict";
 
 
-exports.decode = exports.parse = __webpack_require__(38);
-exports.encode = exports.stringify = __webpack_require__(39);
+exports.decode = exports.parse = __webpack_require__(39);
+exports.encode = exports.stringify = __webpack_require__(40);
 
 
 /***/ }),
@@ -3019,7 +3019,7 @@ util.inherits = __webpack_require__(3);
 
 /*<replacement>*/
 var internalUtil = {
-  deprecate: __webpack_require__(52)
+  deprecate: __webpack_require__(54)
 };
 /*</replacement>*/
 
@@ -3544,7 +3544,7 @@ function CorkedRequest(state) {
     }
   };
 }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(48).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(50).setImmediate))
 
 /***/ }),
 /* 12 */
@@ -3601,10 +3601,10 @@ var inherits = __webpack_require__(3);
 
 inherits(Stream, EE);
 Stream.Readable = __webpack_require__(12);
-Stream.Writable = __webpack_require__(44);
-Stream.Duplex = __webpack_require__(40);
-Stream.Transform = __webpack_require__(43);
-Stream.PassThrough = __webpack_require__(42);
+Stream.Writable = __webpack_require__(45);
+Stream.Duplex = __webpack_require__(41);
+Stream.Transform = __webpack_require__(44);
+Stream.PassThrough = __webpack_require__(43);
 
 // Backwards-compat with node 0.4.x
 Stream.Stream = Stream;
@@ -3798,7 +3798,7 @@ util.inherits = __webpack_require__(3);
 /*</replacement>*/
 
 /*<replacement>*/
-var debugUtil = __webpack_require__(59);
+var debugUtil = __webpack_require__(61);
 var debug = void 0;
 if (debugUtil && debugUtil.debuglog) {
   debug = debugUtil.debuglog('stream');
@@ -3807,7 +3807,7 @@ if (debugUtil && debugUtil.debuglog) {
 }
 /*</replacement>*/
 
-var BufferList = __webpack_require__(41);
+var BufferList = __webpack_require__(42);
 var StringDecoder;
 
 util.inherits(Readable, Stream);
@@ -4697,10 +4697,10 @@ function indexOf(xs, x) {
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global) {var ClientRequest = __webpack_require__(46)
-var extend = __webpack_require__(57)
-var statusCodes = __webpack_require__(34)
-var url = __webpack_require__(50)
+/* WEBPACK VAR INJECTION */(function(global) {var ClientRequest = __webpack_require__(48)
+var extend = __webpack_require__(59)
+var statusCodes = __webpack_require__(35)
+var url = __webpack_require__(52)
 
 var http = exports
 
@@ -5167,31 +5167,29 @@ var _querystring = __webpack_require__(9);
 
 var _querystring2 = _interopRequireDefault(_querystring);
 
-var _uuid = __webpack_require__(53);
+var _uuid = __webpack_require__(55);
 
 var _uuid2 = _interopRequireDefault(_uuid);
 
-var _package = __webpack_require__(58);
+var _package = __webpack_require__(60);
 
 var _package2 = _interopRequireDefault(_package);
 
-var _pubsub = __webpack_require__(30);
+var _pubsub = __webpack_require__(31);
 
 var _pubsub2 = _interopRequireDefault(_pubsub);
 
-var _remote = __webpack_require__(31);
+var _remote = __webpack_require__(32);
 
 var _remote2 = _interopRequireDefault(_remote);
 
-var _datastore = __webpack_require__(27);
+var _datastore = __webpack_require__(28);
 
 var _datastore2 = _interopRequireDefault(_datastore);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var eventId = 0;
 
 var _class = function () {
 	function _class(options) {
@@ -5215,6 +5213,13 @@ var _class = function () {
 		this.wsOptions = {
 			headers: headers
 		};
+		this.websocket = new _pubsub2.default({
+			host: this._get_pubsub_url(this.useSSL, this.host, this.port, this.appId, this.apiKey, this.accessToken, this.uuid),
+			logger: console,
+			WebSocket: this.options.WebSocket,
+			wsOptions: this.wsOptions,
+			keepalive: options.keepalive || 36
+		});
 		this.connect();
 	}
 
@@ -5247,18 +5252,17 @@ var _class = function () {
 	}, {
 		key: 'connect',
 		value: function connect() {
-			this.websocket = new _pubsub2.default({
-				host: this._get_pubsub_url(this.useSSL, this.host, this.port, this.appId, this.apiKey, this.accessToken, this.uuid),
-				logger: console,
-				WebSocket: this.options.WebSocket,
-				wsOptions: this.wsOptions
-			});
 			this.websocket.connect();
 		}
 	}, {
 		key: 'disconnect',
 		value: function disconnect() {
 			this.websocket.disconnect();
+		}
+	}, {
+		key: 'on',
+		value: function on(event, fn) {
+			this.websocket.on(event, fn);
 		}
 	}, {
 		key: '_get_pubsub_url',
@@ -5544,10 +5548,75 @@ module.exports = exports["default"];
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _class = function () {
+	function _class() {
+		_classCallCheck(this, _class);
+
+		this.requestId = 0;
+		this.messages = [];
+	}
+
+	_createClass(_class, [{
+		key: "add",
+		value: function add(message, onAck) {
+			var rid = this.getRequestId();
+			message.e = rid;
+			this.messages.push({
+				id: rid,
+				message: message,
+				cb: onAck
+			});
+		}
+	}, {
+		key: "recvAck",
+		value: function recvAck(rid, args) {
+			var m = this.messages.filter(function (m) {
+				return m.id === rid;
+			})[0];
+			if (m && m.cb) m.cb(args);
+			this.messages = this.messages.filter(function (m) {
+				return m.id !== rid;
+			});
+		}
+	}, {
+		key: "enq",
+		value: function enq() {
+			var message = this.messages.shift();
+			if (message) return message.message;else return null;
+		}
+	}, {
+		key: "getRequestId",
+		value: function getRequestId() {
+			if (this.requestId > 100000) this.requestId = 0;
+			return this.requestId++;
+		}
+	}]);
+
+	return _class;
+}();
+
+exports.default = _class;
+module.exports = exports["default"];
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var http = __webpack_require__(17),
-    https = __webpack_require__(35),
+    https = __webpack_require__(36),
     querystring = __webpack_require__(9);
 
 function request(method, secure, host, port, path, qs, payload, headers, callback) {
@@ -5651,7 +5720,7 @@ function createCORSRequest(method, url) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5663,11 +5732,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _push = __webpack_require__(28);
+var _push = __webpack_require__(29);
 
 var _push2 = _interopRequireDefault(_push);
 
-var _send = __webpack_require__(29);
+var _send = __webpack_require__(30);
 
 var _send2 = _interopRequireDefault(_send);
 
@@ -5771,7 +5840,7 @@ exports.default = _class;
 module.exports = exports['default'];
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5823,7 +5892,7 @@ exports.default = _class;
 module.exports = exports['default'];
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5873,7 +5942,7 @@ exports.default = _class;
 module.exports = exports['default'];
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5885,13 +5954,23 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _MessageStore = __webpack_require__(26);
+
+var _MessageStore2 = _interopRequireDefault(_MessageStore);
+
+var _reinterval = __webpack_require__(46);
+
+var _reinterval2 = _interopRequireDefault(_reinterval);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var WebSocket = __webpack_require__(32);
+var WebSocket = __webpack_require__(33);
 var EventEmitter = __webpack_require__(5).EventEmitter;
 
 var SubscriberManager = function (_EventEmitter) {
@@ -5939,104 +6018,182 @@ var SubscriberManager = function (_EventEmitter) {
 	return SubscriberManager;
 }(EventEmitter);
 
-var _class = function () {
+var _class = function (_EventEmitter2) {
+	_inherits(_class, _EventEmitter2);
+
 	function _class(options) {
 		_classCallCheck(this, _class);
 
-		this.target = options.WebSocket;
-		this.host = options.host;
+		var _this3 = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
 
-		this.connected = false;
-		this.logger = options.logger;
-		this.requestId = 0;
-		this.requestMap = {};
-		this.subscriberMan = new SubscriberManager();
-		this.offlineQueue = [];
-		this.wsOptions = options.wsOptions;
-		this.reconnectPeriod = options.reconnectPeriod || 5000;
+		_this3.options = options;
+		_this3.target = options.WebSocket;
+		_this3.host = options.host;
+
+		_this3.logger = options.logger;
+		_this3.subscriberMan = new SubscriberManager();
+		_this3.offlineQueue = [];
+		_this3.messageStore = new _MessageStore2.default();
+		_this3.wsOptions = options.wsOptions;
+		_this3.reconnectPeriod = options.reconnectPeriod || 5000;
+		_this3.reconnectTimer = null;
+		_this3.pingTimer = null;
+		_this3.pongArrived = true;
+		_this3.state = 'offline';
+		return _this3;
 	}
 
 	_createClass(_class, [{
+		key: 'sendEvent',
+		value: function sendEvent(event, params) {
+			var result = null;
+			switch (this.getState()) {
+				case 'offline':
+					result = this.offline(event, params);
+					break;
+				case 'connecting':
+					result = this.connecting(event, params);
+					break;
+				case 'online':
+					result = this.online(event, params);
+					break;
+				case 'disconnecting':
+					result = this.disconnecting(event, params);
+					break;
+				default:
+					console.error('unknow state');
+			}
+			if (result) {
+				this.emit('state-changed', {
+					currentState: this.state,
+					nextState: result.nextState
+				});
+				this.logger.log('state changed from ' + this.state + ' to ' + result.nextState);
+				this.state = result.nextState;
+			}
+		}
+	}, {
+		key: 'getState',
+		value: function getState() {
+			return this.state;
+		}
+	}, {
+		key: 'offline',
+		value: function offline(event) {
+			if (event == 'connect') {
+				this._connect();
+				return {
+					nextState: 'connecting'
+				};
+			} else {
+				return null;
+			}
+		}
+	}, {
+		key: 'connecting',
+		value: function connecting(event, params) {
+			var _this4 = this;
+
+			if (event == 'connect') {
+				this.logger.warn('already connecting');
+				return null;
+			} else if (event == 'opened') {
+				this.emit('open', {});
+				this.subscriberMan.get().map(function (s) {
+					_this4._subscribe(s.path, s.op, s.cb);
+				});
+				this.flushOfflineMessage();
+				this._setupPingTimer();
+				return {
+					nextState: 'online'
+				};
+			} else if (event == 'error') {
+				this._clean();
+				this._setupReconnect();
+				return null;
+			} else if (event == 'closed') {
+				this._clean();
+				if (params.code > 1000) {
+					this._setupReconnect();
+					return null;
+				} else {
+					return {
+						nextState: 'offline'
+					};
+				}
+			} else {
+				return null;
+			}
+		}
+	}, {
+		key: 'online',
+		value: function online(event, params) {
+			if (event == 'connect') {
+				this.logger.warn('already connected');
+				return null;
+			} else if (event == 'opened') {
+				this.logger.warn('already connected');
+				return null;
+			} else if (event == 'error') {
+				this._clean();
+				this._setupReconnect();
+				return {
+					nextState: 'connecting'
+				};
+			} else if (event == 'closed') {
+				this._clean();
+				if (params.code > 1000) {
+					this._setupReconnect();
+					return {
+						nextState: 'connecting'
+					};
+				} else {
+					return {
+						nextState: 'offline'
+					};
+				}
+			} else if (event == 'disconnect') {
+				this._disconnect();
+				return {
+					nextState: 'disconnecting'
+				};
+			} else {
+				return null;
+			}
+		}
+	}, {
+		key: 'disconnecting',
+		value: function disconnecting(event) {
+			if (event == 'error' || event == 'closed') {
+				this._clean();
+				return {
+					nextState: 'offline'
+				};
+			} else {
+				this.logger.warn('now disconnecting');
+				return null;
+			}
+		}
+	}, {
 		key: 'connect',
 		value: function connect() {
-			var _this3 = this;
-
-			if (!this.connected) {
-				this.client = new WebSocket(this.target, this.host, this.wsOptions);
-				this.client.on('error', function (error) {
-					_this3.logger.error(error);
-					_this3.clean();
-					_this3._setupReconnect();
-				});
-
-				this.client.on('close', function (e) {
-					_this3.logger.log('closed', e);
-					_this3.clean();
-					if (e.code > 1000) _this3._setupReconnect();
-				});
-
-				this.client.on('open', function () {
-					_this3.logger.log('connected');
-					_this3.connected = true;
-					_this3.subscriberMan.get().map(function (s) {
-						_this3._subscribe(s.path, s.op, s.cb);
-					});
-					_this3.flushOfflineMessage();
-				});
-
-				this.client.on('message', function (utf8message) {
-					var message = JSON.parse(utf8message);
-					if (message.hasOwnProperty('e')) {
-						_this3.response(message);
-					} else {
-						_this3.deliver(message);
-					}
-				});
-			} else {
-				this.logger.warn('already connected');
-			}
+			this.sendEvent('connect', {});
 		}
 	}, {
 		key: 'disconnect',
 		value: function disconnect() {
-			if (this.connected) {
-				this.client.close();
-			} else {
-				this.logger.warn('already disconnected');
-			}
-		}
-	}, {
-		key: '_setupReconnect',
-		value: function _setupReconnect() {
-			var _this4 = this;
-
-			setTimeout(function () {
-				_this4.connect();
-			}, this.reconnectPeriod);
-		}
-	}, {
-		key: 'response',
-		value: function response(message) {
-			var cb = this.requestMap[message.e];
-			if (cb) cb(message);
-			this.unregisterCallback(message.e);
-		}
-	}, {
-		key: 'deliver',
-		value: function deliver(message) {
-			this.subscriberMan.deliver(message.p, message);
+			this.sendEvent('disconnect', {});
 		}
 	}, {
 		key: 'publish',
 		value: function publish(path, op, v, cb) {
 			if (typeof v !== 'string') v = JSON.stringify(v);
 			this.send({
-				e: this.registerCallback(cb),
 				p: path,
 				_t: 'p',
 				_o: op,
 				v: v
-			});
+			}, cb);
 		}
 	}, {
 		key: 'subscribe',
@@ -6045,95 +6202,156 @@ var _class = function () {
 			this._subscribe(path, op, cb, onComplete);
 		}
 	}, {
-		key: '_subscribe',
-		value: function _subscribe(path, op, cb, onComplete) {
-			this.send({
-				e: this.registerCallback(onComplete),
-				p: path,
-				_t: 's',
-				_o: op
-			});
-		}
-	}, {
 		key: 'unsubscribe',
 		value: function unsubscribe(path, op, cb) {
 			this.subscriberMan.unreg(path, op, cb);
 			this.send({
-				e: this.registerCallback(cb),
 				p: path,
 				_t: 'u',
 				_o: op
+			}, cb);
+		}
+	}, {
+		key: '_connect',
+		value: function _connect() {
+			var _this5 = this;
+
+			this.client = new WebSocket(this.target, this.host, this.wsOptions);
+			this.client.on('error', function (error) {
+				_this5.logger.error(error);
+				_this5.sendEvent('error', {});
+			});
+
+			this.client.on('close', function (code) {
+				_this5.logger.log('closed', code);
+				_this5.sendEvent('closed', { code: code });
+			});
+
+			this.client.on('open', function () {
+				_this5.sendEvent('opened', {});
+			});
+
+			this.client.on('message', function (utf8message) {
+				var message = JSON.parse(utf8message);
+				if (message.hasOwnProperty('e')) {
+					_this5.response(message);
+				} else {
+					_this5.deliver(message);
+				}
+			});
+
+			this.client.on('pong', function () {
+				_this5._handlePong();
 			});
 		}
 	}, {
+		key: '_disconnect',
+		value: function _disconnect() {
+			this.client.close();
+		}
+	}, {
+		key: '_setupReconnect',
+		value: function _setupReconnect() {
+			var _this6 = this;
+
+			setTimeout(function () {
+				_this6._connect();
+			}, this.reconnectPeriod);
+		}
+	}, {
+		key: 'response',
+		value: function response(message) {
+			this.messageStore.recvAck(message.e, message);
+		}
+	}, {
+		key: 'deliver',
+		value: function deliver(message) {
+			this._resetPingInterval();
+			this.subscriberMan.deliver(message.p, message);
+		}
+	}, {
+		key: '_subscribe',
+		value: function _subscribe(path, op, cb, onComplete) {
+			this.send({
+				p: path,
+				_t: 's',
+				_o: op
+			}, onComplete);
+		}
+	}, {
 		key: 'send',
-		value: function send(message) {
-			if (this.connected) {
+		value: function send(message, cb) {
+			this.messageStore.add(message, cb);
+			if (this.client && this.getState() == 'online') {
 				this.client.send(JSON.stringify(message));
-			} else {
-				this.offlineQueue.push(message);
-				this.logger.log('offline send');
+				this._resetPingInterval();
 			}
 		}
 	}, {
 		key: 'flushOfflineMessage',
 		value: function flushOfflineMessage() {
-			var _this5 = this;
-
-			if (this.connected) {
-				this.offlineQueue.forEach(function (m) {
-					_this5.send(m);
-				});
-				this.offlineQueue = [];
-			} else {
-				this.logger.warn('connection closed');
+			var message = this.messageStore.enq();
+			if (message) {
+				this.client.send(JSON.stringify(message));
+				this.flushOfflineMessage();
 			}
 		}
 	}, {
-		key: 'close',
-		value: function close() {
-			if (this.connected) {
-				this.client.close();
-			} else {
-				this.logger.warn('already closed');
-			}
-		}
-	}, {
-		key: 'clean',
-		value: function clean() {
+		key: '_clean',
+		value: function _clean() {
 			this.client.close();
-			this.connected = false;
 			this.client.clean();
 			this.client = null;
+			if (this.pingTimer !== null) {
+				this.pingTimer.clear();
+				this.pingTimer = null;
+			}
+			this.emit('close', {});
 		}
 	}, {
-		key: 'registerCallback',
-		value: function registerCallback(cb) {
-			var rid = this.getRequestId();
-			this.requestMap[rid] = cb;
-			return rid;
+		key: '_setupPingTimer',
+		value: function _setupPingTimer() {
+			var _this7 = this;
+
+			if (!this.pingTimer && this.options.keepalive) {
+				this.pongArrived = true;
+				this.pingTimer = (0, _reinterval2.default)(function () {
+					_this7._checkPing();
+				}, this.options.keepalive * 1000);
+			}
 		}
 	}, {
-		key: 'unregisterCallback',
-		value: function unregisterCallback(rid) {
-			delete this.requestMap[rid];
+		key: '_resetPingInterval',
+		value: function _resetPingInterval() {
+			if (this.pingTimer && this.options.keepalive) {
+				this.pingTimer.reschedule(this.options.keepalive * 1000);
+			}
 		}
 	}, {
-		key: 'getRequestId',
-		value: function getRequestId() {
-			if (this.requestId > 100000) this.requestId = 0;
-			return this.requestId++;
+		key: '_checkPing',
+		value: function _checkPing() {
+			if (this.pongArrived) {
+				this.pongArrived = false;
+				this.client.ping();
+			} else {
+				this.sendEvent('error', { message: 'pong not coming' });
+			}
+		}
+	}, {
+		key: '_handlePong',
+		value: function _handlePong() {
+			this.pongArrived = true;
 		}
 	}]);
 
 	return _class;
-}();
+}(EventEmitter);
 
 exports.default = _class;
 module.exports = exports['default'];
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6147,7 +6365,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var ajax = __webpack_require__(26);
+var ajax = __webpack_require__(27);
 
 var _class = function () {
 	function _class(host, port, secure, headers) {
@@ -6239,7 +6457,7 @@ exports.default = _class;
 module.exports = exports['default'];
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6272,25 +6490,39 @@ var _class = function (_EventEmitter) {
 		if (isBrowser) {
 			_this.client = new Module(host);
 			_this.client.onerror = _this.fire('error');
-			_this.client.onclose = _this.fire('close');
+			_this.client.onclose = function (e) {
+				_this.emit('close', e.code);
+			};
 			_this.client.onopen = _this.fire('open');
 			_this.client.onmessage = function (msg) {
-				_this.emit('message', msg.data);
+				if (msg.data == 'pong') _this.emit('pong', msg.data);else _this.emit('message', msg.data);
 			};
 		} else {
 			_this.client = new Module(host, options);
 			_this.client.on('error', _this.fire('error'));
 			_this.client.on('close', _this.fire('close'));
 			_this.client.on('open', _this.fire('open'));
-			_this.client.on('message', _this.fire('message'));
+			_this.client.on('message', function (data) {
+				if (data == 'pong') _this.emit('pong', data);else _this.emit('message', data);
+			});
 		}
 		return _this;
 	}
 
 	_createClass(_class, [{
+		key: 'getReadyState',
+		value: function getReadyState() {
+			return this.client.readyState;
+		}
+	}, {
 		key: 'send',
 		value: function send(msg) {
 			this.client.send(msg);
+		}
+	}, {
+		key: 'ping',
+		value: function ping(msg) {
+			this.client.send("ping");
 		}
 	}, {
 		key: 'fire',
@@ -6324,7 +6556,7 @@ module.exports = exports['default'];
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6445,7 +6677,7 @@ function fromByteArray (uint8) {
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -6515,7 +6747,7 @@ module.exports = {
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var http = __webpack_require__(17);
@@ -6535,7 +6767,7 @@ https.request = function (params, cb) {
 
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -6625,7 +6857,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module, global) {var __WEBPACK_AMD_DEFINE_RESULT__;/*! https://mths.be/punycode v1.4.1 by @mathias */
@@ -7161,10 +7393,10 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 }(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(56)(module), __webpack_require__(0)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(58)(module), __webpack_require__(0)))
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7255,7 +7487,7 @@ var isArray = Array.isArray || function (xs) {
 
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7347,14 +7579,14 @@ var objectKeys = Object.keys || function (obj) {
 
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(4)
 
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7424,28 +7656,92 @@ BufferList.prototype.concat = function (n) {
 };
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(15)
 
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(10)
 
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(11)
 
 
 /***/ }),
-/* 45 */
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function ReInterval (callback, interval, args) {
+  var self = this;
+
+  this._callback = callback;
+  this._args = args;
+
+  this._interval = setInterval(callback, interval, this._args);
+
+  this.reschedule = function (interval) {
+    // if no interval entered, use the interval passed in on creation
+    if (!interval)
+      interval = self._interval;
+
+    if (self._interval)
+      clearInterval(self._interval);
+    self._interval = setInterval(self._callback, interval, self._args);
+  };
+
+  this.clear = function () {
+    if (self._interval) {
+      clearInterval(self._interval);
+      self._interval = undefined;
+    }
+  };
+  
+  this.destroy = function () {
+    if (self._interval) {
+      clearInterval(self._interval);
+    }
+    self._callback = undefined;
+    self._interval = undefined;
+    self._args = undefined;
+  };
+}
+
+function reInterval () {
+  if (typeof arguments[0] !== 'function')
+    throw new Error('callback needed');
+  if (typeof arguments[1] !== 'number')
+    throw new Error('interval needed');
+
+  var args;
+
+  if (arguments.length > 0) {
+    args = new Array(arguments.length - 2);
+
+    for (var i = 0; i < args.length; i++) {
+      args[i] = arguments[i + 2];
+    }
+  }
+
+  return new ReInterval(arguments[0], arguments[1], args);
+}
+
+module.exports = reInterval;
+
+
+/***/ }),
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -7638,14 +7934,14 @@ module.exports = __webpack_require__(11)
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(2)))
 
 /***/ }),
-/* 46 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer, global, process) {var capability = __webpack_require__(18)
 var inherits = __webpack_require__(3)
-var response = __webpack_require__(47)
+var response = __webpack_require__(49)
 var stream = __webpack_require__(12)
-var toArrayBuffer = __webpack_require__(49)
+var toArrayBuffer = __webpack_require__(51)
 
 var IncomingMessage = response.IncomingMessage
 var rStates = response.readyStates
@@ -7939,7 +8235,7 @@ var unsafeHeaders = [
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1).Buffer, __webpack_require__(0), __webpack_require__(2)))
 
 /***/ }),
-/* 47 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process, Buffer, global) {var capability = __webpack_require__(18)
@@ -8128,7 +8424,7 @@ IncomingMessage.prototype._onXHRProgress = function () {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(1).Buffer, __webpack_require__(0)))
 
 /***/ }),
-/* 48 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var apply = Function.prototype.apply;
@@ -8181,13 +8477,13 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(45);
+__webpack_require__(47);
 exports.setImmediate = setImmediate;
 exports.clearImmediate = clearImmediate;
 
 
 /***/ }),
-/* 49 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Buffer = __webpack_require__(1).Buffer
@@ -8220,7 +8516,7 @@ module.exports = function (buf) {
 
 
 /***/ }),
-/* 50 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8247,8 +8543,8 @@ module.exports = function (buf) {
 
 
 
-var punycode = __webpack_require__(37);
-var util = __webpack_require__(51);
+var punycode = __webpack_require__(38);
+var util = __webpack_require__(53);
 
 exports.parse = urlParse;
 exports.resolve = urlResolve;
@@ -8959,7 +9255,7 @@ Url.prototype.parseHost = function() {
 
 
 /***/ }),
-/* 51 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8982,7 +9278,7 @@ module.exports = {
 
 
 /***/ }),
-/* 52 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {
@@ -9056,11 +9352,11 @@ function config (name) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 53 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var v1 = __webpack_require__(54);
-var v4 = __webpack_require__(55);
+var v1 = __webpack_require__(56);
+var v4 = __webpack_require__(57);
 
 var uuid = v4;
 uuid.v1 = v1;
@@ -9070,7 +9366,7 @@ module.exports = uuid;
 
 
 /***/ }),
-/* 54 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Unique ID creation requires a high quality random # generator.  We feature
@@ -9179,7 +9475,7 @@ module.exports = v1;
 
 
 /***/ }),
-/* 55 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var rng = __webpack_require__(21);
@@ -9214,7 +9510,7 @@ module.exports = v4;
 
 
 /***/ }),
-/* 56 */
+/* 58 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -9242,7 +9538,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 57 */
+/* 59 */
 /***/ (function(module, exports) {
 
 module.exports = extend
@@ -9267,7 +9563,7 @@ function extend() {
 
 
 /***/ }),
-/* 58 */
+/* 60 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -9301,6 +9597,7 @@ module.exports = {
 	},
 	"homepage": "https://github.com/mlkcca/js#readme",
 	"dependencies": {
+		"reinterval": "^1.1.0",
 		"uuid": "^3.0.1",
 		"ws": "^2.2.0"
 	},
@@ -9325,13 +9622,13 @@ module.exports = {
 };
 
 /***/ }),
-/* 59 */
+/* 61 */
 /***/ (function(module, exports) {
 
 /* (ignored) */
 
 /***/ }),
-/* 60 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

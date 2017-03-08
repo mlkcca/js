@@ -5,7 +5,6 @@ import Pubsub from './pubsub';
 import Remote from './remote';
 import DataStore from './datastore';
 
-var eventId = 0;
 export default class {
 	constructor(options) {
 		this.options = options;
@@ -26,6 +25,13 @@ export default class {
 		this.wsOptions = {
 			headers: headers
 		}
+		this.websocket = new Pubsub({
+			host: this._get_pubsub_url(this.useSSL, this.host, this.port, this.appId, this.apiKey, this.accessToken, this.uuid),
+			logger: console,
+			WebSocket: this.options.WebSocket,
+			wsOptions: this.wsOptions,
+			keepalive: options.keepalive || 36
+		});
 		this.connect();
 	}
 
@@ -53,17 +59,15 @@ export default class {
 	}
 
 	connect() {
-		this.websocket = new Pubsub({
-			host: this._get_pubsub_url(this.useSSL, this.host, this.port, this.appId, this.apiKey, this.accessToken, this.uuid),
-			logger: console,
-			WebSocket: this.options.WebSocket,
-			wsOptions: this.wsOptions
-		});
 		this.websocket.connect();
 	}
 
 	disconnect() {
 		this.websocket.disconnect();
+	}
+
+	on(event, fn) {
+		this.websocket.on(event, fn);
 	}
 
 	_get_pubsub_url(ssl, host, port, appId, apikey, accessToken, uuid) {
