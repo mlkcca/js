@@ -5783,6 +5783,13 @@ var _class = function () {
 			}
 		}
 	}, {
+		key: 'off',
+		value: function off(event, cb) {
+			var op = '_p';
+			if (event == 'push') op = '_p';else if (event == 'send') op = '_s';
+			this.root._get_pubsub().unsubscribe(this.path, op, cb);
+		}
+	}, {
 		key: 'push',
 		value: function push(value, options, cb) {
 			if (typeof options === 'function') {
@@ -5807,29 +5814,27 @@ var _class = function () {
 			params.limit = options.limit || 100;
 			params.order = options.order || 'desc';
 			if (options.ts) {
+				params.id = 'd';
 				params.ts = options.ts;
 			}
 
-			var messages = null;
-
 			if (options.useCache && options.ts && params.order == 'desc') {
-				messages = this.cache.query(options.ts, params.limit);
+				var decoded_messages = this.cache.query(options.ts, params.limit);
+				cb(null, decoded_messages);
+				return;
 			}
 
-			if (messages !== null) {
-				cb(null, messages);
-			} else {
-				this.root._get_remote().get(apiUrl, params).then(function (messages) {
-					if (options.useCache && options.ts && params.order == 'desc') {
-						_this2.cache.add(options.ts, messages);
-					}
-					cb(null, messages.map(function (m) {
-						return _push2.default.decode(m, _this2.datatype);
-					}));
-				}).catch(function (err) {
-					cb(err);
+			this.root._get_remote().get(apiUrl, params).then(function (messages) {
+				var decoded_messages = messages.map(function (m) {
+					return _push2.default.decode(m, _this2.datatype);
 				});
-			}
+				if (options.useCache && options.ts && params.order == 'desc' && messages.length > 0) {
+					_this2.cache.add(options.ts, decoded_messages);
+				}
+				cb(null, decoded_messages);
+			}).catch(function (err) {
+				cb(err);
+			});
 		}
 	}]);
 
@@ -5997,7 +6002,11 @@ var SubscriberManager = function (_EventEmitter) {
 		value: function unreg(path, op, cb) {
 			var topic = path + '/' + op;
 			delete this.subscribers[topic];
-			this.removeListener(topic, cb);
+			if (cb) {
+				this.removeListener(topic, cb);
+			} else {
+				this.removeAllListeners(topic);
+			}
 		}
 	}, {
 		key: 'deliver',

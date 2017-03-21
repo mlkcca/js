@@ -18,7 +18,11 @@ class SubscriberManager extends EventEmitter {
 	unreg(path, op, cb) {
 		let topic = path+'/'+op;
 		delete this.subscribers[topic];
-		this.removeListener(topic, cb);
+		if(cb) {
+			this.removeListener(topic, cb);
+		}else{
+			this.removeAllListeners(topic);
+		}
 	}
 
 	deliver(topic, message) {

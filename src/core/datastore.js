@@ -30,6 +30,13 @@ export default class {
 		}
 	}
 
+	off(event, cb) {
+		let op = '_p';
+		if(event == 'push') op = '_p';
+		else if(event == 'send') op = '_s';
+		this.root._get_pubsub().unsubscribe(this.path, op, cb);
+	}
+
 	push(value, options, cb) {
 		if(typeof options === 'function') {
 			cb = options;
@@ -49,27 +56,25 @@ export default class {
 		params.limit = options.limit || 100;
 		params.order = options.order || 'desc'
 		if(options.ts) {
+			params.id = 'd';
 			params.ts = options.ts;
 		}
 
-		let messages = null;
-
 		if(options.useCache && options.ts && params.order == 'desc') {
-			messages = this.cache.query(options.ts, params.limit)
+			let decoded_messages = this.cache.query(options.ts, params.limit)
+			cb(null, decoded_messages);
+			return;
 		}
 
-		if(messages !== null) {
-			cb(null, messages);
-		}else{
-			this.root._get_remote().get(apiUrl, params).then((messages) => {
-				if(options.useCache && options.ts && params.order == 'desc') {
-			    	this.cache.add(options.ts, messages);
-				}
-				cb(null, messages.map((m)=>PushDataType.decode(m, this.datatype)));
-			}).catch(function(err) {
-				cb(err);
-			});
-		}
+		this.root._get_remote().get(apiUrl, params).then((messages) => {
+			let decoded_messages = messages.map((m)=>PushDataType.decode(m, this.datatype));
+			if(options.useCache && options.ts && params.order == 'desc' && messages.length > 0) {
+		    	this.cache.add(options.ts, decoded_messages);
+			}
+			cb(null, decoded_messages);
+		}).catch(function(err) {
+			cb(err);
+		});
 	}
 
 }
