@@ -62,8 +62,10 @@ export default class {
 
 		if(options.useCache && options.ts && params.order == 'desc') {
 			let decoded_messages = this.cache.query(options.ts, params.limit)
-			cb(null, decoded_messages);
-			return;
+			if(decoded_messages) {
+				cb(null, decoded_messages);
+				return;
+			}
 		}
 
 		this.root._get_remote().get(apiUrl, params).then((messages) => {

@@ -5820,8 +5820,10 @@ var _class = function () {
 
 			if (options.useCache && options.ts && params.order == 'desc') {
 				var decoded_messages = this.cache.query(options.ts, params.limit);
-				cb(null, decoded_messages);
-				return;
+				if (decoded_messages) {
+					cb(null, decoded_messages);
+					return;
+				}
 			}
 
 			this.root._get_remote().get(apiUrl, params).then(function (messages) {
