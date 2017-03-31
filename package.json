@@ -29,9 +29,9 @@
   },
   "homepage": "https://github.com/mlkcca/js#readme",
   "dependencies": {
+    "agentkeepalive": "^3.1.0",
     "reinterval": "^1.1.0",
-    "uuid": "^3.0.1",
-    "ws": "^2.2.0"
+    "uuid": "^3.0.1"
   },
   "devDependencies": {
     "assert": "^1.4.1",

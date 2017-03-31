@@ -22,7 +22,6 @@ let store = {
 export default class Milkcocoa extends MilkcocoaCore {
 	constructor(options) {
 		options.store = store;
-    options.WebSocket = window.WebSocket;
 		super(options);
 	}
 

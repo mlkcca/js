@@ -1,24 +1,79 @@
 import MessageStore from './MessageStore'
 import reInterval from 'reinterval'
-let WebSocket = require('./ws');
 let EventEmitter = require("events").EventEmitter;
 
 class SubscriberManager extends EventEmitter {
-	constructor() {
+	constructor(root, op) {
 		super();
+		this.root = root;
+		this.op = op;
 		this.subscribers = {};
+		this.timestamp = 0;
+		this.caller = null;
 	}
 
-	reg(path, op, cb) {
-		let topic = path+'/'+op;
-		this.subscribers[topic] = {path:path, op:op, cb:cb};
-		this.on(topic, cb);
+	reg(path, cb, onComplete) {
+		this.subscribers[path] = {cb:cb};
+		this.on(path, cb);
+		this._startSubscribe(onComplete);
 	}
 
-	unreg(path, op, cb) {
-		let topic = path+'/'+op;
-		delete this.subscribers[topic];
-		this.removeListener(topic, cb);
+	_get_path_list() {
+		return Object.keys(this.subscribers);
+	}
+
+	_startSubscribe(onComplete) {
+		this._stopSubscribe()
+		let apiUrl = this.root._get_on_url(this.op || 'push');
+		let pathList = this._get_path_list();
+		if(pathList.length == 0) return;
+		let path = pathList.join(',');
+		this.caller = this.root._get_remote().get2(apiUrl, Object.assign({c:path,t:this.timestamp}, {}), (err, res) => {
+			console.log(err);
+			if(err) {
+				if(onComplete) onComplete(err);
+				setTimeout(() => {
+					this._startSubscribe();
+				}, 5000);
+				return;
+			}
+			if(res.err) {
+				if(res.err == 'permission_denied') {
+					if(onComplete) onComplete(res.err);
+				}else{
+					if(onComplete) onComplete(res.err);
+				}
+			}else{
+				Object.keys(res).forEach((key) => {
+					if(this.timestamp < res[key][0][0])
+						this.timestamp = res[key][0][0];
+					res[key].reverse().map((m) => {
+						return {
+							id: m[1],
+							t: m[0],
+							v: m[2]
+						}
+					}).forEach((m) => {
+						this.emit(key, m);
+					});
+				})
+				this._startSubscribe()
+			}
+
+		});
+	}
+
+	_stopSubscribe() {
+		if(this.caller) this.caller.abort();
+	}
+
+	unreg(path, cb) {
+		delete this.subscribers[path];
+		if(cb) {
+			this.removeListener(path, cb);
+		}else{
+			this.removeAllListeners(path);
+		}
 	}
 
 	deliver(topic, message) {
@@ -45,14 +100,16 @@ class SubscriberManager extends EventEmitter {
  */
 
 export default class extends EventEmitter {
-	constructor(options) {
+	constructor(options, root) {
 		super();
 		this.options = options;
-		this.target = options.WebSocket;
+		this.root = root;
 		this.host = options.host;
-		//this.client = new WebSocketClient();
 		this.logger = options.logger;
-		this.subscriberMan = new SubscriberManager();
+		this.subscriberMan = {};
+		this.subscriberMan.push = new SubscriberManager(root, 'push');
+		this.subscriberMan.set = new SubscriberManager(root, 'set');
+		this.subscriberMan.send = new SubscriberManager(root, 'send');
 		this.offlineQueue = [];
 		this.messageStore = new MessageStore();
 		this.wsOptions = options.wsOptions;
@@ -97,7 +154,7 @@ export default class extends EventEmitter {
 
 	offline(event) {
 		if(event == 'connect') {
-			this._connect();
+			//this._connect();
 			return {
 				nextState: 'connecting'
 			}
@@ -113,9 +170,11 @@ export default class extends EventEmitter {
 		}else if(event == 'opened') {
 			//open
 			this.emit('open', {});
+			/*
 			this.subscriberMan.get().map((s) => {
 				this._subscribe(s.path, s.op, s.cb);
 			});
+			*/
 			this.flushOfflineMessage();
 			this._setupPingTimer();
 			return {
@@ -196,65 +255,54 @@ export default class extends EventEmitter {
 		this.sendEvent('disconnect', {});
 	}
 
-	publish(path, op, v, cb) {
-		if(typeof v !== 'string') v = JSON.stringify(v);
-		this.send({
-        	p: path,
-        	_t: 'p',
-        	_o: op,
-        	v: v
-		}, cb);
+	publish(path, op, v, cb, _options) {
+		let options = _options || {};
+
+		v = JSON.stringify(v);
+		let rid = this.messageStore.add({path:path,op:op,v:v,options:_options}, cb);
+		let apiUrl = this.root._get_api_url(op || 'push');
+		let retryTimer = setTimeout(() => {
+			this.flushOfflineMessage(() => {
+			});
+		}, 10000);
+		this.root._get_remote().get(apiUrl, Object.assign({c:path,v:v}, _options)).then((res) => {
+			this.messageStore.recvAck(rid, res);
+			clearTimeout(retryTimer);
+			//cb(null, res);
+		}).catch(function(err) {
+			cb(err);
+		});
+	}
+
+	/* connect時に呼ばれる */
+	flushOfflineMessage(cb) {
+		let message = this.messageStore.enq();
+		if(message) {
+			let mes = message.message;
+			let rid = message.id;
+			let apiUrl = this.root._get_api_url(mes.op || 'push');
+			this.root._get_remote().get(apiUrl, Object.assign({c:mes.path,v:mes.v}, mes.options)).then((res) => {
+				this.messageStore.recvAck(rid, res);
+				this.flushOfflineMessage(cb);
+			}).catch(function(err) {
+				cb(err);
+			});
+		}else{
+			cb(null);
+		}
 	}
 
 	subscribe(path, op, cb, onComplete) {
-		this.subscriberMan.reg(path, op, cb);
-		this._subscribe(path, op, cb, onComplete);
+		this.subscriberMan[op].reg(path, cb, onComplete);
+		//this._subscribe(path, op, cb, onComplete);
 	}
 
 	unsubscribe(path, op, cb) {
-		this.subscriberMan.unreg(path, op, cb);
-		this.send({
-        	p: path,
-        	_t: 'u',
-        	_o: op
-		}, cb);
+		this.subscriberMan[op].unreg(path, cb);
 	}
 
 	/* private API */
 
-	_connect() {
-		this.client = new WebSocket(this.target, this.host, this.wsOptions);
-		this.client.on('error', (error) => {
-			this.logger.error(error);
-			this.sendEvent('error', {});
-		});
-
-		this.client.on('close', (code) => {
-			this.logger.log('closed', code);
-			this.sendEvent('closed', {code: code});
-		});
-
-		this.client.on('open', () => {
-			this.sendEvent('opened', {});
-		});
-
-		this.client.on('message', (utf8message) => {
-			let message = JSON.parse(utf8message);
-			if(message.hasOwnProperty('e')) {
-				this.response(message);
-			}else{
-				this.deliver(message);	
-			}
-		});
-
-		this.client.on('pong', () => {
-			this._handlePong();
-		})
-	}
-
-	_disconnect() {
-		this.client.close();
-	}
 
 	_setupReconnect() {
 		setTimeout(() => {
@@ -284,15 +332,6 @@ export default class extends EventEmitter {
 		if(this.client && this.getState() == 'online') {
 			this.client.send(JSON.stringify(message));
 			this._resetPingInterval();
-		}
-	}
-
-	/* connect時に呼ばれる */
-	flushOfflineMessage() {
-		let message = this.messageStore.enq();
-		if(message) {
-			this.client.send(JSON.stringify(message));
-			this.flushOfflineMessage();
 		}
 	}
 
