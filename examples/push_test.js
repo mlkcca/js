@@ -19,7 +19,8 @@ ds.on('set', function(e) {
 aaa_ds.on('push', function(e) {
 	console.log(e);
 });
+*/
+
 ds.push({message: "Hello!"}, function(result) {
 	console.log(result);
 });
-*/

@@ -1,6 +1,5 @@
 import MessageStore from './MessageStore'
 import reInterval from 'reinterval'
-let WebSocket = require('./ws');
 let EventEmitter = require("events").EventEmitter;
 
 class SubscriberManager extends EventEmitter {
@@ -30,6 +29,7 @@ class SubscriberManager extends EventEmitter {
 		if(pathList.length == 0) return;
 		let path = pathList.join(',');
 		this.caller = this.root._get_remote().get2(apiUrl, Object.assign({c:path,t:this.timestamp}, {}), (err, res) => {
+			console.log(err);
 			if(err) {
 				if(onComplete) onComplete(err);
 				setTimeout(() => {
@@ -104,9 +104,7 @@ export default class extends EventEmitter {
 		super();
 		this.options = options;
 		this.root = root;
-		this.target = options.WebSocket;
 		this.host = options.host;
-		//this.client = new WebSocketClient();
 		this.logger = options.logger;
 		this.subscriberMan = {};
 		this.subscriberMan.push = new SubscriberManager(root, 'push');
@@ -260,16 +258,19 @@ export default class extends EventEmitter {
 	publish(path, op, v, cb, _options) {
 		let options = _options || {};
 
-		this.flushOfflineMessage(() => {
-			v = JSON.stringify(v);
-			let rid = this.messageStore.add({path:path,op:op,v:v,options:_options}, cb);
-			let apiUrl = this.root._get_api_url(op || 'push');
-			this.root._get_remote().get(apiUrl, Object.assign({c:path,v:v}, _options)).then((res) => {
-				this.messageStore.recvAck(rid, res);
-				//cb(null, res);
-			}).catch(function(err) {
-				cb(err);
+		v = JSON.stringify(v);
+		let rid = this.messageStore.add({path:path,op:op,v:v,options:_options}, cb);
+		let apiUrl = this.root._get_api_url(op || 'push');
+		let retryTimer = setTimeout(() => {
+			this.flushOfflineMessage(() => {
 			});
+		}, 10000);
+		this.root._get_remote().get(apiUrl, Object.assign({c:path,v:v}, _options)).then((res) => {
+			this.messageStore.recvAck(rid, res);
+			clearTimeout(retryTimer);
+			//cb(null, res);
+		}).catch(function(err) {
+			cb(err);
 		});
 	}
 
@@ -302,39 +303,6 @@ export default class extends EventEmitter {
 
 	/* private API */
 
-	_connect() {
-		this.client = new WebSocket(this.target, this.host, this.wsOptions);
-		this.client.on('error', (error) => {
-			this.logger.error(error);
-			this.sendEvent('error', {});
-		});
-
-		this.client.on('close', (code) => {
-			this.logger.log('closed', code);
-			this.sendEvent('closed', {code: code});
-		});
-
-		this.client.on('open', () => {
-			this.sendEvent('opened', {});
-		});
-
-		this.client.on('message', (utf8message) => {
-			let message = JSON.parse(utf8message);
-			if(message.hasOwnProperty('e')) {
-				this.response(message);
-			}else{
-				this.deliver(message);	
-			}
-		});
-
-		this.client.on('pong', () => {
-			this._handlePong();
-		})
-	}
-
-	_disconnect() {
-		this.client.close();
-	}
 
 	_setupReconnect() {
 		setTimeout(() => {
