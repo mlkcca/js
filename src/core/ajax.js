@@ -1,6 +1,23 @@
 var http = require("http"),
     https = require('https'),
-    querystring = require("querystring");
+    querystring = require("querystring"),
+    Agent = require('agentkeepalive'),
+    HttpsAgent = Agent.HttpsAgent
+
+const keepaliveAgent = new Agent({
+  maxSockets: 100,
+  maxFreeSockets: 10,
+  timeout: 300000,
+  freeSocketKeepAliveTimeout: 30000,
+});
+
+const keepaliveHttpsAgent = new HttpsAgent({
+  maxSockets: 100,
+  maxFreeSockets: 10,
+  timeout: 300000,
+  freeSocketKeepAliveTimeout: 30000,
+});
+
 /*
 method
 utl
@@ -15,17 +32,19 @@ function request(method, secure, host, port, path, qs, payload, headers, callbac
 	if(qs) {
 		path += "?" + querystring.stringify(qs);
 	}
+	console.log(path);
 
 	var options = {
 		hostname: host,
 		port: port || (secure ? 443 : 80),
 		path: path,
 		method: method,
-		headers : headers
+		headers : headers,
+		agent: secure?keepaliveHttpsAgent:keepaliveAgent
 	};
 
 	if(method == 'GET') {
-		http_client.get(options, process_response)
+		return http_client.get(options, process_response)
 		.on('error', function (e) {
 			callback(e);
 		});
@@ -41,6 +60,7 @@ function request(method, secure, host, port, path, qs, payload, headers, callbac
 		});
 		req.write(payload);
 		req.end();
+		return req;
 	}
 
 	function process_response(res) {

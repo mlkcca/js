@@ -34,14 +34,25 @@ export default class {
 				if(err) {
 					return reject(err);
 				}
+				/*
 				if(data.err) {
 					return reject(data.err);
 				}
-				resolve(data.content);
+				*/
+				resolve(data);
 			});
 		});
 	}
 
+	get2(path, params, cb) {
+		return ajax.request('GET', this.secure, this.host, this.port, path, params, null, this.headers, function(err, data) {
+			if(err) {
+				return cb(err);
+			}
+			cb(null, data);
+		});
+	}
+	
 	put(path, params) {
 		return new Promise((resolve, reject) => {
 			ajax.request('PUT', this.secure, this.host, this.port, path, null, JSON.stringify(params), this.headers, function(err, data) {

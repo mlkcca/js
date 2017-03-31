@@ -7,12 +7,12 @@ export default class {
 
 	add(message, onAck) {
 		let rid = this.getRequestId();
-		message.e = rid;
 		this.messages.push({
 			id: rid,
 			message: message,
 			cb: onAck
 		})
+		return rid;
 	}
 
 	recvAck(rid, args) {
@@ -24,7 +24,7 @@ export default class {
 	enq() {
 		let message = this.messages.shift();
 		if(message)
-			return message.message;
+			return message;
 		else
 			return null;
 	}

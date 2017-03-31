@@ -31,7 +31,7 @@ export default class {
 			WebSocket: this.options.WebSocket,
 			wsOptions: this.wsOptions,
 			keepalive: options.keepalive || 36
-		});
+		}, this);
 		this.connect();
 	}
 
@@ -82,6 +82,12 @@ export default class {
 		let appOptions = this._get_options();
 		if(appOptions.apiKey) return `/api/${api}/${appOptions.appId}/${appOptions.apiKey}`;
 		else return `/api/${api}/${appOptions.appId}`;
+	}
+
+	_get_on_url(api) {
+		let appOptions = this._get_options();
+		if(appOptions.apiKey) return `/on/${api}/${appOptions.appId}/${appOptions.apiKey}`;
+		else return `/on/${api}/${appOptions.appId}`;
 	}
 
 	_get_pubsub() {

@@ -74,7 +74,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 62);
+/******/ 	return __webpack_require__(__webpack_require__.s = 63);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -119,8 +119,8 @@ module.exports = g;
 
 
 
-var base64 = __webpack_require__(34)
-var ieee754 = __webpack_require__(37)
+var base64 = __webpack_require__(35)
+var ieee754 = __webpack_require__(38)
 var isArray = __webpack_require__(14)
 
 exports.Buffer = Buffer
@@ -2793,8 +2793,8 @@ function nextTick(fn, arg1, arg2, arg3) {
 "use strict";
 
 
-exports.decode = exports.parse = __webpack_require__(39);
-exports.encode = exports.stringify = __webpack_require__(40);
+exports.decode = exports.parse = __webpack_require__(40);
+exports.encode = exports.stringify = __webpack_require__(41);
 
 
 /***/ }),
@@ -3019,7 +3019,7 @@ util.inherits = __webpack_require__(3);
 
 /*<replacement>*/
 var internalUtil = {
-  deprecate: __webpack_require__(54)
+  deprecate: __webpack_require__(55)
 };
 /*</replacement>*/
 
@@ -3544,7 +3544,7 @@ function CorkedRequest(state) {
     }
   };
 }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(50).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(51).setImmediate))
 
 /***/ }),
 /* 12 */
@@ -3601,10 +3601,10 @@ var inherits = __webpack_require__(3);
 
 inherits(Stream, EE);
 Stream.Readable = __webpack_require__(12);
-Stream.Writable = __webpack_require__(45);
-Stream.Duplex = __webpack_require__(41);
-Stream.Transform = __webpack_require__(44);
-Stream.PassThrough = __webpack_require__(43);
+Stream.Writable = __webpack_require__(46);
+Stream.Duplex = __webpack_require__(42);
+Stream.Transform = __webpack_require__(45);
+Stream.PassThrough = __webpack_require__(44);
 
 // Backwards-compat with node 0.4.x
 Stream.Stream = Stream;
@@ -3798,7 +3798,7 @@ util.inherits = __webpack_require__(3);
 /*</replacement>*/
 
 /*<replacement>*/
-var debugUtil = __webpack_require__(61);
+var debugUtil = __webpack_require__(62);
 var debug = void 0;
 if (debugUtil && debugUtil.debuglog) {
   debug = debugUtil.debuglog('stream');
@@ -3807,7 +3807,7 @@ if (debugUtil && debugUtil.debuglog) {
 }
 /*</replacement>*/
 
-var BufferList = __webpack_require__(42);
+var BufferList = __webpack_require__(43);
 var StringDecoder;
 
 util.inherits(Readable, Stream);
@@ -4697,10 +4697,10 @@ function indexOf(xs, x) {
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global) {var ClientRequest = __webpack_require__(48)
-var extend = __webpack_require__(59)
-var statusCodes = __webpack_require__(35)
-var url = __webpack_require__(52)
+/* WEBPACK VAR INJECTION */(function(global) {var ClientRequest = __webpack_require__(49)
+var extend = __webpack_require__(60)
+var statusCodes = __webpack_require__(36)
+var url = __webpack_require__(53)
 
 var http = exports
 
@@ -5167,23 +5167,23 @@ var _querystring = __webpack_require__(9);
 
 var _querystring2 = _interopRequireDefault(_querystring);
 
-var _uuid = __webpack_require__(55);
+var _uuid = __webpack_require__(56);
 
 var _uuid2 = _interopRequireDefault(_uuid);
 
-var _package = __webpack_require__(60);
+var _package = __webpack_require__(61);
 
 var _package2 = _interopRequireDefault(_package);
 
-var _pubsub = __webpack_require__(31);
+var _pubsub = __webpack_require__(32);
 
 var _pubsub2 = _interopRequireDefault(_pubsub);
 
-var _remote = __webpack_require__(32);
+var _remote = __webpack_require__(33);
 
 var _remote2 = _interopRequireDefault(_remote);
 
-var _datastore = __webpack_require__(28);
+var _datastore = __webpack_require__(29);
 
 var _datastore2 = _interopRequireDefault(_datastore);
 
@@ -5219,7 +5219,7 @@ var _class = function () {
 			WebSocket: this.options.WebSocket,
 			wsOptions: this.wsOptions,
 			keepalive: options.keepalive || 36
-		});
+		}, this);
 		this.connect();
 	}
 
@@ -5276,6 +5276,12 @@ var _class = function () {
 		value: function _get_api_url(api) {
 			var appOptions = this._get_options();
 			if (appOptions.apiKey) return '/api/' + api + '/' + appOptions.appId + '/' + appOptions.apiKey;else return '/api/' + api + '/' + appOptions.appId;
+		}
+	}, {
+		key: '_get_on_url',
+		value: function _get_on_url(api) {
+			var appOptions = this._get_options();
+			if (appOptions.apiKey) return '/on/' + api + '/' + appOptions.appId + '/' + appOptions.apiKey;else return '/on/' + api + '/' + appOptions.appId;
 		}
 	}, {
 		key: '_get_pubsub',
@@ -5390,6 +5396,17 @@ function authWithMilkcocoa(options) {
 
 /***/ }),
 /* 24 */
+/***/ (function(module, exports) {
+
+module.exports = noop;
+module.exports.HttpsAgent = noop;
+
+// Noop function for browser since native api's don't use agents.
+function noop () {}
+
+
+/***/ }),
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5401,7 +5418,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _span = __webpack_require__(25);
+var _span = __webpack_require__(26);
 
 var _span2 = _interopRequireDefault(_span);
 
@@ -5459,7 +5476,7 @@ exports.default = _class;
 module.exports = exports['default'];
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5544,7 +5561,7 @@ exports.default = _class;
 module.exports = exports["default"];
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5570,12 +5587,12 @@ var _class = function () {
 		key: "add",
 		value: function add(message, onAck) {
 			var rid = this.getRequestId();
-			message.e = rid;
 			this.messages.push({
 				id: rid,
 				message: message,
 				cb: onAck
 			});
+			return rid;
 		}
 	}, {
 		key: "recvAck",
@@ -5592,7 +5609,7 @@ var _class = function () {
 		key: "enq",
 		value: function enq() {
 			var message = this.messages.shift();
-			if (message) return message.message;else return null;
+			if (message) return message;else return null;
 		}
 	}, {
 		key: "getRequestId",
@@ -5609,15 +5626,31 @@ exports.default = _class;
 module.exports = exports["default"];
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var http = __webpack_require__(17),
-    https = __webpack_require__(36),
-    querystring = __webpack_require__(9);
+    https = __webpack_require__(37),
+    querystring = __webpack_require__(9),
+    Agent = __webpack_require__(24),
+    HttpsAgent = Agent.HttpsAgent;
+
+var keepaliveAgent = new Agent({
+	maxSockets: 100,
+	maxFreeSockets: 10,
+	timeout: 300000,
+	freeSocketKeepAliveTimeout: 30000
+});
+
+var keepaliveHttpsAgent = new HttpsAgent({
+	maxSockets: 100,
+	maxFreeSockets: 10,
+	timeout: 300000,
+	freeSocketKeepAliveTimeout: 30000
+});
 
 function request(method, secure, host, port, path, qs, payload, headers, callback) {
 	var http_client = secure ? https : http;
@@ -5626,17 +5659,19 @@ function request(method, secure, host, port, path, qs, payload, headers, callbac
 	if (qs) {
 		path += "?" + querystring.stringify(qs);
 	}
+	console.log(path);
 
 	var options = {
 		hostname: host,
 		port: port || (secure ? 443 : 80),
 		path: path,
 		method: method,
-		headers: headers
+		headers: headers,
+		agent: secure ? keepaliveHttpsAgent : keepaliveAgent
 	};
 
 	if (method == 'GET') {
-		http_client.get(options, process_response).on('error', function (e) {
+		return http_client.get(options, process_response).on('error', function (e) {
 			callback(e);
 		});
 	} else {
@@ -5651,6 +5686,7 @@ function request(method, secure, host, port, path, qs, payload, headers, callbac
 		});
 		req.write(payload);
 		req.end();
+		return req;
 	}
 
 	function process_response(res) {
@@ -5720,7 +5756,7 @@ function createCORSRequest(method, url) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5732,15 +5768,15 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _push = __webpack_require__(29);
+var _push = __webpack_require__(30);
 
 var _push2 = _interopRequireDefault(_push);
 
-var _send = __webpack_require__(30);
+var _send = __webpack_require__(31);
 
 var _send2 = _interopRequireDefault(_send);
 
-var _cache = __webpack_require__(24);
+var _cache = __webpack_require__(25);
 
 var _cache2 = _interopRequireDefault(_cache);
 
@@ -5773,11 +5809,15 @@ var _class = function () {
 			var _this = this;
 
 			if (event == 'push') {
-				this.root._get_pubsub().subscribe(this.path, '_p', function (message) {
+				this.root._get_pubsub().subscribe(this.path, 'push', function (message) {
+					cb(_push2.default.decode(message, _this.datatype));
+				}, onComplete);
+			} else if (event == 'set') {
+				this.root._get_pubsub().subscribe(this.path, 'set', function (message) {
 					cb(_push2.default.decode(message, _this.datatype));
 				}, onComplete);
 			} else if (event == 'send') {
-				this.root._get_pubsub().subscribe(this.path, '_s', function (message) {
+				this.root._get_pubsub().subscribe(this.path, 'send', function (message) {
 					cb(_send2.default.decode(message, _this.datatype));
 				}, onComplete);
 			}
@@ -5795,7 +5835,15 @@ var _class = function () {
 			if (typeof options === 'function') {
 				cb = options;
 			}
-			this.root._get_pubsub().publish(this.path, '_p', value, cb);
+			this.root._get_pubsub().publish(this.path, 'push', value, cb);
+		}
+	}, {
+		key: 'set',
+		value: function set(id, value, options, cb) {
+			if (typeof options === 'function') {
+				cb = options;
+			}
+			this.root._get_pubsub().publish(this.path, 'set', value, cb, { _id: id });
 		}
 	}, {
 		key: 'send',
@@ -5826,14 +5874,19 @@ var _class = function () {
 				}
 			}
 
-			this.root._get_remote().get(apiUrl, params).then(function (messages) {
-				var decoded_messages = messages.map(function (m) {
-					return _push2.default.decode(m, _this2.datatype);
-				});
-				if (options.useCache && options.ts && params.order == 'desc' && messages.length > 0) {
-					_this2.cache.add(options.ts, decoded_messages);
+			this.root._get_remote().get(apiUrl, params).then(function (result) {
+				if (result.err) {
+					cb(result.err);
+				} else {
+					var messages = result.content;
+					var _decoded_messages = messages.map(function (m) {
+						return _push2.default.decode(m, _this2.datatype);
+					});
+					if (options.useCache && options.ts && params.order == 'desc' && messages.length > 0) {
+						_this2.cache.add(options.ts, _decoded_messages);
+					}
+					cb(null, _decoded_messages);
 				}
-				cb(null, decoded_messages);
 			}).catch(function (err) {
 				cb(err);
 			});
@@ -5847,7 +5900,7 @@ exports.default = _class;
 module.exports = exports['default'];
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5899,7 +5952,7 @@ exports.default = _class;
 module.exports = exports['default'];
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5949,7 +6002,7 @@ exports.default = _class;
 module.exports = exports['default'];
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5961,11 +6014,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _MessageStore = __webpack_require__(26);
+var _MessageStore = __webpack_require__(27);
 
 var _MessageStore2 = _interopRequireDefault(_MessageStore);
 
-var _reinterval = __webpack_require__(46);
+var _reinterval = __webpack_require__(47);
 
 var _reinterval2 = _interopRequireDefault(_reinterval);
 
@@ -5977,37 +6030,91 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var WebSocket = __webpack_require__(33);
+var WebSocket = __webpack_require__(34);
 var EventEmitter = __webpack_require__(5).EventEmitter;
 
 var SubscriberManager = function (_EventEmitter) {
 	_inherits(SubscriberManager, _EventEmitter);
 
-	function SubscriberManager() {
+	function SubscriberManager(root, op) {
 		_classCallCheck(this, SubscriberManager);
 
 		var _this = _possibleConstructorReturn(this, (SubscriberManager.__proto__ || Object.getPrototypeOf(SubscriberManager)).call(this));
 
+		_this.root = root;
+		_this.op = op;
 		_this.subscribers = {};
+		_this.timestamp = 0;
+		_this.caller = null;
 		return _this;
 	}
 
 	_createClass(SubscriberManager, [{
 		key: 'reg',
-		value: function reg(path, op, cb) {
-			var topic = path + '/' + op;
-			this.subscribers[topic] = { path: path, op: op, cb: cb };
-			this.on(topic, cb);
+		value: function reg(path, cb, onComplete) {
+			this.subscribers[path] = { cb: cb };
+			this.on(path, cb);
+			this._startSubscribe(onComplete);
+		}
+	}, {
+		key: '_get_path_list',
+		value: function _get_path_list() {
+			return Object.keys(this.subscribers);
+		}
+	}, {
+		key: '_startSubscribe',
+		value: function _startSubscribe(onComplete) {
+			var _this2 = this;
+
+			this._stopSubscribe();
+			var apiUrl = this.root._get_on_url(this.op || 'push');
+			var pathList = this._get_path_list();
+			if (pathList.length == 0) return;
+			var path = pathList.join(',');
+			this.caller = this.root._get_remote().get2(apiUrl, Object.assign({ c: path, t: this.timestamp }, {}), function (err, res) {
+				if (err) {
+					if (onComplete) onComplete(err);
+					setTimeout(function () {
+						_this2._startSubscribe();
+					}, 5000);
+					return;
+				}
+				if (res.err) {
+					if (res.err == 'permission_denied') {
+						if (onComplete) onComplete(res.err);
+					} else {
+						if (onComplete) onComplete(res.err);
+					}
+				} else {
+					Object.keys(res).forEach(function (key) {
+						if (_this2.timestamp < res[key][0][0]) _this2.timestamp = res[key][0][0];
+						res[key].reverse().map(function (m) {
+							return {
+								id: m[1],
+								t: m[0],
+								v: m[2]
+							};
+						}).forEach(function (m) {
+							_this2.emit(key, m);
+						});
+					});
+					_this2._startSubscribe();
+				}
+			});
+		}
+	}, {
+		key: '_stopSubscribe',
+		value: function _stopSubscribe() {
+			if (this.caller) this.caller.abort();
 		}
 	}, {
 		key: 'unreg',
-		value: function unreg(path, op, cb) {
-			var topic = path + '/' + op;
-			delete this.subscribers[topic];
+		value: function unreg(path, cb) {
+			delete this.subscribers[path];
 			if (cb) {
-				this.removeListener(topic, cb);
+				this.removeListener(path, cb);
 			} else {
-				this.removeAllListeners(topic);
+				this.removeAllListeners(path);
 			}
 		}
 	}, {
@@ -6018,10 +6125,10 @@ var SubscriberManager = function (_EventEmitter) {
 	}, {
 		key: 'get',
 		value: function get() {
-			var _this2 = this;
+			var _this3 = this;
 
 			return Object.keys(this.subscribers).map(function (topic) {
-				return _this2.subscribers[topic];
+				return _this3.subscribers[topic];
 			});
 		}
 	}]);
@@ -6032,26 +6139,30 @@ var SubscriberManager = function (_EventEmitter) {
 var _class = function (_EventEmitter2) {
 	_inherits(_class, _EventEmitter2);
 
-	function _class(options) {
+	function _class(options, root) {
 		_classCallCheck(this, _class);
 
-		var _this3 = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
+		var _this4 = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
 
-		_this3.options = options;
-		_this3.target = options.WebSocket;
-		_this3.host = options.host;
+		_this4.options = options;
+		_this4.root = root;
+		_this4.target = options.WebSocket;
+		_this4.host = options.host;
 
-		_this3.logger = options.logger;
-		_this3.subscriberMan = new SubscriberManager();
-		_this3.offlineQueue = [];
-		_this3.messageStore = new _MessageStore2.default();
-		_this3.wsOptions = options.wsOptions;
-		_this3.reconnectPeriod = options.reconnectPeriod || 5000;
-		_this3.reconnectTimer = null;
-		_this3.pingTimer = null;
-		_this3.pongArrived = true;
-		_this3.state = 'offline';
-		return _this3;
+		_this4.logger = options.logger;
+		_this4.subscriberMan = {};
+		_this4.subscriberMan.push = new SubscriberManager(root, 'push');
+		_this4.subscriberMan.set = new SubscriberManager(root, 'set');
+		_this4.subscriberMan.send = new SubscriberManager(root, 'send');
+		_this4.offlineQueue = [];
+		_this4.messageStore = new _MessageStore2.default();
+		_this4.wsOptions = options.wsOptions;
+		_this4.reconnectPeriod = options.reconnectPeriod || 5000;
+		_this4.reconnectTimer = null;
+		_this4.pingTimer = null;
+		_this4.pongArrived = true;
+		_this4.state = 'offline';
+		return _this4;
 	}
 
 	_createClass(_class, [{
@@ -6092,7 +6203,6 @@ var _class = function (_EventEmitter2) {
 		key: 'offline',
 		value: function offline(event) {
 			if (event == 'connect') {
-				this._connect();
 				return {
 					nextState: 'connecting'
 				};
@@ -6103,16 +6213,12 @@ var _class = function (_EventEmitter2) {
 	}, {
 		key: 'connecting',
 		value: function connecting(event, params) {
-			var _this4 = this;
-
 			if (event == 'connect') {
 				this.logger.warn('already connecting');
 				return null;
 			} else if (event == 'opened') {
 				this.emit('open', {});
-				this.subscriberMan.get().map(function (s) {
-					_this4._subscribe(s.path, s.op, s.cb);
-				});
+
 				this.flushOfflineMessage();
 				this._setupPingTimer();
 				return {
@@ -6197,62 +6303,83 @@ var _class = function (_EventEmitter2) {
 		}
 	}, {
 		key: 'publish',
-		value: function publish(path, op, v, cb) {
-			if (typeof v !== 'string') v = JSON.stringify(v);
-			this.send({
-				p: path,
-				_t: 'p',
-				_o: op,
-				v: v
-			}, cb);
+		value: function publish(path, op, v, cb, _options) {
+			var _this5 = this;
+
+			var options = _options || {};
+
+			this.flushOfflineMessage(function () {
+				v = JSON.stringify(v);
+				var rid = _this5.messageStore.add({ path: path, op: op, v: v, options: _options }, cb);
+				var apiUrl = _this5.root._get_api_url(op || 'push');
+				_this5.root._get_remote().get(apiUrl, Object.assign({ c: path, v: v }, _options)).then(function (res) {
+					_this5.messageStore.recvAck(rid, res);
+				}).catch(function (err) {
+					cb(err);
+				});
+			});
+		}
+	}, {
+		key: 'flushOfflineMessage',
+		value: function flushOfflineMessage(cb) {
+			var _this6 = this;
+
+			var message = this.messageStore.enq();
+			if (message) {
+				var mes = message.message;
+				var rid = message.id;
+				var apiUrl = this.root._get_api_url(mes.op || 'push');
+				this.root._get_remote().get(apiUrl, Object.assign({ c: mes.path, v: mes.v }, mes.options)).then(function (res) {
+					_this6.messageStore.recvAck(rid, res);
+					_this6.flushOfflineMessage(cb);
+				}).catch(function (err) {
+					cb(err);
+				});
+			} else {
+				cb(null);
+			}
 		}
 	}, {
 		key: 'subscribe',
 		value: function subscribe(path, op, cb, onComplete) {
-			this.subscriberMan.reg(path, op, cb);
-			this._subscribe(path, op, cb, onComplete);
+			this.subscriberMan[op].reg(path, cb, onComplete);
 		}
 	}, {
 		key: 'unsubscribe',
 		value: function unsubscribe(path, op, cb) {
-			this.subscriberMan.unreg(path, op, cb);
-			this.send({
-				p: path,
-				_t: 'u',
-				_o: op
-			}, cb);
+			this.subscriberMan[op].unreg(path, cb);
 		}
 	}, {
 		key: '_connect',
 		value: function _connect() {
-			var _this5 = this;
+			var _this7 = this;
 
 			this.client = new WebSocket(this.target, this.host, this.wsOptions);
 			this.client.on('error', function (error) {
-				_this5.logger.error(error);
-				_this5.sendEvent('error', {});
+				_this7.logger.error(error);
+				_this7.sendEvent('error', {});
 			});
 
 			this.client.on('close', function (code) {
-				_this5.logger.log('closed', code);
-				_this5.sendEvent('closed', { code: code });
+				_this7.logger.log('closed', code);
+				_this7.sendEvent('closed', { code: code });
 			});
 
 			this.client.on('open', function () {
-				_this5.sendEvent('opened', {});
+				_this7.sendEvent('opened', {});
 			});
 
 			this.client.on('message', function (utf8message) {
 				var message = JSON.parse(utf8message);
 				if (message.hasOwnProperty('e')) {
-					_this5.response(message);
+					_this7.response(message);
 				} else {
-					_this5.deliver(message);
+					_this7.deliver(message);
 				}
 			});
 
 			this.client.on('pong', function () {
-				_this5._handlePong();
+				_this7._handlePong();
 			});
 		}
 	}, {
@@ -6263,10 +6390,10 @@ var _class = function (_EventEmitter2) {
 	}, {
 		key: '_setupReconnect',
 		value: function _setupReconnect() {
-			var _this6 = this;
+			var _this8 = this;
 
 			setTimeout(function () {
-				_this6._connect();
+				_this8._connect();
 			}, this.reconnectPeriod);
 		}
 	}, {
@@ -6299,15 +6426,6 @@ var _class = function (_EventEmitter2) {
 			}
 		}
 	}, {
-		key: 'flushOfflineMessage',
-		value: function flushOfflineMessage() {
-			var message = this.messageStore.enq();
-			if (message) {
-				this.client.send(JSON.stringify(message));
-				this.flushOfflineMessage();
-			}
-		}
-	}, {
 		key: '_clean',
 		value: function _clean() {
 			this.client.close();
@@ -6322,12 +6440,12 @@ var _class = function (_EventEmitter2) {
 	}, {
 		key: '_setupPingTimer',
 		value: function _setupPingTimer() {
-			var _this7 = this;
+			var _this9 = this;
 
 			if (!this.pingTimer && this.options.keepalive) {
 				this.pongArrived = true;
 				this.pingTimer = (0, _reinterval2.default)(function () {
-					_this7._checkPing();
+					_this9._checkPing();
 				}, this.options.keepalive * 1000);
 			}
 		}
@@ -6362,7 +6480,7 @@ exports.default = _class;
 module.exports = exports['default'];
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6376,7 +6494,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var ajax = __webpack_require__(27);
+var ajax = __webpack_require__(28);
 
 var _class = function () {
 	function _class(host, port, secure, headers) {
@@ -6414,11 +6532,19 @@ var _class = function () {
 					if (err) {
 						return reject(err);
 					}
-					if (data.err) {
-						return reject(data.err);
-					}
-					resolve(data.content);
+
+					resolve(data);
 				});
+			});
+		}
+	}, {
+		key: 'get2',
+		value: function get2(path, params, cb) {
+			return ajax.request('GET', this.secure, this.host, this.port, path, params, null, this.headers, function (err, data) {
+				if (err) {
+					return cb(err);
+				}
+				cb(null, data);
 			});
 		}
 	}, {
@@ -6468,7 +6594,7 @@ exports.default = _class;
 module.exports = exports['default'];
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6567,7 +6693,7 @@ module.exports = exports['default'];
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6688,7 +6814,7 @@ function fromByteArray (uint8) {
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -6758,7 +6884,7 @@ module.exports = {
 
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var http = __webpack_require__(17);
@@ -6778,7 +6904,7 @@ https.request = function (params, cb) {
 
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -6868,7 +6994,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module, global) {var __WEBPACK_AMD_DEFINE_RESULT__;/*! https://mths.be/punycode v1.4.1 by @mathias */
@@ -7404,10 +7530,10 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 }(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(58)(module), __webpack_require__(0)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(59)(module), __webpack_require__(0)))
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7498,7 +7624,7 @@ var isArray = Array.isArray || function (xs) {
 
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7590,14 +7716,14 @@ var objectKeys = Object.keys || function (obj) {
 
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(4)
 
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7667,28 +7793,28 @@ BufferList.prototype.concat = function (n) {
 };
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(15)
 
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(10)
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(11)
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7752,7 +7878,7 @@ module.exports = reInterval;
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -7945,14 +8071,14 @@ module.exports = reInterval;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(2)))
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer, global, process) {var capability = __webpack_require__(18)
 var inherits = __webpack_require__(3)
-var response = __webpack_require__(49)
+var response = __webpack_require__(50)
 var stream = __webpack_require__(12)
-var toArrayBuffer = __webpack_require__(51)
+var toArrayBuffer = __webpack_require__(52)
 
 var IncomingMessage = response.IncomingMessage
 var rStates = response.readyStates
@@ -8246,7 +8372,7 @@ var unsafeHeaders = [
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1).Buffer, __webpack_require__(0), __webpack_require__(2)))
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process, Buffer, global) {var capability = __webpack_require__(18)
@@ -8435,7 +8561,7 @@ IncomingMessage.prototype._onXHRProgress = function () {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(1).Buffer, __webpack_require__(0)))
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var apply = Function.prototype.apply;
@@ -8488,13 +8614,13 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(47);
+__webpack_require__(48);
 exports.setImmediate = setImmediate;
 exports.clearImmediate = clearImmediate;
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Buffer = __webpack_require__(1).Buffer
@@ -8527,7 +8653,7 @@ module.exports = function (buf) {
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8554,8 +8680,8 @@ module.exports = function (buf) {
 
 
 
-var punycode = __webpack_require__(38);
-var util = __webpack_require__(53);
+var punycode = __webpack_require__(39);
+var util = __webpack_require__(54);
 
 exports.parse = urlParse;
 exports.resolve = urlResolve;
@@ -9266,7 +9392,7 @@ Url.prototype.parseHost = function() {
 
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9289,7 +9415,7 @@ module.exports = {
 
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {
@@ -9363,11 +9489,11 @@ function config (name) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var v1 = __webpack_require__(56);
-var v4 = __webpack_require__(57);
+var v1 = __webpack_require__(57);
+var v4 = __webpack_require__(58);
 
 var uuid = v4;
 uuid.v1 = v1;
@@ -9377,7 +9503,7 @@ module.exports = uuid;
 
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Unique ID creation requires a high quality random # generator.  We feature
@@ -9486,7 +9612,7 @@ module.exports = v1;
 
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var rng = __webpack_require__(21);
@@ -9521,7 +9647,7 @@ module.exports = v4;
 
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -9549,7 +9675,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports) {
 
 module.exports = extend
@@ -9574,7 +9700,7 @@ function extend() {
 
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -9608,6 +9734,7 @@ module.exports = {
 	},
 	"homepage": "https://github.com/mlkcca/js#readme",
 	"dependencies": {
+		"agentkeepalive": "^3.1.0",
 		"reinterval": "^1.1.0",
 		"uuid": "^3.0.1",
 		"ws": "^2.2.0"
@@ -9633,13 +9760,13 @@ module.exports = {
 };
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports) {
 
 /* (ignored) */
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
