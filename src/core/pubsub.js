@@ -29,7 +29,6 @@ class SubscriberManager extends EventEmitter {
 		if(pathList.length == 0) return;
 		let path = pathList.join(',');
 		this.caller = this.root._get_remote().get2(apiUrl, Object.assign({c:path,t:this.timestamp}, {}), (err, res) => {
-			console.log(err);
 			if(err) {
 				if(onComplete) onComplete(err);
 				setTimeout(() => {

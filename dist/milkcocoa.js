@@ -5741,7 +5741,6 @@ if ('browser' !== process.title) {
 }
 
 function createCORSRequest(method, url) {
-	console.log(url);
 	var xhr = new XMLHttpRequest();
 	if ("withCredentials" in xhr) {
 		xhr.open(method, url, true);
@@ -6071,7 +6070,6 @@ var SubscriberManager = function (_EventEmitter) {
 			if (pathList.length == 0) return;
 			var path = pathList.join(',');
 			this.caller = this.root._get_remote().get2(apiUrl, Object.assign({ c: path, t: this.timestamp }, {}), function (err, res) {
-				console.log(err);
 				if (err) {
 					if (onComplete) onComplete(err);
 					setTimeout(function () {
