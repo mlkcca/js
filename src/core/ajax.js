@@ -117,7 +117,6 @@ if ('browser' !== process.title) {
 
 
 function createCORSRequest(method, url) {
-	console.log(url);
     var xhr = new XMLHttpRequest();
     if ("withCredentials" in xhr) {
         xhr.open(method, url, true);
