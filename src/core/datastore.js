@@ -56,7 +56,7 @@ export default class {
 	}
 
 	send(value, cb) {
-		this.root._get_pubsub().publish(this.path, '_s', value, cb);
+		this.root._get_pubsub().publish(this.path, 'send', value, cb);
 	}
 
 	history(options, cb) {

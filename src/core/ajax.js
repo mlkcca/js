@@ -32,7 +32,6 @@ function request(method, secure, host, port, path, qs, payload, headers, callbac
 	if(qs) {
 		path += "?" + querystring.stringify(qs);
 	}
-	console.log(path);
 
 	var options = {
 		hostname: host,

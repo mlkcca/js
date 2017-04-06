@@ -5659,7 +5659,6 @@ function request(method, secure, host, port, path, qs, payload, headers, callbac
 	if (qs) {
 		path += "?" + querystring.stringify(qs);
 	}
-	console.log(path);
 
 	var options = {
 		hostname: host,
@@ -5847,7 +5846,7 @@ var _class = function () {
 	}, {
 		key: 'send',
 		value: function send(value, cb) {
-			this.root._get_pubsub().publish(this.path, '_s', value, cb);
+			this.root._get_pubsub().publish(this.path, 'send', value, cb);
 		}
 	}, {
 		key: 'history',
@@ -6087,11 +6086,18 @@ var SubscriberManager = function (_EventEmitter) {
 					Object.keys(res).forEach(function (key) {
 						if (_this2.timestamp < res[key][0][0]) _this2.timestamp = res[key][0][0];
 						res[key].reverse().map(function (m) {
-							return {
-								id: m[1],
-								t: m[0],
-								v: m[2]
-							};
+							if (m.length == 2) {
+								return {
+									t: m[0],
+									v: m[1]
+								};
+							} else if (m.length == 3) {
+								return {
+									id: m[1],
+									t: m[0],
+									v: m[2]
+								};
+							}
 						}).forEach(function (m) {
 							_this2.emit(key, m);
 						});

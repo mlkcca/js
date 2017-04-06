@@ -47,10 +47,17 @@ class SubscriberManager extends EventEmitter {
 					if(this.timestamp < res[key][0][0])
 						this.timestamp = res[key][0][0];
 					res[key].reverse().map((m) => {
-						return {
-							id: m[1],
-							t: m[0],
-							v: m[2]
+						if(m.length == 2) {
+							return {
+								t: m[0],
+								v: m[1]
+							}
+						}else if(m.length == 3) {
+							return {
+								id: m[1],
+								t: m[0],
+								v: m[2]
+							}
 						}
 					}).forEach((m) => {
 						this.emit(key, m);
