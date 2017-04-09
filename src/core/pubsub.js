@@ -82,10 +82,6 @@ class SubscriberManager extends EventEmitter {
 		}
 	}
 
-	deliver(topic, message) {
-		this.emit(topic, message);
-	}
-
 	get() {
 		return Object.keys(this.subscribers).map((topic) => {
 			return this.subscribers[topic];
@@ -267,13 +263,15 @@ export default class extends EventEmitter {
 		v = JSON.stringify(v);
 		let rid = this.messageStore.add({path:path,op:op,v:v,options:_options}, cb);
 		let apiUrl = this.root._get_api_url(op || 'push');
+		/*
 		let retryTimer = setTimeout(() => {
 			this.flushOfflineMessage(() => {
 			});
 		}, 10000);
-		this.root._get_remote().get(apiUrl, Object.assign({c:path,v:v}, _options)).then((res) => {
+		*/
+		this.root._get_remote().post(apiUrl, Object.assign({v:v}, _options), {c:path}, {'Content-Type': 'application/json'}).then((res) => {
 			this.messageStore.recvAck(rid, res);
-			clearTimeout(retryTimer);
+			//clearTimeout(retryTimer);
 			//cb(null, res);
 		}).catch(function(err) {
 			cb(err);
@@ -316,32 +314,6 @@ export default class extends EventEmitter {
 		}, this.reconnectPeriod);
 	}
 
-	response(message) {
-		this.messageStore.recvAck(message.e, message);
-	}
-
-	deliver(message) {
-		this._resetPingInterval();
-		this.subscriberMan.deliver(message.p, message);
-	}
-
-	_subscribe(path, op, cb, onComplete) {
-		this.send({
-        	p: path,
-        	_t: 's',
-        	_o: op
-		}, onComplete);
-	}
-
-	send(message, cb) {
-		this.messageStore.add(message, cb);
-		if(this.client && this.getState() == 'online') {
-			this.client.send(JSON.stringify(message));
-			this._resetPingInterval();
-		}
-	}
-
-
 	_clean() {
 		this.client.close();
 		this.client.clean();
@@ -371,7 +343,7 @@ export default class extends EventEmitter {
 	_checkPing() {
 		if (this.pongArrived) {
 			this.pongArrived = false
-			this.client.ping()
+			//send ping event
 		} else {
 			this.sendEvent('error', {message: 'pong not coming'});
 		}

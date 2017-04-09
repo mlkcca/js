@@ -32,6 +32,7 @@ function request(method, secure, host, port, path, qs, payload, headers, callbac
 	if(qs) {
 		path += "?" + querystring.stringify(qs);
 	}
+	//console.log('path', method, path, payload);
 
 	var options = {
 		hostname: host,
@@ -49,7 +50,7 @@ function request(method, secure, host, port, path, qs, payload, headers, callbac
 		});
 	}else{
 		var req = http_client.request(options, process_response);
-		req.setTimeout(5000);
+		req.setTimeout(120000);
 		req.on('timeout', function() {
 			if(callback) callback(new Error("timed out"), null);
 			req.abort();
@@ -69,7 +70,14 @@ function request(method, secure, host, port, path, qs, payload, headers, callbac
 				content += str;
 			});
 			res.on('end', function() {
-				callback(null, JSON.parse(content));
+				let r = null;
+				try{
+					r = JSON.parse(content);
+				}catch(e) {
+					callback(e);
+				}
+				if(r)
+					callback(null, r);
 			});
 		}
 	}

@@ -8,9 +8,11 @@ export default class {
     	this.headers = headers;
     }
 
-	post(path, params) {
+	post(path, params, _qs, _headers) {
+		let qs = _qs || null;
+		let headers = Object.assign({}, this.headers, _headers);
 		return new Promise((resolve, reject) => {
-			ajax.request('POST', this.secure, this.host, this.port, path, null, JSON.stringify(params), this.headers, function(err, data) {
+			ajax.request('POST', this.secure, this.host, this.port, path, qs, JSON.stringify(params), headers, function(err, data) {
 				if(err) {
 					return reject(err);
 				}

@@ -1,5 +1,5 @@
 {
-  "name": "mlkcca-js",
+  "name": "mlkcca",
   "version": "1.0.0",
   "description": "mlkcca js sdk",
   "main": "./lib/node/index.js",

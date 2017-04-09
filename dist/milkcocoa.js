@@ -5660,6 +5660,7 @@ function request(method, secure, host, port, path, qs, payload, headers, callbac
 		path += "?" + querystring.stringify(qs);
 	}
 
+
 	var options = {
 		hostname: host,
 		port: port || (secure ? 443 : 80),
@@ -5675,7 +5676,7 @@ function request(method, secure, host, port, path, qs, payload, headers, callbac
 		});
 	} else {
 		var req = http_client.request(options, process_response);
-		req.setTimeout(5000);
+		req.setTimeout(120000);
 		req.on('timeout', function () {
 			if (callback) callback(new Error("timed out"), null);
 			req.abort();
@@ -5695,7 +5696,13 @@ function request(method, secure, host, port, path, qs, payload, headers, callbac
 				content += str;
 			});
 			res.on('end', function () {
-				callback(null, JSON.parse(content));
+				var r = null;
+				try {
+					r = JSON.parse(content);
+				} catch (e) {
+					callback(e);
+				}
+				if (r) callback(null, r);
 			});
 		}
 	}
@@ -6122,11 +6129,6 @@ var SubscriberManager = function (_EventEmitter) {
 			}
 		}
 	}, {
-		key: 'deliver',
-		value: function deliver(topic, message) {
-			this.emit(topic, message);
-		}
-	}, {
 		key: 'get',
 		value: function get() {
 			var _this3 = this;
@@ -6313,12 +6315,9 @@ var _class = function (_EventEmitter2) {
 			v = JSON.stringify(v);
 			var rid = this.messageStore.add({ path: path, op: op, v: v, options: _options }, cb);
 			var apiUrl = this.root._get_api_url(op || 'push');
-			var retryTimer = setTimeout(function () {
-				_this5.flushOfflineMessage(function () {});
-			}, 10000);
-			this.root._get_remote().get(apiUrl, Object.assign({ c: path, v: v }, _options)).then(function (res) {
+
+			this.root._get_remote().post(apiUrl, Object.assign({ v: v }, _options), { c: path }, { 'Content-Type': 'application/json' }).then(function (res) {
 				_this5.messageStore.recvAck(rid, res);
-				clearTimeout(retryTimer);
 			}).catch(function (err) {
 				cb(err);
 			});
@@ -6363,35 +6362,6 @@ var _class = function (_EventEmitter2) {
 			}, this.reconnectPeriod);
 		}
 	}, {
-		key: 'response',
-		value: function response(message) {
-			this.messageStore.recvAck(message.e, message);
-		}
-	}, {
-		key: 'deliver',
-		value: function deliver(message) {
-			this._resetPingInterval();
-			this.subscriberMan.deliver(message.p, message);
-		}
-	}, {
-		key: '_subscribe',
-		value: function _subscribe(path, op, cb, onComplete) {
-			this.send({
-				p: path,
-				_t: 's',
-				_o: op
-			}, onComplete);
-		}
-	}, {
-		key: 'send',
-		value: function send(message, cb) {
-			this.messageStore.add(message, cb);
-			if (this.client && this.getState() == 'online') {
-				this.client.send(JSON.stringify(message));
-				this._resetPingInterval();
-			}
-		}
-	}, {
 		key: '_clean',
 		value: function _clean() {
 			this.client.close();
@@ -6427,7 +6397,6 @@ var _class = function (_EventEmitter2) {
 		value: function _checkPing() {
 			if (this.pongArrived) {
 				this.pongArrived = false;
-				this.client.ping();
 			} else {
 				this.sendEvent('error', { message: 'pong not coming' });
 			}
@@ -6473,11 +6442,13 @@ var _class = function () {
 
 	_createClass(_class, [{
 		key: 'post',
-		value: function post(path, params) {
+		value: function post(path, params, _qs, _headers) {
 			var _this = this;
 
+			var qs = _qs || null;
+			var headers = Object.assign({}, this.headers, _headers);
 			return new Promise(function (resolve, reject) {
-				ajax.request('POST', _this.secure, _this.host, _this.port, path, null, JSON.stringify(params), _this.headers, function (err, data) {
+				ajax.request('POST', _this.secure, _this.host, _this.port, path, qs, JSON.stringify(params), headers, function (err, data) {
 					if (err) {
 						return reject(err);
 					}
@@ -9571,7 +9542,7 @@ function extend() {
 /***/ (function(module, exports) {
 
 module.exports = {
-	"name": "mlkcca-js",
+	"name": "mlkcca",
 	"version": "1.0.0",
 	"description": "mlkcca js sdk",
 	"main": "./lib/node/index.js",

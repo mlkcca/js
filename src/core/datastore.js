@@ -83,7 +83,7 @@ export default class {
 			if(result.err) {
 				cb(result.err);
 			}else{
-					let messages = result.content;
+				let messages = result.content;
 				let decoded_messages = messages.map((m)=>PushDataType.decode(m, this.datatype));
 				if(options.useCache && options.ts && params.order == 'desc' && messages.length > 0) {
 			    	this.cache.add(options.ts, decoded_messages);
