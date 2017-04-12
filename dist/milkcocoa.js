@@ -6048,7 +6048,6 @@ var SubscriberManager = function (_EventEmitter) {
 		_this.root = root;
 		_this.op = op;
 		_this.subscribers = {};
-		_this.timestamp = 0;
 		_this.caller = null;
 		return _this;
 	}
@@ -6056,30 +6055,35 @@ var SubscriberManager = function (_EventEmitter) {
 	_createClass(SubscriberManager, [{
 		key: 'reg',
 		value: function reg(path, cb, onComplete) {
-			this.subscribers[path] = { cb: cb };
+			this.subscribers[path] = { cb: cb, timestamp: 0 };
 			this.on(path, cb);
 			this._startSubscribe(onComplete);
 		}
 	}, {
 		key: '_get_path_list',
 		value: function _get_path_list() {
-			return Object.keys(this.subscribers);
+			var _this2 = this;
+
+			return Object.keys(this.subscribers).map(function (topic) {
+				return [topic, _this2.subscribers[topic].timestamp];
+			});
 		}
 	}, {
 		key: '_startSubscribe',
 		value: function _startSubscribe(onComplete) {
-			var _this2 = this;
+			var _this3 = this;
 
 			this._stopSubscribe();
 			var apiUrl = this.root._get_on_url(this.op || 'push');
 			var pathList = this._get_path_list();
 			if (pathList.length == 0) return;
-			var path = pathList.join(',');
-			this.caller = this.root._get_remote().get2(apiUrl, Object.assign({ c: path, t: this.timestamp }, {}), function (err, res) {
+			var path = JSON.stringify(pathList);
+			pathList;
+			this.caller = this.root._get_remote().get2(apiUrl, Object.assign({ c: path }, {}), function (err, res) {
 				if (err) {
 					if (onComplete) onComplete(err);
 					setTimeout(function () {
-						_this2._startSubscribe();
+						_this3._startSubscribe();
 					}, 5000);
 					return;
 				}
@@ -6091,7 +6095,7 @@ var SubscriberManager = function (_EventEmitter) {
 					}
 				} else {
 					Object.keys(res).forEach(function (key) {
-						if (_this2.timestamp < res[key][0][0]) _this2.timestamp = res[key][0][0];
+						_this3.subscribers[key].timestamp = res[key][0][0];
 						res[key].reverse().map(function (m) {
 							if (m.length == 2) {
 								return {
@@ -6106,10 +6110,10 @@ var SubscriberManager = function (_EventEmitter) {
 								};
 							}
 						}).forEach(function (m) {
-							_this2.emit(key, m);
+							_this3.emit(key, m);
 						});
 					});
-					_this2._startSubscribe();
+					_this3._startSubscribe();
 				}
 			});
 		}
@@ -6131,10 +6135,10 @@ var SubscriberManager = function (_EventEmitter) {
 	}, {
 		key: 'get',
 		value: function get() {
-			var _this3 = this;
+			var _this4 = this;
 
 			return Object.keys(this.subscribers).map(function (topic) {
-				return _this3.subscribers[topic];
+				return _this4.subscribers[topic];
 			});
 		}
 	}]);
@@ -6148,25 +6152,25 @@ var _class = function (_EventEmitter2) {
 	function _class(options, root) {
 		_classCallCheck(this, _class);
 
-		var _this4 = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
+		var _this5 = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
 
-		_this4.options = options;
-		_this4.root = root;
-		_this4.host = options.host;
-		_this4.logger = options.logger;
-		_this4.subscriberMan = {};
-		_this4.subscriberMan.push = new SubscriberManager(root, 'push');
-		_this4.subscriberMan.set = new SubscriberManager(root, 'set');
-		_this4.subscriberMan.send = new SubscriberManager(root, 'send');
-		_this4.offlineQueue = [];
-		_this4.messageStore = new _MessageStore2.default();
-		_this4.wsOptions = options.wsOptions;
-		_this4.reconnectPeriod = options.reconnectPeriod || 5000;
-		_this4.reconnectTimer = null;
-		_this4.pingTimer = null;
-		_this4.pongArrived = true;
-		_this4.state = 'offline';
-		return _this4;
+		_this5.options = options;
+		_this5.root = root;
+		_this5.host = options.host;
+		_this5.logger = options.logger;
+		_this5.subscriberMan = {};
+		_this5.subscriberMan.push = new SubscriberManager(root, 'push');
+		_this5.subscriberMan.set = new SubscriberManager(root, 'set');
+		_this5.subscriberMan.send = new SubscriberManager(root, 'send');
+		_this5.offlineQueue = [];
+		_this5.messageStore = new _MessageStore2.default();
+		_this5.wsOptions = options.wsOptions;
+		_this5.reconnectPeriod = options.reconnectPeriod || 5000;
+		_this5.reconnectTimer = null;
+		_this5.pingTimer = null;
+		_this5.pongArrived = true;
+		_this5.state = 'offline';
+		return _this5;
 	}
 
 	_createClass(_class, [{
@@ -6308,7 +6312,7 @@ var _class = function (_EventEmitter2) {
 	}, {
 		key: 'publish',
 		value: function publish(path, op, v, cb, _options) {
-			var _this5 = this;
+			var _this6 = this;
 
 			var options = _options || {};
 
@@ -6317,7 +6321,7 @@ var _class = function (_EventEmitter2) {
 			var apiUrl = this.root._get_api_url(op || 'push');
 
 			this.root._get_remote().post(apiUrl, Object.assign({ v: v }, _options), { c: path }, { 'Content-Type': 'application/json' }).then(function (res) {
-				_this5.messageStore.recvAck(rid, res);
+				_this6.messageStore.recvAck(rid, res);
 			}).catch(function (err) {
 				cb(err);
 			});
@@ -6325,7 +6329,7 @@ var _class = function (_EventEmitter2) {
 	}, {
 		key: 'flushOfflineMessage',
 		value: function flushOfflineMessage(cb) {
-			var _this6 = this;
+			var _this7 = this;
 
 			var message = this.messageStore.enq();
 			if (message) {
@@ -6333,8 +6337,8 @@ var _class = function (_EventEmitter2) {
 				var rid = message.id;
 				var apiUrl = this.root._get_api_url(mes.op || 'push');
 				this.root._get_remote().get(apiUrl, Object.assign({ c: mes.path, v: mes.v }, mes.options)).then(function (res) {
-					_this6.messageStore.recvAck(rid, res);
-					_this6.flushOfflineMessage(cb);
+					_this7.messageStore.recvAck(rid, res);
+					_this7.flushOfflineMessage(cb);
 				}).catch(function (err) {
 					cb(err);
 				});
@@ -6355,10 +6359,10 @@ var _class = function (_EventEmitter2) {
 	}, {
 		key: '_setupReconnect',
 		value: function _setupReconnect() {
-			var _this7 = this;
+			var _this8 = this;
 
 			setTimeout(function () {
-				_this7._connect();
+				_this8._connect();
 			}, this.reconnectPeriod);
 		}
 	}, {
@@ -6376,12 +6380,12 @@ var _class = function (_EventEmitter2) {
 	}, {
 		key: '_setupPingTimer',
 		value: function _setupPingTimer() {
-			var _this8 = this;
+			var _this9 = this;
 
 			if (!this.pingTimer && this.options.keepalive) {
 				this.pongArrived = true;
 				this.pingTimer = (0, _reinterval2.default)(function () {
-					_this8._checkPing();
+					_this9._checkPing();
 				}, this.options.keepalive * 1000);
 			}
 		}

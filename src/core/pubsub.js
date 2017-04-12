@@ -8,18 +8,19 @@ class SubscriberManager extends EventEmitter {
 		this.root = root;
 		this.op = op;
 		this.subscribers = {};
-		this.timestamp = 0;
 		this.caller = null;
 	}
 
 	reg(path, cb, onComplete) {
-		this.subscribers[path] = {cb:cb};
+		this.subscribers[path] = {cb:cb,timestamp:0};
 		this.on(path, cb);
 		this._startSubscribe(onComplete);
 	}
 
 	_get_path_list() {
-		return Object.keys(this.subscribers);
+		return Object.keys(this.subscribers).map((topic) => {
+			return [topic, this.subscribers[topic].timestamp];
+		})
 	}
 
 	_startSubscribe(onComplete) {
@@ -27,8 +28,9 @@ class SubscriberManager extends EventEmitter {
 		let apiUrl = this.root._get_on_url(this.op || 'push');
 		let pathList = this._get_path_list();
 		if(pathList.length == 0) return;
-		let path = pathList.join(',');
-		this.caller = this.root._get_remote().get2(apiUrl, Object.assign({c:path,t:this.timestamp}, {}), (err, res) => {
+		let path = JSON.stringify(pathList);
+		pathList
+		this.caller = this.root._get_remote().get2(apiUrl, Object.assign({c:path}, {}), (err, res) => {
 			if(err) {
 				if(onComplete) onComplete(err);
 				setTimeout(() => {
@@ -44,8 +46,7 @@ class SubscriberManager extends EventEmitter {
 				}
 			}else{
 				Object.keys(res).forEach((key) => {
-					if(this.timestamp < res[key][0][0])
-						this.timestamp = res[key][0][0];
+					this.subscribers[key].timestamp = res[key][0][0];
 					res[key].reverse().map((m) => {
 						if(m.length == 2) {
 							return {
