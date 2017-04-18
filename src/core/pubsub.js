@@ -29,8 +29,7 @@ class SubscriberManager extends EventEmitter {
 		let pathList = this._get_path_list();
 		if(pathList.length == 0) return;
 		let path = JSON.stringify(pathList);
-		pathList
-		this.caller = this.root._get_remote().get2(apiUrl, Object.assign({c:path}, {}), (err, res) => {
+		this.caller = this.root._get_remote().get2(apiUrl, {c:path}, (err, res) => {
 			if(err) {
 				if(onComplete) onComplete(err);
 				setTimeout(() => {
@@ -45,18 +44,21 @@ class SubscriberManager extends EventEmitter {
 					if(onComplete) onComplete(res.err);
 				}
 			}else{
+				let min_ts = Infinity;
 				Object.keys(res).forEach((key) => {
-					this.subscribers[key].timestamp = res[key][0][0];
+					let ts = res[key][0][0];;
+					this.subscribers[key].timestamp = ts;
+					if(min_ts > ts) min_ts = ts;
 					res[key].reverse().map((m) => {
 						if(m.length == 2) {
 							return {
-								t: m[0],
+								t: Math.floor(m[0]/1000),
 								v: m[1]
 							}
 						}else if(m.length == 3) {
 							return {
 								id: m[1],
-								t: m[0],
+								t: Math.floor(m[0]/1000),
 								v: m[2]
 							}
 						}
@@ -64,6 +66,11 @@ class SubscriberManager extends EventEmitter {
 						this.emit(key, m);
 					});
 				})
+				for(var t in this.subscribers) {
+					if(this.subscribers[t].timestamp == 0) {
+						this.subscribers[t].timestamp = min_ts;
+					}
+				}
 				this._startSubscribe()
 			}
 
