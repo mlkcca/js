@@ -10,10 +10,17 @@ export default class {
 	}
 
 	static json(message) {
+		let value = null;
+		try {
+			value = JSON.parse(message.v);
+		}catch(e) {
+			//JSON parse error
+			value = 'invalid json';
+		}
 		return {
 			id: message.id,
-			timestamp: message.t,
-			value: JSON.parse(message.v)
+			timestamp: Math.floor(message.t),
+			value: value
 		}
 	}
 

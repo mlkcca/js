@@ -5932,10 +5932,16 @@ var _class = function () {
 	}, {
 		key: 'json',
 		value: function json(message) {
+			var value = null;
+			try {
+				value = JSON.parse(message.v);
+			} catch (e) {
+				value = 'invalid json';
+			}
 			return {
 				id: message.id,
-				timestamp: message.t,
-				value: JSON.parse(message.v)
+				timestamp: Math.floor(message.t),
+				value: value
 			};
 		}
 	}, {
@@ -6078,8 +6084,7 @@ var SubscriberManager = function (_EventEmitter) {
 			var pathList = this._get_path_list();
 			if (pathList.length == 0) return;
 			var path = JSON.stringify(pathList);
-			pathList;
-			this.caller = this.root._get_remote().get2(apiUrl, Object.assign({ c: path }, {}), function (err, res) {
+			this.caller = this.root._get_remote().get2(apiUrl, { c: path }, function (err, res) {
 				if (err) {
 					if (onComplete) onComplete(err);
 					setTimeout(function () {
@@ -6094,18 +6099,21 @@ var SubscriberManager = function (_EventEmitter) {
 						if (onComplete) onComplete(res.err);
 					}
 				} else {
+					var min_ts = Infinity;
 					Object.keys(res).forEach(function (key) {
-						_this3.subscribers[key].timestamp = res[key][0][0];
+						var ts = res[key][0][0];;
+						_this3.subscribers[key].timestamp = ts;
+						if (min_ts > ts) min_ts = ts;
 						res[key].reverse().map(function (m) {
 							if (m.length == 2) {
 								return {
-									t: m[0],
+									t: Math.floor(m[0] / 1000),
 									v: m[1]
 								};
 							} else if (m.length == 3) {
 								return {
 									id: m[1],
-									t: m[0],
+									t: Math.floor(m[0] / 1000),
 									v: m[2]
 								};
 							}
@@ -6113,6 +6121,11 @@ var SubscriberManager = function (_EventEmitter) {
 							_this3.emit(key, m);
 						});
 					});
+					for (var t in _this3.subscribers) {
+						if (_this3.subscribers[t].timestamp == 0) {
+							_this3.subscribers[t].timestamp = min_ts;
+						}
+					}
 					_this3._startSubscribe();
 				}
 			});
