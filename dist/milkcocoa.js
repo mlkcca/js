@@ -5600,7 +5600,7 @@ var _class = function () {
 			var m = this.messages.filter(function (m) {
 				return m.id === rid;
 			})[0];
-			if (m && m.cb) m.cb(args);
+			if (m && m.cb) m.cb(null, args);
 			this.messages = this.messages.filter(function (m) {
 				return m.id !== rid;
 			});
@@ -5837,10 +5837,15 @@ var _class = function () {
 	}, {
 		key: 'push',
 		value: function push(value, options, cb) {
+			var _this2 = this;
+
 			if (typeof options === 'function') {
 				cb = options;
 			}
-			this.root._get_pubsub().publish(this.path, 'push', value, cb);
+			this.root._get_pubsub().publish(this.path, 'push', value, function (err, message) {
+				if (err) return cb(err);
+				cb(null, _push2.default.decode(message, _this2.datatype));
+			});
 		}
 	}, {
 		key: 'set',
@@ -5858,7 +5863,7 @@ var _class = function () {
 	}, {
 		key: 'history',
 		value: function history(options, cb) {
-			var _this2 = this;
+			var _this3 = this;
 
 			var apiUrl = this.root._get_api_url('history');
 			var params = {
@@ -5885,10 +5890,10 @@ var _class = function () {
 				} else {
 					var messages = result.content;
 					var _decoded_messages = messages.map(function (m) {
-						return _push2.default.decode(m, _this2.datatype);
+						return _push2.default.decode(m, _this3.datatype);
 					});
 					if (options.useCache && options.ts && params.order == 'desc' && messages.length > 0) {
-						_this2.cache.add(options.ts, _decoded_messages);
+						_this3.cache.add(options.ts, _decoded_messages);
 					}
 					cb(null, _decoded_messages);
 				}
@@ -5932,6 +5937,7 @@ var _class = function () {
 	}, {
 		key: 'json',
 		value: function json(message) {
+			if (!message) return null;
 			var value = null;
 			try {
 				value = JSON.parse(message.v);
@@ -6334,6 +6340,7 @@ var _class = function (_EventEmitter2) {
 			var apiUrl = this.root._get_api_url(op || 'push');
 
 			this.root._get_remote().post(apiUrl, Object.assign({ v: v }, _options), { c: path }, { 'Content-Type': 'application/json' }).then(function (res) {
+				if (res) res.v = v;
 				_this6.messageStore.recvAck(rid, res);
 			}).catch(function (err) {
 				cb(err);

@@ -45,7 +45,10 @@ export default class {
 		if(typeof options === 'function') {
 			cb = options;
 		}
-		this.root._get_pubsub().publish(this.path, 'push', value, cb);
+		this.root._get_pubsub().publish(this.path, 'push', value, (err, message) => {
+			if(err) return cb(err);
+			cb(null, PushDataType.decode(message, this.datatype))
+		});
 	}
 
 	set(id, value, options, cb) {

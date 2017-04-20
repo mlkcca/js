@@ -278,6 +278,7 @@ export default class extends EventEmitter {
 		}, 10000);
 		*/
 		this.root._get_remote().post(apiUrl, Object.assign({v:v}, _options), {c:path}, {'Content-Type': 'application/json'}).then((res) => {
+			if(res) res.v = v;
 			this.messageStore.recvAck(rid, res);
 			//clearTimeout(retryTimer);
 			//cb(null, res);

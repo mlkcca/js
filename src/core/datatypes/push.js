@@ -10,6 +10,7 @@ export default class {
 	}
 
 	static json(message) {
+		if(!message) return null;
 		let value = null;
 		try {
 			value = JSON.parse(message.v);
