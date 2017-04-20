@@ -108,9 +108,13 @@ export default class {
 
 	grant(options, cb) {
 		let apiUrl = this._get_api_url('grant');
-		let params = {};
-		this.remote.get(apiUrl, params).then(function(accessToken) {
-			cb(null, accessToken);
+		let params = options;
+		this.remote.get(apiUrl, params).then(function(result) {
+			if(result.err) {
+				cb(result.err);
+				return;
+			}
+			cb(null, result.content);
 		}).catch(function(err) {
 			cb(err);
 		});

@@ -5307,9 +5307,13 @@ var _class = function () {
 		key: 'grant',
 		value: function grant(options, cb) {
 			var apiUrl = this._get_api_url('grant');
-			var params = {};
-			this.remote.get(apiUrl, params).then(function (accessToken) {
-				cb(null, accessToken);
+			var params = options;
+			this.remote.get(apiUrl, params).then(function (result) {
+				if (result.err) {
+					cb(result.err);
+					return;
+				}
+				cb(null, result.content);
 			}).catch(function (err) {
 				cb(err);
 			});
