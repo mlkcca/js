@@ -17,7 +17,7 @@ export default class {
 
 	recvAck(rid, args) {
 		let m = this.messages.filter((m)=>m.id === rid)[0];
-		if(m && m.cb) m.cb(args); 
+		if(m && m.cb) m.cb(null, args); 
 		this.messages = this.messages.filter((m)=>m.id !== rid);
 	}
 
