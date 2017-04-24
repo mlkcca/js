@@ -121,6 +121,24 @@ export default class {
 
 	}
 
+	listDataStores(options, cb) {
+		let apiUrl = this._get_api_url('ds');
+		let params = {
+			c: options.c || ''
+		}
+		params.limit = options.limit || 100;
+		this._get_remote().get(apiUrl, params).then((result) => {
+			if(result.err) {
+				cb(result.err);
+			}else{
+				let dataStores = result.content;
+				cb(null, dataStores);
+			}
+		}).catch(function(err) {
+			cb(err);
+		});
+	}
+
 	static history(options, cb) {
 		let appId = options.appId;
 		let apiKey = options.apiKey;
