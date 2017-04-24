@@ -26,7 +26,8 @@ describe("milkcocoa", function() {
 		    it("ts", function(done) {
 				var ds = milkcocoa.dataStore('demo', {datatype: 'json'});
 
-				ds.history({ts:1488901499709,limit:2}, function(err, messages) {
+				ds.history({ts:1493027628099,limit:2}, function(err, messages) {
+					console.log(err, messages);
 		        	assert.equal(null, err);
 		        	assert.equal(true, messages.length==2);
 					done();
@@ -37,8 +38,9 @@ describe("milkcocoa", function() {
 		    it("cache", function(done) {
 				var ds = milkcocoa.dataStore('demo', {datatype: 'json'});
 
-				ds.history({ts:1488901499709,limit:2,useCache:true}, function(err, messages) {
-					ds.history({ts:1488901499709,limit:2,useCache:true}, function(err, messages) {
+				ds.history({ts:1493027628099,limit:2,useCache:true}, function(err, messages) {
+					ds.history({ts:1493027628099,limit:2,useCache:true}, function(err, messages) {
+						console.log(err, messages);
 			        	assert.equal(null, err);
 			        	assert.equal(true, messages.length==2);
 			        	assert.equal(true, messages[0].hasOwnProperty('value'));
