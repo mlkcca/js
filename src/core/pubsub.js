@@ -1,4 +1,3 @@
-import MessageStore from './MessageStore'
 import reInterval from 'reinterval'
 let EventEmitter = require("events").EventEmitter;
 
@@ -121,7 +120,6 @@ export default class extends EventEmitter {
 		this.subscriberMan.set = new SubscriberManager(root, 'set');
 		this.subscriberMan.send = new SubscriberManager(root, 'send');
 		this.offlineQueue = [];
-		this.messageStore = new MessageStore();
 		this.wsOptions = options.wsOptions;
 		this.reconnectPeriod = options.reconnectPeriod || 5000;
 		this.reconnectTimer = null;
@@ -265,11 +263,11 @@ export default class extends EventEmitter {
 		this.sendEvent('disconnect', {});
 	}
 
-	publish(path, op, v, cb, _options) {
+	publish(path, op, _v, cb, _options) {
 		let options = _options || {};
 
-		v = JSON.stringify(v);
-		let rid = this.messageStore.add({path:path,op:op,v:v,options:_options}, cb);
+		let v = JSON.stringify(_v);
+		//let rid = this.messageStore.add({path:path,op:op,v:v,options:_options}, cb);
 		let apiUrl = this.root._get_api_url(op || 'push');
 		/*
 		let retryTimer = setTimeout(() => {
@@ -279,30 +277,12 @@ export default class extends EventEmitter {
 		*/
 		this.root._get_remote().post(apiUrl, Object.assign({v:v}, _options), {c:path}, {'Content-Type': 'application/json'}).then((res) => {
 			if(res) res.v = v;
-			this.messageStore.recvAck(rid, res);
+			//this.messageStore.recvAck(rid, res);
 			//clearTimeout(retryTimer);
-			//cb(null, res);
+			cb(null, res);
 		}).catch(function(err) {
 			cb(err);
 		});
-	}
-
-	/* connect時に呼ばれる */
-	flushOfflineMessage(cb) {
-		let message = this.messageStore.enq();
-		if(message) {
-			let mes = message.message;
-			let rid = message.id;
-			let apiUrl = this.root._get_api_url(mes.op || 'push');
-			this.root._get_remote().get(apiUrl, Object.assign({c:mes.path,v:mes.v}, mes.options)).then((res) => {
-				this.messageStore.recvAck(rid, res);
-				this.flushOfflineMessage(cb);
-			}).catch(function(err) {
-				cb(err);
-			});
-		}else{
-			cb(null);
-		}
 	}
 
 	subscribe(path, op, cb, onComplete) {
