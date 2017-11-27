@@ -10,8 +10,21 @@ export default class {
   }
 
   static json (message) {
+    if (!message) return null
+    let timestamp = null
+    if (message.t) {
+      timestamp = Math.floor(message.t)
+    }
+    let value = null
+    try {
+      value = JSON.parse(message.v)
+    } catch (e) {
+      // JSON parse error
+      value = 'invalid json'
+    }
     return {
-      value: JSON.parse(message.v)
+      value: value,
+      timestamp: timestamp
     }
   }
 
