@@ -31,6 +31,7 @@
   "dependencies": {
     "agentkeepalive": "^3.1.0",
     "reinterval": "^1.1.0",
+    "standard": "^10.0.3",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
