@@ -21,6 +21,7 @@ function Send (uuid) {
       let ds = milkcocoa.dataStore(uuid + '/send', {datatype: 'json'})
       ds.on('send', function (payload) {
         assert.deepEqual({message: 'Hello onsend!'}, payload.value)
+        assert.equal('number', typeof payload.timestamp)
         done()
       })
       ds.send({message: 'Hello onsend!'})

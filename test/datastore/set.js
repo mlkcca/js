@@ -7,7 +7,7 @@ function Set (uuid) {
   describe('set()', function () {
     it('should call the onCompleteCallback whose err is null.', function (done) {
       let ds = milkcocoa.dataStore(uuid + '/set', {datatype: 'json'})
-      ds.set('set-test', {message: 'Hello set!'}, function (err, result) {
+      ds.set('set-test', {message: 'Hello set!'}, function (err) {
         if (err) done()
         assert.equal(null, err)
         done()
@@ -22,6 +22,7 @@ function Set (uuid) {
       ds.on('set', function (payload) {
         assert.equal('set-test-on', payload.id)
         assert.deepEqual({message: 'Hello onset!'}, payload.value)
+        assert.equal('number', typeof payload.timestamp)
         done()
       })
       ds.set('set-test-on', {message: 'Hello onset!'})
@@ -38,6 +39,7 @@ function Set (uuid) {
         assert.deepEqual({message: 'Hello onset!'}, messages[0].value)
         assert.equal('set-test', messages[1].id)
         assert.deepEqual({message: 'Hello set!'}, messages[1].value)
+        assert.equal(true, isNaN(messages[0].timestamp))
         done()
       })
     })
