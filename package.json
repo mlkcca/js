@@ -27,6 +27,14 @@
   "bugs": {
     "url": "https://github.com/mlkcca/js/issues"
   },
+  "standard": {
+    "globals": [
+      "describe",
+      "it",
+      "expect",
+      "test"
+    ]
+  },
   "homepage": "https://github.com/mlkcca/js#readme",
   "dependencies": {
     "agentkeepalive": "^3.1.0",
