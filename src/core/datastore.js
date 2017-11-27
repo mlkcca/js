@@ -59,7 +59,7 @@ export default class {
 		} else if (typeof options === 'undefined') {
 			cb = function () {}
 		}
-		this.root._get_pubsub().publish(this.path, 'set', value, cb, {_id: id});
+		this.root._get_pubsub().publish(this.path, 'set', value, cb, {id: id});
 	}
 
 	send(value, cb) {
