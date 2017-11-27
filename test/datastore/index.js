@@ -2,6 +2,7 @@ const history = require('./history')
 const push = require('./push')
 const send = require('./send')
 const set = require('./set')
+const onoff = require('./onoff')
 const uuidv4 = require('uuid/v4')
 
 describe('DataStore', function () {
@@ -14,6 +15,9 @@ describe('DataStore', function () {
   })
   describe('Set', function () {
     set(uuid)
+  })
+  describe('On/Off', function () {
+    onoff(uuid)
   })
   // history()
 })
