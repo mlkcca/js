@@ -9,10 +9,10 @@ export default class {
 	add(ts, data) {
 		let span = new Span(ts, data);
 		this.spanList.push(span);
-		this.combine();
+		this._combine();
 	}
 
-	combine() {
+	_combine() {
 		this.spanList = this.spanList.reduce((acc, s) => {
 			if(acc.length == 0) {
 				return [s];
