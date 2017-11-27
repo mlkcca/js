@@ -44,6 +44,8 @@ export default class {
 	push(value, options, cb) {
 		if(typeof options === 'function') {
 			cb = options;
+		} else if (typeof options === 'undefined') {
+			cb = function () {}
 		}
 		this.root._get_pubsub().publish(this.path, 'push', value, (err, message) => {
 			if(err) return cb(err);
@@ -54,11 +56,16 @@ export default class {
 	set(id, value, options, cb) {
 		if(typeof options === 'function') {
 			cb = options;
+		} else if (typeof options === 'undefined') {
+			cb = function () {}
 		}
 		this.root._get_pubsub().publish(this.path, 'set', value, cb, {_id: id});
 	}
 
 	send(value, cb) {
+		if (typeof cb === 'undefined') {
+			cb = function () {}
+		}
 		this.root._get_pubsub().publish(this.path, 'send', value, cb);
 	}
 

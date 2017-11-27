@@ -10,7 +10,10 @@
     "build": "gulp compile",
     "build:web": "webpack",
     "build:node": "gulp babel",
-    "test": "mocha test --recursive"
+    "test": "mocha test --recursive",
+    "test:file": "mocha",
+    "lint": "standard",
+    "lint:fix": "standard --fix"
   },
   "repository": {
     "type": "git",
@@ -39,7 +42,6 @@
   "dependencies": {
     "agentkeepalive": "^3.1.0",
     "reinterval": "^1.1.0",
-    "standard": "^10.0.3",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
@@ -57,6 +59,7 @@
     "gulp-uglify": "^2.0.1",
     "mocha": "^3.2.0",
     "run-sequence": "^1.2.2",
+    "standard": "^10.0.3",
     "stats-webpack-plugin": "^0.5.0",
     "webpack": "^2.2.1"
   }
