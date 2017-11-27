@@ -1,6 +1,7 @@
 const history = require('./history')
 const push = require('./push')
 const send = require('./send')
+const set = require('./set')
 const uuidv4 = require('uuid/v4')
 
 describe('DataStore', function () {
@@ -10,6 +11,9 @@ describe('DataStore', function () {
   })
   describe('Send', function () {
     send(uuid)
+  })
+  describe('Set', function () {
+    set(uuid)
   })
   // history()
 })

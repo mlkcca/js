@@ -6,7 +6,7 @@ function Send (uuid) {
 
   describe('send()', function () {
     it('should call the onCompleteCallback whose err is null.', function (done) {
-      let ds = milkcocoa.dataStore(uuid, {datatype: 'json'})
+      let ds = milkcocoa.dataStore(uuid + '/send', {datatype: 'json'})
       ds.send({message: 'Hello send!'}, function (err) {
         if (err) done()
         assert.equal(null, err)
@@ -18,7 +18,7 @@ function Send (uuid) {
   describe('on(send)', function () {
     this.timeout(3000)
     it('should be called by send() and have the sent data.', function (done) {
-      let ds = milkcocoa.dataStore(uuid, {datatype: 'json'})
+      let ds = milkcocoa.dataStore(uuid + '/send', {datatype: 'json'})
       ds.on('send', function (payload) {
         assert.deepEqual({message: 'Hello onsend!'}, payload.value)
         done()
