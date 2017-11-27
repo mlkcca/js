@@ -21,9 +21,9 @@ describe('Cache', function () {
 
   describe('add()', function () {
     let cache = new Cache()
-    cache.add(1000, [{id: '1', t: 990}, {id: '2', t: 980}, {id: '3', t: 970}, {id: '4', t: 960}, {id: '5', t: 950}])
-    cache.add(950, [{id: '6', t: 940}, {id: '7', t: 930}, {id: '8', t: 925}, {id: '9', t: 920}, {id: '10', t: 915}])
-    it('should concat all data when it runs more than twice.', function () {
+    cache.add(1000, [{id: '1', t: 990}, {id: '2', t: 980}, {id: '8', t: 925}, {id: '4', t: 960}, {id: '5', t: 950}])
+    cache.add(950, [{id: '6', t: 940}, {id: '7', t: 930}, {id: '3', t: 970}, {id: '9', t: 920}, {id: '10', t: 915}])
+    it('should concat all data and sort by ts when it runs more than twice.', function () {
       assert.deepEqual([{id: '1', t: 990}, {id: '2', t: 980}, {id: '3', t: 970}, {id: '4', t: 960}, {id: '5', t: 950}, {id: '6', t: 940}, {id: '7', t: 930}, {id: '8', t: 925}, {id: '9', t: 920}, {id: '10', t: 915}], cache.query(1000, 10))
     })
   })
