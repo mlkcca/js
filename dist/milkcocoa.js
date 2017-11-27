@@ -6257,11 +6257,9 @@ var SubscriberManager = function (_EventEmitter) {
 		key: 'unreg',
 		value: function unreg(path, cb) {
 			delete this.subscribers[path];
-			if (cb) {
-				this.removeListener(path, cb);
-			} else {
-				this.removeAllListeners(path);
-			}
+			this._stopSubscribe();
+
+			this.removeAllListeners(path);
 		}
 	}, {
 		key: 'get',

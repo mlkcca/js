@@ -34,11 +34,11 @@ export default class {
 		}
 	}
 
-	off(event, cb) {
+	off(event) {
 		// let op = '_p';
 		// if(event == 'push') op = '_p';
 		// else if(event == 'send') op = '_s';
-		this.root._get_pubsub().unsubscribe(this.path, event, cb);
+		this.root._get_pubsub().unsubscribe(this.path, event);
 	}
 
 	push(value, options, cb) {

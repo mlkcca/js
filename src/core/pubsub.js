@@ -80,13 +80,14 @@ class SubscriberManager extends EventEmitter {
 		if(this.caller) this.caller.abort();
 	}
 
-	unreg(path, cb) {
+	unreg(path) {
 		delete this.subscribers[path];
-		if(cb) {
-			this.removeListener(path, cb);
-		}else{
+		this._stopSubscribe()
+		// if(cb) {
+		// 	this.removeListener(path, cb);
+		// }else{
 			this.removeAllListeners(path);
-		}
+		// }
 	}
 
 	get() {
@@ -290,8 +291,8 @@ export default class extends EventEmitter {
 		//this._subscribe(path, op, cb, onComplete);
 	}
 
-	unsubscribe(path, op, cb) {
-		this.subscriberMan[op].unreg(path, cb);
+	unsubscribe(path, op) {
+		this.subscriberMan[op].unreg(path);
 	}
 
 	/* private API */
