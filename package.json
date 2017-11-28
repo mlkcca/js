@@ -10,7 +10,7 @@
     "build": "gulp compile",
     "build:web": "webpack",
     "build:node": "gulp babel",
-    "test": "mocha test --recursive",
+    "test": "mocha test/index.js",
     "test:file": "mocha",
     "lint": "standard",
     "lint:fix": "standard --fix"

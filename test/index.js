@@ -1,10 +1,19 @@
-const assert = require('assert')
-const Milkcocoa = require('../lib/node')
+const uuidv4 = require('uuid/v4')
 
-var milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid1', apiKey: 'demo'})
+const cache = require('./cache')
+const datastore = require('./datastore')
+const milkcocoa = require('./milkcocoa')
 
-describe('milkcocoa', function () {
-  it('getAppId', function () {
-    assert.equal('demo', milkcocoa.getAppId())
-  })
+const uuid = uuidv4()
+
+describe('Cache', function () {
+  cache()
+})
+
+describe('DataStore', function () {
+  datastore(uuid)
+})
+
+describe('Milkcocoa', function () {
+  milkcocoa(uuid)
 })

@@ -2,7 +2,7 @@ const assert = require('assert')
 const Milkcocoa = require('../../lib/node')
 
 function Send (uuid) {
-  const milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid-' + uuid, apiKey: 'demo'})
+  const milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid-' + uuid + '-send', apiKey: 'demo'})
 
   describe('send()', function () {
     it('should call the onCompleteCallback whose err is null.', function (done) {

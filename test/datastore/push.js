@@ -2,7 +2,7 @@ const assert = require('assert')
 const Milkcocoa = require('../../lib/node')
 
 function Push (uuid) {
-  const milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid-' + uuid, apiKey: 'demo'})
+  const milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid-' + uuid + '-push', apiKey: 'demo'})
 
   describe('push()', function () {
     it('should call the onCompleteCallback whose argument is the same data.', function (done) {

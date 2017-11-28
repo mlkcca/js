@@ -2,7 +2,7 @@ const assert = require('assert')
 const Milkcocoa = require('../../lib/node')
 
 function OnOff (uuid) {
-  const milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid-' + uuid, apiKey: 'demo'})
+  const milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid-' + uuid + '-onoff', apiKey: 'demo'})
 
   describe('on()', function () {
     this.timeout(3000)
@@ -44,6 +44,7 @@ function OnOff (uuid) {
           ds.send(1)
           ds.push(1)
           setTimeout(function () {
+            assert.ok(true)
             done()
           }, 2000)
         }, 100)

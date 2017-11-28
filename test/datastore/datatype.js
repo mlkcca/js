@@ -2,7 +2,7 @@ const assert = require('assert')
 const Milkcocoa = require('../../lib/node')
 
 function DataType (uuid) {
-  const milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid-' + uuid, apiKey: 'demo'})
+  const milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid-' + uuid + '-datatype', apiKey: 'demo'})
 
   describe('dataStore(*, {datatype: "json"})', function () {
     it('should receive push() callback data as object.', function (done) {

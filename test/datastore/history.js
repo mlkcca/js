@@ -2,7 +2,7 @@ const assert = require('assert')
 const Milkcocoa = require('../../lib/node')
 
 function History (uuid) {
-  const milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid-' + uuid, apiKey: 'demo'})
+  const milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid-' + uuid + '-history', apiKey: 'demo'})
   var dataTime1 = 0
   var pushedDataTime1 = 0
   var dataTime2 = 0

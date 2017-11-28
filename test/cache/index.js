@@ -1,7 +1,7 @@
 const assert = require('assert')
 const Cache = require('../../lib/cache')
 
-describe('Cache', function () {
+function CacheTest () {
   describe('query()', function () {
     let cache = new Cache()
     cache.add(100, [{id: '1', t: 70}, {id: '2', t: 60}])
@@ -27,4 +27,6 @@ describe('Cache', function () {
       assert.deepEqual([{id: '1', t: 990}, {id: '2', t: 980}, {id: '3', t: 970}, {id: '4', t: 960}, {id: '5', t: 950}, {id: '6', t: 940}, {id: '7', t: 930}, {id: '8', t: 925}, {id: '9', t: 920}, {id: '10', t: 915}], cache.query(1000, 10))
     })
   })
-})
+}
+
+module.exports = CacheTest
