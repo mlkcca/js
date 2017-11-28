@@ -35,9 +35,9 @@ export default class {
   }
 
   off (event) {
-// let op = '_p';
-// if(event == 'push') op = '_p';
-// else if(event == 'send') op = '_s';
+    // let op = '_p';
+    // if(event == 'push') op = '_p';
+    // else if(event == 'send') op = '_s';
     this.root._get_pubsub().unsubscribe(this.path, event)
   }
 
