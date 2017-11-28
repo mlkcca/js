@@ -5731,131 +5731,132 @@ module.exports = exports["default"];
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
-var http = __webpack_require__(11),
-    https = __webpack_require__(37),
-    querystring = __webpack_require__(8),
-    Agent = __webpack_require__(24),
-    HttpsAgent = Agent.HttpsAgent;
+var http = __webpack_require__(11);
+var https = __webpack_require__(37);
+var querystring = __webpack_require__(8);
+var Agent = __webpack_require__(24);
+var HttpsAgent = Agent.HttpsAgent;
 
 var keepaliveAgent = new Agent({
-	maxSockets: 100,
-	maxFreeSockets: 10,
-	timeout: 300000,
-	freeSocketKeepAliveTimeout: 30000
+  maxSockets: 100,
+  maxFreeSockets: 10,
+  timeout: 300000,
+  freeSocketKeepAliveTimeout: 30000
 });
 
 var keepaliveHttpsAgent = new HttpsAgent({
-	maxSockets: 100,
-	maxFreeSockets: 10,
-	timeout: 300000,
-	freeSocketKeepAliveTimeout: 30000
+  maxSockets: 100,
+  maxFreeSockets: 10,
+  timeout: 300000,
+  freeSocketKeepAliveTimeout: 30000
 });
 
 function request(method, secure, host, port, path, qs, payload, headers, callback) {
-	var http_client = secure ? https : http;
+  var http_client = secure ? https : http;
 
 
-	if (qs) {
-		path += "?" + querystring.stringify(qs);
-	}
+  if (qs) {
+    path += '?' + querystring.stringify(qs);
+  }
 
 
-	var options = {
-		hostname: host,
-		port: port || (secure ? 443 : 80),
-		path: path,
-		method: method,
-		headers: headers,
-		agent: secure ? keepaliveHttpsAgent : keepaliveAgent
-	};
+  var options = {
+    hostname: host,
+    port: port || (secure ? 443 : 80),
+    path: path,
+    method: method,
+    headers: headers,
+    agent: secure ? keepaliveHttpsAgent : keepaliveAgent
+  };
 
-	if (method == 'GET') {
-		return http_client.get(options, process_response).on('error', function (e) {
-			callback(e);
-		});
-	} else {
-		var req = http_client.request(options, process_response);
-		req.setTimeout(120000);
-		req.on('timeout', function () {
-			if (callback) callback(new Error("timed out"), null);
-			req.abort();
-		});
-		req.on('error', function (err) {
-			if (callback) callback(err, null);
-		});
-		req.write(payload);
-		req.end();
-		return req;
-	}
+  if (method === 'GET') {
+    return http_client.get(options, process_response).on('error', function (e) {
+      callback(e);
+    });
+  } else {
+    var req = http_client.request(options, process_response);
+    req.setTimeout(120000);
+    req.on('timeout', function () {
+      if (callback) callback(new Error('timed out'), null);
+      req.abort();
+    });
+    req.on('error', function (err) {
+      if (callback) callback(err, null);
+    });
+    req.write(payload);
+    req.end();
+    return req;
+  }
 
-	function process_response(res) {
-		if (callback) {
-			var content = "";
-			res.on('data', function (str) {
-				content += str;
-			});
-			res.on('end', function () {
-				var r = null;
-				try {
-					r = JSON.parse(content);
-				} catch (e) {
-					callback(e);
-				}
-				if (r) callback(null, r);
-			});
-		}
-	}
+  function process_response(res) {
+    if (callback) {
+      var content = '';
+      res.on('data', function (str) {
+        content += str;
+      });
+      res.on('end', function () {
+        var r = null;
+        try {
+          r = JSON.parse(content);
+        } catch (e) {
+          callback(e);
+        }
+        if (r) {
+          callback(null, r);
+        }
+      });
+    }
+  }
 }
 
 function requestBrowser(method, secure, host, _port, path, qs, payload, headers, callback) {
-	var port = _port || (secure ? 443 : 80);
-	var url = (secure ? 'https://' : 'http://') + host + ':' + port + path;
-	if (qs) {
-		url += "?" + querystring.stringify(qs);
-	}
-	var xhr = createCORSRequest(method, url);
-	xhr.withCredentials = true;
-	xhr.onload = function () {
-		var decoded = "";
-		try {
-			var parsed = JSON.parse(xhr.responseText);
-			callback(null, parsed);
-		} catch (e) {
-			callback(null, JSON.parse(xhr.responseText));
-		}
-	};
-	xhr.onerror = function () {
-		callback(xhr.statusText || 'unknown error');
-	};
+  var port = _port || (secure ? 443 : 80);
+  var url = (secure ? 'https://' : 'http://') + host + ':' + port + path;
+  if (qs) {
+    url += '?' + querystring.stringify(qs);
+  }
+  var xhr = createCORSRequest(method, url);
+  xhr.withCredentials = true;
+  xhr.onload = function () {
+    try {
+      var parsed = JSON.parse(xhr.responseText);
+      callback(null, parsed);
+    } catch (e) {
+      callback(null, JSON.parse(xhr.responseText));
+    }
+  };
+  xhr.onerror = function () {
+    callback(xhr.statusText || 'unknown error');
+  };
 
-	for (var header_key in headers) {
-		xhr.setRequestHeader(header_key, headers[header_key]);
-	}
+  for (var header_key in headers) {
+    xhr.setRequestHeader(header_key, headers[header_key]);
+  }
 
-	xhr.send(payload);
+  xhr.send(payload);
 }
 
-if ('browser' !== process.title) {
-	module.exports = {
-		request: request
-	};
+if (process.title !== 'browser') {
+  module.exports = {
+    request: request
+  };
 } else {
-	module.exports = {
-		request: requestBrowser
-	};
+  module.exports = {
+    request: requestBrowser
+  };
 }
 
 function createCORSRequest(method, url) {
-	var xhr = new XMLHttpRequest();
-	if ("withCredentials" in xhr) {
-		xhr.open(method, url, true);
-	} else if (typeof XDomainRequest != "undefined") {
-		xhr = new XDomainRequest();
-		xhr.open(method, url);
-	} else {
-		xhr = null;
-	}
-	return xhr;
+  var xhr = new XMLHttpRequest();
+  if ('withCredentials' in xhr) {
+    xhr.open(method, url, true);
+  } else if (typeof XDomainRequest !== 'undefined') {
+    xhr = new XDomainRequest();
+    xhr.open(method, url);
+  } else {
+    xhr = null;
+  }
+  return xhr;
 }
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
@@ -5867,7 +5868,7 @@ function createCORSRequest(method, url) {
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5889,125 +5890,125 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var _class = function () {
-	function _class(root, path, _options) {
-		_classCallCheck(this, _class);
+  function _class(root, path, _options) {
+    _classCallCheck(this, _class);
 
-		this.root = root;
-		this.path = path;
-		var options = _options || {};
-		this.setDataType(options.datatype || 'json');
-		this.cache = new _cache2.default();
-	}
+    this.root = root;
+    this.path = path;
+    var options = _options || {};
+    this.setDataType(options.datatype || 'json');
+    this.cache = new _cache2.default();
+  }
 
-	_createClass(_class, [{
-		key: 'setDataType',
-		value: function setDataType(datatype) {
-			if (datatype != 'text' && datatype != 'json' && datatype == 'binary') {
-				throw new Error('invalid datatype');
-			}
-			this.datatype = datatype;
-		}
-	}, {
-		key: 'on',
-		value: function on(event, cb, onComplete) {
-			var _this = this;
+  _createClass(_class, [{
+    key: 'setDataType',
+    value: function setDataType(datatype) {
+      if (datatype !== 'text' && datatype !== 'json' && datatype === 'binary') {
+        throw new Error('invalid datatype');
+      }
+      this.datatype = datatype;
+    }
+  }, {
+    key: 'on',
+    value: function on(event, cb, onComplete) {
+      var _this = this;
 
-			if (event == 'push') {
-				this.root._get_pubsub().subscribe(this.path, 'push', function (message) {
-					cb(_push2.default.decode(message, _this.datatype));
-				}, onComplete);
-			} else if (event == 'set') {
-				this.root._get_pubsub().subscribe(this.path, 'set', function (message) {
-					cb(_push2.default.decode(message, _this.datatype));
-				}, onComplete);
-			} else if (event == 'send') {
-				this.root._get_pubsub().subscribe(this.path, 'send', function (message) {
-					cb(_send2.default.decode(message, _this.datatype));
-				}, onComplete);
-			}
-		}
-	}, {
-		key: 'off',
-		value: function off(event, cb) {
-			this.root._get_pubsub().unsubscribe(this.path, event, cb);
-		}
-	}, {
-		key: 'push',
-		value: function push(value, options, cb) {
-			var _this2 = this;
+      if (event === 'push') {
+        this.root._get_pubsub().subscribe(this.path, 'push', function (message) {
+          cb(_push2.default.decode(message, _this.datatype));
+        }, onComplete);
+      } else if (event === 'set') {
+        this.root._get_pubsub().subscribe(this.path, 'set', function (message) {
+          cb(_push2.default.decode(message, _this.datatype));
+        }, onComplete);
+      } else if (event === 'send') {
+        this.root._get_pubsub().subscribe(this.path, 'send', function (message) {
+          cb(_send2.default.decode(message, _this.datatype));
+        }, onComplete);
+      }
+    }
+  }, {
+    key: 'off',
+    value: function off(event) {
+      this.root._get_pubsub().unsubscribe(this.path, event);
+    }
+  }, {
+    key: 'push',
+    value: function push(value, options, cb) {
+      var _this2 = this;
 
-			if (typeof options === 'function') {
-				cb = options;
-			} else if (typeof options === 'undefined') {
-				cb = function cb() {};
-			}
-			this.root._get_pubsub().publish(this.path, 'push', value, function (err, message) {
-				if (err) return cb(err);
-				cb(null, _push2.default.decode(message, _this2.datatype));
-			});
-		}
-	}, {
-		key: 'set',
-		value: function set(id, value, options, cb) {
-			if (typeof options === 'function') {
-				cb = options;
-			} else if (typeof options === 'undefined') {
-				cb = function cb() {};
-			}
-			this.root._get_pubsub().publish(this.path, 'set', value, cb, { id: id });
-		}
-	}, {
-		key: 'send',
-		value: function send(value, cb) {
-			if (typeof cb === 'undefined') {
-				cb = function cb() {};
-			}
-			this.root._get_pubsub().publish(this.path, 'send', value, cb);
-		}
-	}, {
-		key: 'history',
-		value: function history(options, cb) {
-			var _this3 = this;
+      if (typeof options === 'function') {
+        cb = options;
+      } else if (typeof options === 'undefined') {
+        cb = function cb() {};
+      }
+      this.root._get_pubsub().publish(this.path, 'push', value, function (err, message) {
+        if (err) return cb(err);
+        cb(null, _push2.default.decode(message, _this2.datatype));
+      });
+    }
+  }, {
+    key: 'set',
+    value: function set(id, value, options, cb) {
+      if (typeof options === 'function') {
+        cb = options;
+      } else if (typeof options === 'undefined') {
+        cb = function cb() {};
+      }
+      this.root._get_pubsub().publish(this.path, 'set', value, cb, { id: id });
+    }
+  }, {
+    key: 'send',
+    value: function send(value, cb) {
+      if (typeof cb === 'undefined') {
+        cb = function cb() {};
+      }
+      this.root._get_pubsub().publish(this.path, 'send', value, cb);
+    }
+  }, {
+    key: 'history',
+    value: function history(options, cb) {
+      var _this3 = this;
 
-			var apiUrl = this.root._get_api_url('history');
-			var params = {
-				c: this.path
-			};
-			params.limit = options.limit || 100;
-			params.order = options.order || 'desc';
-			if (options.ts) {
-				params.id = 'd';
-				params.ts = options.ts;
-			}
+      var apiUrl = this.root._get_api_url('history');
+      var params = {
+        c: this.path
+      };
+      params.limit = options.limit || 100;
+      params.order = options.order || 'desc';
+      if (options.ts) {
+        params.id = 'd';
+        params.ts = options.ts;
+      }
 
-			if (options.useCache && options.ts && params.order == 'desc') {
-				var decoded_messages = this.cache.query(options.ts, params.limit);
-				if (decoded_messages) {
-					cb(null, decoded_messages);
-					return;
-				}
-			}
+      if (options.useCache && options.ts && params.order === 'desc') {
+        var decoded_messages = this.cache.query(options.ts, params.limit);
+        if (decoded_messages) {
+          cb(null, decoded_messages);
+          return;
+        }
+      }
 
-			this.root._get_remote().get(apiUrl, params).then(function (result) {
-				if (result.err) {
-					cb(result.err);
-				} else {
-					var messages = result.content;
-					var _decoded_messages = messages.map(function (m) {
-						return _push2.default.decode(m, _this3.datatype);
-					});
-					if (options.useCache && options.ts && params.order == 'desc' && messages.length > 0) {
-						_this3.cache.add(options.ts, _decoded_messages);
-					}
-					cb(null, _decoded_messages);
-				}
-			}).catch(function (err) {
-				cb(err);
-			});
-		}
-	}]);
+      this.root._get_remote().get(apiUrl, params).then(function (result) {
+        if (result.err) {
+          cb(result.err);
+        } else {
+          var messages = result.content;
+          var _decoded_messages = messages.map(function (m) {
+            return _push2.default.decode(m, _this3.datatype);
+          });
+          if (options.useCache && options.ts && params.order === 'desc' && messages.length > 0) {
+            _this3.cache.add(options.ts, _decoded_messages);
+          }
+          cb(null, _decoded_messages);
+        }
+      }).catch(function (err) {
+        cb(err);
+      });
+    }
+  }]);
 
-	return _class;
+  return _class;
 }();
 
 exports.default = _class;
@@ -6142,7 +6143,7 @@ module.exports = exports['default'];
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6162,365 +6163,365 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var EventEmitter = __webpack_require__(7).EventEmitter;
 
 var SubscriberManager = function (_EventEmitter) {
-	_inherits(SubscriberManager, _EventEmitter);
+  _inherits(SubscriberManager, _EventEmitter);
 
-	function SubscriberManager(root, op) {
-		_classCallCheck(this, SubscriberManager);
+  function SubscriberManager(root, op) {
+    _classCallCheck(this, SubscriberManager);
 
-		var _this = _possibleConstructorReturn(this, (SubscriberManager.__proto__ || Object.getPrototypeOf(SubscriberManager)).call(this));
+    var _this = _possibleConstructorReturn(this, (SubscriberManager.__proto__ || Object.getPrototypeOf(SubscriberManager)).call(this));
 
-		_this.root = root;
-		_this.op = op;
-		_this.subscribers = {};
-		_this.caller = null;
-		return _this;
-	}
+    _this.root = root;
+    _this.op = op;
+    _this.subscribers = {};
+    _this.caller = null;
+    return _this;
+  }
 
-	_createClass(SubscriberManager, [{
-		key: 'reg',
-		value: function reg(path, cb, onComplete) {
-			this.subscribers[path] = { cb: cb, timestamp: 0 };
-			this.on(path, cb);
-			this._startSubscribe(onComplete);
-		}
-	}, {
-		key: '_get_path_list',
-		value: function _get_path_list() {
-			var _this2 = this;
+  _createClass(SubscriberManager, [{
+    key: 'reg',
+    value: function reg(path, cb, onComplete) {
+      this.subscribers[path] = { cb: cb, timestamp: 0 };
+      this.on(path, cb);
+      this._startSubscribe(onComplete);
+    }
+  }, {
+    key: '_get_path_list',
+    value: function _get_path_list() {
+      var _this2 = this;
 
-			return Object.keys(this.subscribers).map(function (topic) {
-				return [topic, _this2.subscribers[topic].timestamp];
-			});
-		}
-	}, {
-		key: '_startSubscribe',
-		value: function _startSubscribe(onComplete) {
-			var _this3 = this;
+      return Object.keys(this.subscribers).map(function (topic) {
+        return [topic, _this2.subscribers[topic].timestamp];
+      });
+    }
+  }, {
+    key: '_startSubscribe',
+    value: function _startSubscribe(onComplete) {
+      var _this3 = this;
 
-			this._stopSubscribe();
-			var apiUrl = this.root._get_on_url(this.op || 'push');
-			var pathList = this._get_path_list();
-			if (pathList.length == 0) return;
-			var path = JSON.stringify(pathList);
-			this.caller = this.root._get_remote().get2(apiUrl, { c: path }, function (err, res) {
-				if (err) {
-					if (onComplete) onComplete(err);
-					setTimeout(function () {
-						_this3._startSubscribe();
-					}, 5000);
-					return;
-				}
-				if (res.err) {
-					if (res.err == 'permission_denied') {
-						if (onComplete) onComplete(res.err);
-					} else {
-						if (onComplete) onComplete(res.err);
-					}
-				} else {
-					var min_ts = Infinity;
-					Object.keys(res).forEach(function (key) {
-						var ts = res[key][0][0];;
-						_this3.subscribers[key].timestamp = ts;
-						if (min_ts > ts) min_ts = ts;
-						res[key].reverse().map(function (m) {
-							if (m.length == 2) {
-								return {
-									t: Math.floor(m[0] / 1000),
-									v: m[1]
-								};
-							} else if (m.length == 3) {
-								return {
-									id: m[1],
-									t: Math.floor(m[0] / 1000),
-									v: m[2]
-								};
-							}
-						}).forEach(function (m) {
-							_this3.emit(key, m);
-						});
-					});
-					for (var t in _this3.subscribers) {
-						if (_this3.subscribers[t].timestamp == 0) {
-							_this3.subscribers[t].timestamp = min_ts;
-						}
-					}
-					_this3._startSubscribe();
-				}
-			});
-		}
-	}, {
-		key: '_stopSubscribe',
-		value: function _stopSubscribe() {
-			if (this.caller) this.caller.abort();
-		}
-	}, {
-		key: 'unreg',
-		value: function unreg(path, cb) {
-			delete this.subscribers[path];
-			this._stopSubscribe();
+      this._stopSubscribe();
+      var apiUrl = this.root._get_on_url(this.op || 'push');
+      var pathList = this._get_path_list();
+      if (pathList.length === 0) return;
+      var path = JSON.stringify(pathList);
+      this.caller = this.root._get_remote().get2(apiUrl, { c: path }, function (err, res) {
+        if (err) {
+          if (onComplete) onComplete(err);
+          setTimeout(function () {
+            _this3._startSubscribe();
+          }, 5000);
+          return;
+        }
+        if (res.err) {
+          if (res.err === 'permission_denied') {
+            if (onComplete) onComplete(res.err);
+          } else {
+            if (onComplete) onComplete(res.err);
+          }
+        } else {
+          var min_ts = Infinity;
+          Object.keys(res).forEach(function (key) {
+            var ts = res[key][0][0];
+            _this3.subscribers[key].timestamp = ts;
+            if (min_ts > ts) min_ts = ts;
+            res[key].reverse().map(function (m) {
+              if (m.length === 2) {
+                return {
+                  t: Math.floor(m[0] / 1000),
+                  v: m[1]
+                };
+              } else if (m.length === 3) {
+                return {
+                  id: m[1],
+                  t: Math.floor(m[0] / 1000),
+                  v: m[2]
+                };
+              }
+            }).forEach(function (m) {
+              _this3.emit(key, m);
+            });
+          });
+          for (var t in _this3.subscribers) {
+            if (_this3.subscribers[t].timestamp === 0) {
+              _this3.subscribers[t].timestamp = min_ts;
+            }
+          }
+          _this3._startSubscribe();
+        }
+      });
+    }
+  }, {
+    key: '_stopSubscribe',
+    value: function _stopSubscribe() {
+      if (this.caller) this.caller.abort();
+    }
+  }, {
+    key: 'unreg',
+    value: function unreg(path) {
+      delete this.subscribers[path];
+      this._stopSubscribe();
 
-			this.removeAllListeners(path);
-		}
-	}, {
-		key: 'get',
-		value: function get() {
-			var _this4 = this;
+      this.removeAllListeners(path);
+    }
+  }, {
+    key: 'get',
+    value: function get() {
+      var _this4 = this;
 
-			return Object.keys(this.subscribers).map(function (topic) {
-				return _this4.subscribers[topic];
-			});
-		}
-	}]);
+      return Object.keys(this.subscribers).map(function (topic) {
+        return _this4.subscribers[topic];
+      });
+    }
+  }]);
 
-	return SubscriberManager;
+  return SubscriberManager;
 }(EventEmitter);
 
 var _class = function (_EventEmitter2) {
-	_inherits(_class, _EventEmitter2);
+  _inherits(_class, _EventEmitter2);
 
-	function _class(options, root) {
-		_classCallCheck(this, _class);
+  function _class(options, root) {
+    _classCallCheck(this, _class);
 
-		var _this5 = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
+    var _this5 = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
 
-		_this5.options = options;
-		_this5.root = root;
-		_this5.host = options.host;
-		_this5.logger = options.logger;
-		_this5.subscriberMan = {};
-		_this5.subscriberMan.push = new SubscriberManager(root, 'push');
-		_this5.subscriberMan.set = new SubscriberManager(root, 'set');
-		_this5.subscriberMan.send = new SubscriberManager(root, 'send');
-		_this5.offlineQueue = [];
-		_this5.wsOptions = options.wsOptions;
-		_this5.reconnectPeriod = options.reconnectPeriod || 5000;
-		_this5.reconnectTimer = null;
-		_this5.pingTimer = null;
-		_this5.pongArrived = true;
-		_this5.state = 'offline';
-		return _this5;
-	}
+    _this5.options = options;
+    _this5.root = root;
+    _this5.host = options.host;
+    _this5.logger = options.logger;
+    _this5.subscriberMan = {};
+    _this5.subscriberMan.push = new SubscriberManager(root, 'push');
+    _this5.subscriberMan.set = new SubscriberManager(root, 'set');
+    _this5.subscriberMan.send = new SubscriberManager(root, 'send');
+    _this5.offlineQueue = [];
+    _this5.wsOptions = options.wsOptions;
+    _this5.reconnectPeriod = options.reconnectPeriod || 5000;
+    _this5.reconnectTimer = null;
+    _this5.pingTimer = null;
+    _this5.pongArrived = true;
+    _this5.state = 'offline';
+    return _this5;
+  }
 
-	_createClass(_class, [{
-		key: 'sendEvent',
-		value: function sendEvent(event, params) {
-			var result = null;
-			switch (this.getState()) {
-				case 'offline':
-					result = this.offline(event, params);
-					break;
-				case 'connecting':
-					result = this.connecting(event, params);
-					break;
-				case 'online':
-					result = this.online(event, params);
-					break;
-				case 'disconnecting':
-					result = this.disconnecting(event, params);
-					break;
-				default:
-					console.error('unknow state');
-			}
-			if (result) {
-				this.emit('state-changed', {
-					currentState: this.state,
-					nextState: result.nextState
-				});
-				this.logger.log('state changed from ' + this.state + ' to ' + result.nextState);
-				this.state = result.nextState;
-			}
-		}
-	}, {
-		key: 'getState',
-		value: function getState() {
-			return this.state;
-		}
-	}, {
-		key: 'offline',
-		value: function offline(event) {
-			if (event == 'connect') {
-				return {
-					nextState: 'connecting'
-				};
-			} else {
-				return null;
-			}
-		}
-	}, {
-		key: 'connecting',
-		value: function connecting(event, params) {
-			if (event == 'connect') {
-				this.logger.warn('already connecting');
-				return null;
-			} else if (event == 'opened') {
-				this.emit('open', {});
+  _createClass(_class, [{
+    key: 'sendEvent',
+    value: function sendEvent(event, params) {
+      var result = null;
+      switch (this.getState()) {
+        case 'offline':
+          result = this.offline(event, params);
+          break;
+        case 'connecting':
+          result = this.connecting(event, params);
+          break;
+        case 'online':
+          result = this.online(event, params);
+          break;
+        case 'disconnecting':
+          result = this.disconnecting(event, params);
+          break;
+        default:
+          console.error('unknow state');
+      }
+      if (result) {
+        this.emit('state-changed', {
+          currentState: this.state,
+          nextState: result.nextState
+        });
+        this.logger.log('state changed from ' + this.state + ' to ' + result.nextState);
+        this.state = result.nextState;
+      }
+    }
+  }, {
+    key: 'getState',
+    value: function getState() {
+      return this.state;
+    }
+  }, {
+    key: 'offline',
+    value: function offline(event) {
+      if (event === 'connect') {
+        return {
+          nextState: 'connecting'
+        };
+      } else {
+        return null;
+      }
+    }
+  }, {
+    key: 'connecting',
+    value: function connecting(event, params) {
+      if (event === 'connect') {
+        this.logger.warn('already connecting');
+        return null;
+      } else if (event === 'opened') {
+        this.emit('open', {});
 
-				this.flushOfflineMessage();
-				this._setupPingTimer();
-				return {
-					nextState: 'online'
-				};
-			} else if (event == 'error') {
-				this._clean();
-				this._setupReconnect();
-				return null;
-			} else if (event == 'closed') {
-				this._clean();
-				if (params.code > 1000) {
-					this._setupReconnect();
-					return null;
-				} else {
-					return {
-						nextState: 'offline'
-					};
-				}
-			} else {
-				return null;
-			}
-		}
-	}, {
-		key: 'online',
-		value: function online(event, params) {
-			if (event == 'connect') {
-				this.logger.warn('already connected');
-				return null;
-			} else if (event == 'opened') {
-				this.logger.warn('already connected');
-				return null;
-			} else if (event == 'error') {
-				this._clean();
-				this._setupReconnect();
-				return {
-					nextState: 'connecting'
-				};
-			} else if (event == 'closed') {
-				this._clean();
-				if (params.code > 1000) {
-					this._setupReconnect();
-					return {
-						nextState: 'connecting'
-					};
-				} else {
-					return {
-						nextState: 'offline'
-					};
-				}
-			} else if (event == 'disconnect') {
-				this._disconnect();
-				return {
-					nextState: 'disconnecting'
-				};
-			} else {
-				return null;
-			}
-		}
-	}, {
-		key: 'disconnecting',
-		value: function disconnecting(event) {
-			if (event == 'error' || event == 'closed') {
-				this._clean();
-				return {
-					nextState: 'offline'
-				};
-			} else {
-				this.logger.warn('now disconnecting');
-				return null;
-			}
-		}
-	}, {
-		key: 'connect',
-		value: function connect() {
-			this.sendEvent('connect', {});
-		}
-	}, {
-		key: 'disconnect',
-		value: function disconnect() {
-			this.sendEvent('disconnect', {});
-		}
-	}, {
-		key: 'publish',
-		value: function publish(path, op, _v, cb, _options) {
-			var options = _options || {};
+        this.flushOfflineMessage();
+        this._setupPingTimer();
+        return {
+          nextState: 'online'
+        };
+      } else if (event === 'error') {
+        this._clean();
+        this._setupReconnect();
+        return null;
+      } else if (event === 'closed') {
+        this._clean();
+        if (params.code > 1000) {
+          this._setupReconnect();
+          return null;
+        } else {
+          return {
+            nextState: 'offline'
+          };
+        }
+      } else {
+        return null;
+      }
+    }
+  }, {
+    key: 'online',
+    value: function online(event, params) {
+      if (event === 'connect') {
+        this.logger.warn('already connected');
+        return null;
+      } else if (event === 'opened') {
+        this.logger.warn('already connected');
+        return null;
+      } else if (event === 'error') {
+        this._clean();
+        this._setupReconnect();
+        return {
+          nextState: 'connecting'
+        };
+      } else if (event === 'closed') {
+        this._clean();
+        if (params.code > 1000) {
+          this._setupReconnect();
+          return {
+            nextState: 'connecting'
+          };
+        } else {
+          return {
+            nextState: 'offline'
+          };
+        }
+      } else if (event === 'disconnect') {
+        this._disconnect();
+        return {
+          nextState: 'disconnecting'
+        };
+      } else {
+        return null;
+      }
+    }
+  }, {
+    key: 'disconnecting',
+    value: function disconnecting(event) {
+      if (event === 'error' || event === 'closed') {
+        this._clean();
+        return {
+          nextState: 'offline'
+        };
+      } else {
+        this.logger.warn('now disconnecting');
+        return null;
+      }
+    }
+  }, {
+    key: 'connect',
+    value: function connect() {
+      this.sendEvent('connect', {});
+    }
+  }, {
+    key: 'disconnect',
+    value: function disconnect() {
+      this.sendEvent('disconnect', {});
+    }
+  }, {
+    key: 'publish',
+    value: function publish(path, op, _v, cb, _options) {
+      var options = _options || {};
 
-			var v = JSON.stringify(_v);
+      var v = JSON.stringify(_v);
 
-			var apiUrl = this.root._get_api_url(op || 'push');
+      var apiUrl = this.root._get_api_url(op || 'push');
 
-			this.root._get_remote().post(apiUrl, Object.assign({ v: v }, _options), { c: path }, { 'Content-Type': 'application/json' }).then(function (res) {
-				if (res) res.v = v;
+      this.root._get_remote().post(apiUrl, Object.assign({ v: v }, options), { c: path }, { 'Content-Type': 'application/json' }).then(function (res) {
+        if (res) res.v = v;
 
-				cb(null, res);
-			}).catch(function (err) {
-				cb(err);
-			});
-		}
-	}, {
-		key: 'subscribe',
-		value: function subscribe(path, op, cb, onComplete) {
-			this.subscriberMan[op].reg(path, cb, onComplete);
-		}
-	}, {
-		key: 'unsubscribe',
-		value: function unsubscribe(path, op, cb) {
-			this.subscriberMan[op].unreg(path, cb);
-		}
-	}, {
-		key: '_setupReconnect',
-		value: function _setupReconnect() {
-			var _this6 = this;
+        cb(null, res);
+      }).catch(function (err) {
+        cb(err);
+      });
+    }
+  }, {
+    key: 'subscribe',
+    value: function subscribe(path, op, cb, onComplete) {
+      this.subscriberMan[op].reg(path, cb, onComplete);
+    }
+  }, {
+    key: 'unsubscribe',
+    value: function unsubscribe(path, op) {
+      this.subscriberMan[op].unreg(path);
+    }
+  }, {
+    key: '_setupReconnect',
+    value: function _setupReconnect() {
+      var _this6 = this;
 
-			setTimeout(function () {
-				_this6._connect();
-			}, this.reconnectPeriod);
-		}
-	}, {
-		key: '_clean',
-		value: function _clean() {
-			this.client.close();
-			this.client.clean();
-			this.client = null;
-			if (this.pingTimer !== null) {
-				this.pingTimer.clear();
-				this.pingTimer = null;
-			}
-			this.emit('close', {});
-		}
-	}, {
-		key: '_setupPingTimer',
-		value: function _setupPingTimer() {
-			var _this7 = this;
+      setTimeout(function () {
+        _this6._connect();
+      }, this.reconnectPeriod);
+    }
+  }, {
+    key: '_clean',
+    value: function _clean() {
+      this.client.close();
+      this.client.clean();
+      this.client = null;
+      if (this.pingTimer !== null) {
+        this.pingTimer.clear();
+        this.pingTimer = null;
+      }
+      this.emit('close', {});
+    }
+  }, {
+    key: '_setupPingTimer',
+    value: function _setupPingTimer() {
+      var _this7 = this;
 
-			if (!this.pingTimer && this.options.keepalive) {
-				this.pongArrived = true;
-				this.pingTimer = (0, _reinterval2.default)(function () {
-					_this7._checkPing();
-				}, this.options.keepalive * 1000);
-			}
-		}
-	}, {
-		key: '_resetPingInterval',
-		value: function _resetPingInterval() {
-			if (this.pingTimer && this.options.keepalive) {
-				this.pingTimer.reschedule(this.options.keepalive * 1000);
-			}
-		}
-	}, {
-		key: '_checkPing',
-		value: function _checkPing() {
-			if (this.pongArrived) {
-				this.pongArrived = false;
-			} else {
-				this.sendEvent('error', { message: 'pong not coming' });
-			}
-		}
-	}, {
-		key: '_handlePong',
-		value: function _handlePong() {
-			this.pongArrived = true;
-		}
-	}]);
+      if (!this.pingTimer && this.options.keepalive) {
+        this.pongArrived = true;
+        this.pingTimer = (0, _reinterval2.default)(function () {
+          _this7._checkPing();
+        }, this.options.keepalive * 1000);
+      }
+    }
+  }, {
+    key: '_resetPingInterval',
+    value: function _resetPingInterval() {
+      if (this.pingTimer && this.options.keepalive) {
+        this.pingTimer.reschedule(this.options.keepalive * 1000);
+      }
+    }
+  }, {
+    key: '_checkPing',
+    value: function _checkPing() {
+      if (this.pongArrived) {
+        this.pongArrived = false;
+      } else {
+        this.sendEvent('error', { message: 'pong not coming' });
+      }
+    }
+  }, {
+    key: '_handlePong',
+    value: function _handlePong() {
+      this.pongArrived = true;
+    }
+  }]);
 
-	return _class;
+  return _class;
 }(EventEmitter);
 
 exports.default = _class;
@@ -9794,7 +9795,7 @@ function extend() {
 /* 59 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"mlkcca","version":"1.0.0","description":"mlkcca js sdk","main":"./lib/node/index.js","engines":{"node":">=6.x"},"scripts":{"build":"gulp compile","build:web":"webpack","build:node":"gulp babel","test":"mocha test --recursive","test:file":"mocha","lint":"standard","lint:fix":"standard --fix"},"repository":{"type":"git","url":"git+https://github.com/mlkcca/js.git"},"keywords":["milkcocoa","IoT","pubsub","js"],"author":"Uhuru, Inc","license":"MIT","bugs":{"url":"https://github.com/mlkcca/js/issues"},"standard":{"globals":["describe","it","expect","test"]},"homepage":"https://github.com/mlkcca/js#readme","dependencies":{"agentkeepalive":"^3.1.0","reinterval":"^1.1.0","uuid":"^3.0.1"},"devDependencies":{"assert":"^1.4.1","babel-core":"^6.23.1","babel-loader":"^6.3.2","babel-plugin-add-module-exports":"^0.2.1","babel-preset-es2015":"^6.22.0","babel-preset-es2017":"^6.22.0","gulp":"^3.9.1","gulp-babel":"^6.1.2","gulp-clean":"^0.3.2","gulp-rename":"^1.2.2","gulp-sourcemaps":"^2.4.1","gulp-uglify":"^2.0.1","mocha":"^3.2.0","run-sequence":"^1.2.2","standard":"^10.0.3","stats-webpack-plugin":"^0.5.0","webpack":"^2.2.1"}}
+module.exports = {"name":"mlkcca","version":"1.0.0","description":"mlkcca js sdk","main":"./lib/node/index.js","engines":{"node":">=6.x"},"scripts":{"build":"gulp compile","build:web":"webpack","build:node":"gulp babel","test":"mocha test --recursive","test:file":"mocha","lint":"standard","lint:fix":"standard --fix"},"repository":{"type":"git","url":"git+https://github.com/mlkcca/js.git"},"keywords":["milkcocoa","IoT","pubsub","js"],"author":"Uhuru, Inc","license":"MIT","bugs":{"url":"https://github.com/mlkcca/js/issues"},"standard":{"globals":["describe","it","before","expect","XMLHttpRequest","XDomainRequest","test"]},"homepage":"https://github.com/mlkcca/js#readme","dependencies":{"agentkeepalive":"^3.1.0","reinterval":"^1.1.0","uuid":"^3.0.1"},"devDependencies":{"assert":"^1.4.1","babel-core":"^6.23.1","babel-loader":"^6.3.2","babel-plugin-add-module-exports":"^0.2.1","babel-preset-es2015":"^6.22.0","babel-preset-es2017":"^6.22.0","gulp":"^3.9.1","gulp-babel":"^6.1.2","gulp-clean":"^0.3.2","gulp-rename":"^1.2.2","gulp-sourcemaps":"^2.4.1","gulp-uglify":"^2.0.1","mocha":"^3.2.0","run-sequence":"^1.2.2","standard":"^10.0.3","stats-webpack-plugin":"^0.5.0","webpack":"^2.2.1"}}
 
 /***/ }),
 /* 60 */
