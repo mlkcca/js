@@ -24,11 +24,11 @@ class SubscriberManager extends EventEmitter {
 
   _startSubscribe (onComplete) {
     this._stopSubscribe()
-    let apiUrl = this.root._get_on_url(this.op || 'push')
+    let apiUrl = this.root._getOnUrl(this.op || 'push')
     let pathList = this._getPathList()
     if (pathList.length === 0) return
     let path = JSON.stringify(pathList)
-    this.caller = this.root._get_remote().get2(apiUrl, {c: path}, (err, res) => {
+    this.caller = this.root._getRemote().get2(apiUrl, {c: path}, (err, res) => {
       if (err) {
         if (onComplete) onComplete(err)
         setTimeout(() => {
@@ -266,14 +266,14 @@ export default class extends EventEmitter {
 
     let v = JSON.stringify(_v)
     // let rid = this.messageStore.add({path:path,op:op,v:v,options:_options}, cb);
-    let apiUrl = this.root._get_api_url(op || 'push')
+    let apiUrl = this.root._getApiUrl(op || 'push')
     /*
       let retryTimer = setTimeout(() => {
         this.flushOfflineMessage(() => {
         });
       }, 10000);
     */
-    this.root._get_remote().post(apiUrl, Object.assign({v: v}, options), {c: path}, {'Content-Type': 'application/json'}).then((res) => {
+    this.root._getRemote().post(apiUrl, Object.assign({v: v}, options), {c: path}, {'Content-Type': 'application/json'}).then((res) => {
       if (res) res.v = v
       // this.messageStore.recvAck(rid, res);
       // clearTimeout(retryTimer);

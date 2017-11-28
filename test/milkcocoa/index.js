@@ -11,7 +11,7 @@ function MilkcocoaTest (uuid) {
   })
   describe('get_uuid()', function () {
     it('should get current uuid.', function () {
-      assert.equal('uuid-' + uuid + '-milkcocoa', milkcocoa.get_uuid())
+      assert.equal('uuid-' + uuid + '-milkcocoa', milkcocoa.getUUID())
     })
   })
   describe('listDataStores()', function () {

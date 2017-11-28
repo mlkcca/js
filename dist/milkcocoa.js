@@ -5299,7 +5299,7 @@ module.exports = rng;
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -5333,172 +5333,171 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var _class = function () {
-	function _class(options) {
-		_classCallCheck(this, _class);
+  function _class(options) {
+    _classCallCheck(this, _class);
 
-		this.options = options;
-		this.appId = options.appId;
-		this.store = options.store;
-		if (!this.appId) throw new Error('appId required');
-		if (!this.store) throw new Error('store required');
-		this.uuid = this.get_uuid(options.uuid);
-		this.apiKey = options.apiKey;
-		this.accessToken = options.accessToken;
-		this.useSSL = options.hasOwnProperty('useSSL') ? options.useSSL : true;
-		this.host = options.host || 'pubsub1.mlkcca.com';
-		this.port = options.port || 443;
-		this.keepaliveTimeout = options.keepaliveTimeout || 300;
-		var headers = {};
-		if (this.accessToken) headers['Authorization'] = "Bearer " + this.accessToken;
-		this.remote = new _remote2.default(this.host, this.port, this.useSSL, headers);
-		this.wsOptions = {
-			headers: headers
-		};
-		this.websocket = new _pubsub2.default({
-			host: this._get_pubsub_url(this.useSSL, this.host, this.port, this.appId, this.apiKey, this.accessToken, this.uuid),
-			logger: console,
-			WebSocket: this.options.WebSocket,
-			wsOptions: this.wsOptions,
-			keepalive: options.keepalive || 36
-		}, this);
-		this.connect();
-	}
+    this.options = options;
+    this.appId = options.appId;
+    this.store = options.store;
+    if (!this.appId) throw new Error('appId required');
+    if (!this.store) throw new Error('store required');
+    this.uuid = this.getUUID(options.uuid);
+    this.apiKey = options.apiKey;
+    this.accessToken = options.accessToken;
+    this.useSSL = options.hasOwnProperty('useSSL') ? options.useSSL : true;
+    this.host = options.host || 'pubsub1.mlkcca.com';
+    this.port = options.port || 443;
+    this.keepaliveTimeout = options.keepaliveTimeout || 300;
+    var headers = {};
+    if (this.accessToken) headers['Authorization'] = 'Bearer ' + this.accessToken;
+    this.remote = new _remote2.default(this.host, this.port, this.useSSL, headers);
+    this.wsOptions = {
+      headers: headers
+    };
+    this.websocket = new _pubsub2.default({
+      host: this._getPubsubUrl(this.useSSL, this.host, this.port, this.appId, this.apiKey, this.accessToken, this.uuid),
+      logger: console,
+      WebSocket: this.options.WebSocket,
+      wsOptions: this.wsOptions,
+      keepalive: options.keepalive || 36
+    }, this);
+    this.connect();
+  }
 
-	_createClass(_class, [{
-		key: 'version',
-		value: function version() {
-			return _package2.default.version;
-		}
-	}, {
-		key: 'getAppId',
-		value: function getAppId() {
-			return this.appId;
-		}
-	}, {
-		key: 'get_uuid',
-		value: function get_uuid(uuid) {
-			if (uuid) {
-				this.store.set('uuid', uuid);
-			} else {
-				var current_uuid = this.store.get('uuid', uuid);
-				if (current_uuid) {
-					uuid = current_uuid;
-				} else {
-					uuid = (0, _uuid2.default)();
-					this.store.set('uuid', uuid);
-				}
-			}
-			return uuid;
-		}
-	}, {
-		key: 'connect',
-		value: function connect() {
-			this.websocket.connect();
-		}
-	}, {
-		key: 'disconnect',
-		value: function disconnect() {
-			this.websocket.disconnect();
-		}
-	}, {
-		key: 'on',
-		value: function on(event, fn) {
-			this.websocket.on(event, fn);
-		}
-	}, {
-		key: '_get_pubsub_url',
-		value: function _get_pubsub_url(ssl, host, port, appId, apikey, accessToken, uuid) {
+  _createClass(_class, [{
+    key: 'version',
+    value: function version() {
+      return _package2.default.version;
+    }
+  }, {
+    key: 'getAppId',
+    value: function getAppId() {
+      return this.appId;
+    }
+  }, {
+    key: 'getUUID',
+    value: function getUUID(uuid) {
+      if (uuid) {
+        this.store.set('uuid', uuid);
+      } else {
+        var currentUUID = this.store.get('uuid', uuid);
+        if (currentUUID) {
+          uuid = currentUUID;
+        } else {
+          uuid = (0, _uuid2.default)();
+          this.store.set('uuid', uuid);
+        }
+      }
+      return uuid;
+    }
+  }, {
+    key: 'connect',
+    value: function connect() {
+      this.websocket.connect();
+    }
+  }, {
+    key: 'disconnect',
+    value: function disconnect() {
+      this.websocket.disconnect();
+    }
+  }, {
+    key: 'on',
+    value: function on(event, fn) {
+      this.websocket.on(event, fn);
+    }
+  }, {
+    key: '_getPubsubUrl',
+    value: function _getPubsubUrl(ssl, host, port, appId, apikey, accessToken, uuid) {
+      var base = 'ws' + (ssl ? 's' : '') + '://' + host + ':' + port + '/ws2/' + appId + '/';
+      if (apikey) return base + apikey + '?' + _querystring2.default.stringify({ uuid: uuid });else if (accessToken) return base + '?' + _querystring2.default.stringify({ at: accessToken, uuid: uuid });else return base + '?' + _querystring2.default.stringify({ uuid: uuid });
+    }
+  }, {
+    key: '_getApiUrl',
+    value: function _getApiUrl(api) {
+      var appOptions = this._getOptions();
+      if (appOptions.apiKey) return '/api/' + api + '/' + appOptions.appId + '/' + appOptions.apiKey;else return '/api/' + api + '/' + appOptions.appId;
+    }
+  }, {
+    key: '_getOnUrl',
+    value: function _getOnUrl(api) {
+      var appOptions = this._getOptions();
+      if (appOptions.apiKey) return '/on/' + api + '/' + appOptions.appId + '/' + appOptions.apiKey;else return '/on/' + api + '/' + appOptions.appId;
+    }
+  }, {
+    key: '_getPubsub',
+    value: function _getPubsub() {
+      return this.websocket;
+    }
+  }, {
+    key: '_getRemote',
+    value: function _getRemote() {
+      return this.remote;
+    }
+  }, {
+    key: '_getOptions',
+    value: function _getOptions() {
+      return this.options;
+    }
+  }, {
+    key: 'dataStore',
+    value: function dataStore(path, options) {
+      return new _datastore2.default(this, path, options);
+    }
+  }, {
+    key: 'grant',
+    value: function grant(options, cb) {
+      var apiUrl = this._getApiUrl('grant');
+      var params = options;
+      this.remote.get(apiUrl, params).then(function (result) {
+        if (result.err) {
+          cb(result.err);
+          return;
+        }
+        cb(null, result.content);
+      }).catch(function (err) {
+        cb(err);
+      });
+    }
+  }, {
+    key: 'listDataStores',
+    value: function listDataStores(options, cb) {
+      var apiUrl = this._getApiUrl('ds');
+      var params = {
+        c: options.c || ''
+      };
+      params.limit = options.limit || 100;
+      this._getRemote().get(apiUrl, params).then(function (result) {
+        if (result.err) {
+          cb(result.err);
+        } else {
+          var dataStores = result.content;
+          cb(null, dataStores);
+        }
+      }).catch(function (err) {
+        cb(err);
+      });
+    }
+  }], [{
+    key: 'history',
+    value: function history(options, cb) {
+      var appId = options.appId;
+      var apiKey = options.apiKey;
+      var useSSL = options.hasOwnProperty('useSSL') ? options.useSSL : true;
+      var host = options.host || 'pubsub1.mlkcca.com';
+      var port = options.port || 443;
+      var remote = new _remote2.default(host, port, useSSL, {});
+      remote.get('/api/history/' + appId + '/' + apiKey, { c: options.path }).then(function (messages) {
+        cb(null, messages);
+      }).catch(function (err) {
+        cb(err);
+      });
+    }
+  }, {
+    key: 'grant',
+    value: function grant() {}
+  }]);
 
-			var base = 'ws' + (ssl ? 's' : '') + '://' + host + ':' + port + '/ws2/' + appId + '/';
-			if (apikey) return base + apikey + '?' + _querystring2.default.stringify({ uuid: uuid });else if (accessToken) return base + '?' + _querystring2.default.stringify({ at: accessToken, uuid: uuid });else return base + '?' + _querystring2.default.stringify({ uuid: uuid });
-		}
-	}, {
-		key: '_get_api_url',
-		value: function _get_api_url(api) {
-			var appOptions = this._get_options();
-			if (appOptions.apiKey) return '/api/' + api + '/' + appOptions.appId + '/' + appOptions.apiKey;else return '/api/' + api + '/' + appOptions.appId;
-		}
-	}, {
-		key: '_get_on_url',
-		value: function _get_on_url(api) {
-			var appOptions = this._get_options();
-			if (appOptions.apiKey) return '/on/' + api + '/' + appOptions.appId + '/' + appOptions.apiKey;else return '/on/' + api + '/' + appOptions.appId;
-		}
-	}, {
-		key: '_get_pubsub',
-		value: function _get_pubsub() {
-			return this.websocket;
-		}
-	}, {
-		key: '_get_remote',
-		value: function _get_remote() {
-			return this.remote;
-		}
-	}, {
-		key: '_get_options',
-		value: function _get_options() {
-			return this.options;
-		}
-	}, {
-		key: 'dataStore',
-		value: function dataStore(path, options) {
-			return new _datastore2.default(this, path, options);
-		}
-	}, {
-		key: 'grant',
-		value: function grant(options, cb) {
-			var apiUrl = this._get_api_url('grant');
-			var params = options;
-			this.remote.get(apiUrl, params).then(function (result) {
-				if (result.err) {
-					cb(result.err);
-					return;
-				}
-				cb(null, result.content);
-			}).catch(function (err) {
-				cb(err);
-			});
-		}
-	}, {
-		key: 'listDataStores',
-		value: function listDataStores(options, cb) {
-			var apiUrl = this._get_api_url('ds');
-			var params = {
-				c: options.c || ''
-			};
-			params.limit = options.limit || 100;
-			this._get_remote().get(apiUrl, params).then(function (result) {
-				if (result.err) {
-					cb(result.err);
-				} else {
-					var dataStores = result.content;
-					cb(null, dataStores);
-				}
-			}).catch(function (err) {
-				cb(err);
-			});
-		}
-	}], [{
-		key: 'history',
-		value: function history(options, cb) {
-			var appId = options.appId;
-			var apiKey = options.apiKey;
-			var useSSL = options.hasOwnProperty('useSSL') ? options.useSSL : true;
-			var host = options.host || 'pubsub1.mlkcca.com';
-			var port = options.port || 443;
-			var remote = new _remote2.default(host, port, useSSL, {});
-			remote.get('/api/history/' + appId + '/' + apiKey, { c: options.path }).then(function (messages) {
-				cb(null, messages);
-			}).catch(function (err) {
-				cb(err);
-			});
-		}
-	}, {
-		key: 'grant',
-		value: function grant() {}
-	}]);
-
-	return _class;
+  return _class;
 }();
 
 exports.default = _class;
@@ -5914,15 +5913,15 @@ var _class = function () {
       var _this = this;
 
       if (event === 'push') {
-        this.root._get_pubsub().subscribe(this.path, 'push', function (message) {
+        this.root._getPubsub().subscribe(this.path, 'push', function (message) {
           cb(_push2.default.decode(message, _this.datatype));
         }, onComplete);
       } else if (event === 'set') {
-        this.root._get_pubsub().subscribe(this.path, 'set', function (message) {
+        this.root._getPubsub().subscribe(this.path, 'set', function (message) {
           cb(_push2.default.decode(message, _this.datatype));
         }, onComplete);
       } else if (event === 'send') {
-        this.root._get_pubsub().subscribe(this.path, 'send', function (message) {
+        this.root._getPubsub().subscribe(this.path, 'send', function (message) {
           cb(_send2.default.decode(message, _this.datatype));
         }, onComplete);
       }
@@ -5930,7 +5929,7 @@ var _class = function () {
   }, {
     key: 'off',
     value: function off(event) {
-      this.root._get_pubsub().unsubscribe(this.path, event);
+      this.root._getPubsub().unsubscribe(this.path, event);
     }
   }, {
     key: 'push',
@@ -5942,7 +5941,7 @@ var _class = function () {
       } else if (typeof options === 'undefined') {
         cb = function cb() {};
       }
-      this.root._get_pubsub().publish(this.path, 'push', value, function (err, message) {
+      this.root._getPubsub().publish(this.path, 'push', value, function (err, message) {
         if (err) return cb(err);
         cb(null, _push2.default.decode(message, _this2.datatype));
       });
@@ -5955,7 +5954,7 @@ var _class = function () {
       } else if (typeof options === 'undefined') {
         cb = function cb() {};
       }
-      this.root._get_pubsub().publish(this.path, 'set', value, cb, { id: id });
+      this.root._getPubsub().publish(this.path, 'set', value, cb, { id: id });
     }
   }, {
     key: 'send',
@@ -5963,14 +5962,14 @@ var _class = function () {
       if (typeof cb === 'undefined') {
         cb = function cb() {};
       }
-      this.root._get_pubsub().publish(this.path, 'send', value, cb);
+      this.root._getPubsub().publish(this.path, 'send', value, cb);
     }
   }, {
     key: 'history',
     value: function history(options, cb) {
       var _this3 = this;
 
-      var apiUrl = this.root._get_api_url('history');
+      var apiUrl = this.root._getApiUrl('history');
       var params = {
         c: this.path
       };
@@ -5989,7 +5988,7 @@ var _class = function () {
         }
       }
 
-      this.root._get_remote().get(apiUrl, params).then(function (result) {
+      this.root._getRemote().get(apiUrl, params).then(function (result) {
         if (result.err) {
           cb(result.err);
         } else {
@@ -6199,11 +6198,11 @@ var SubscriberManager = function (_EventEmitter) {
       var _this3 = this;
 
       this._stopSubscribe();
-      var apiUrl = this.root._get_on_url(this.op || 'push');
+      var apiUrl = this.root._getOnUrl(this.op || 'push');
       var pathList = this._getPathList();
       if (pathList.length === 0) return;
       var path = JSON.stringify(pathList);
-      this.caller = this.root._get_remote().get2(apiUrl, { c: path }, function (err, res) {
+      this.caller = this.root._getRemote().get2(apiUrl, { c: path }, function (err, res) {
         if (err) {
           if (onComplete) onComplete(err);
           setTimeout(function () {
@@ -6445,9 +6444,9 @@ var _class = function (_EventEmitter2) {
 
       var v = JSON.stringify(_v);
 
-      var apiUrl = this.root._get_api_url(op || 'push');
+      var apiUrl = this.root._getApiUrl(op || 'push');
 
-      this.root._get_remote().post(apiUrl, Object.assign({ v: v }, options), { c: path }, { 'Content-Type': 'application/json' }).then(function (res) {
+      this.root._getRemote().post(apiUrl, Object.assign({ v: v }, options), { c: path }, { 'Content-Type': 'application/json' }).then(function (res) {
         if (res) res.v = v;
 
         cb(null, res);
@@ -9796,7 +9795,7 @@ function extend() {
 /* 59 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"mlkcca","version":"1.0.0","description":"mlkcca js sdk","main":"./lib/node/index.js","engines":{"node":">=6.x"},"scripts":{"build":"gulp compile","build:web":"webpack","build:node":"gulp babel","test":"mocha test --recursive","test:file":"mocha","lint":"standard","lint:fix":"standard --fix"},"repository":{"type":"git","url":"git+https://github.com/mlkcca/js.git"},"keywords":["milkcocoa","IoT","pubsub","js"],"author":"Uhuru, Inc","license":"MIT","bugs":{"url":"https://github.com/mlkcca/js/issues"},"standard":{"globals":["describe","it","before","expect","XMLHttpRequest","XDomainRequest","test"]},"homepage":"https://github.com/mlkcca/js#readme","dependencies":{"agentkeepalive":"^3.1.0","reinterval":"^1.1.0","uuid":"^3.0.1"},"devDependencies":{"assert":"^1.4.1","babel-core":"^6.23.1","babel-loader":"^6.3.2","babel-plugin-add-module-exports":"^0.2.1","babel-preset-es2015":"^6.22.0","babel-preset-es2017":"^6.22.0","gulp":"^3.9.1","gulp-babel":"^6.1.2","gulp-clean":"^0.3.2","gulp-rename":"^1.2.2","gulp-sourcemaps":"^2.4.1","gulp-uglify":"^2.0.1","mocha":"^3.2.0","run-sequence":"^1.2.2","standard":"^10.0.3","stats-webpack-plugin":"^0.5.0","webpack":"^2.2.1"}}
+module.exports = {"name":"mlkcca","version":"1.0.0","description":"mlkcca js sdk","main":"./lib/node/index.js","engines":{"node":">=6.x"},"scripts":{"build":"gulp compile","build:web":"webpack","build:node":"gulp babel","test":"mocha test/index.js","test:file":"mocha","lint":"standard","lint:fix":"standard --fix"},"repository":{"type":"git","url":"git+https://github.com/mlkcca/js.git"},"keywords":["milkcocoa","IoT","pubsub","js"],"author":"Uhuru, Inc","license":"MIT","bugs":{"url":"https://github.com/mlkcca/js/issues"},"standard":{"globals":["describe","it","before","expect","XMLHttpRequest","XDomainRequest","test"]},"homepage":"https://github.com/mlkcca/js#readme","dependencies":{"agentkeepalive":"^3.1.0","reinterval":"^1.1.0","uuid":"^3.0.1"},"devDependencies":{"assert":"^1.4.1","babel-core":"^6.23.1","babel-loader":"^6.3.2","babel-plugin-add-module-exports":"^0.2.1","babel-preset-es2015":"^6.22.0","babel-preset-es2017":"^6.22.0","gulp":"^3.9.1","gulp-babel":"^6.1.2","gulp-clean":"^0.3.2","gulp-rename":"^1.2.2","gulp-sourcemaps":"^2.4.1","gulp-uglify":"^2.0.1","mocha":"^3.2.0","run-sequence":"^1.2.2","standard":"^10.0.3","stats-webpack-plugin":"^0.5.0","webpack":"^2.2.1"}}
 
 /***/ }),
 /* 60 */

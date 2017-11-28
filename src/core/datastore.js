@@ -20,15 +20,15 @@ export default class {
 
   on (event, cb, onComplete) {
     if (event === 'push') {
-      this.root._get_pubsub().subscribe(this.path, 'push', (message) => {
+      this.root._getPubsub().subscribe(this.path, 'push', (message) => {
         cb(PushDataType.decode(message, this.datatype))
       }, onComplete)
     } else if (event === 'set') {
-      this.root._get_pubsub().subscribe(this.path, 'set', (message) => {
+      this.root._getPubsub().subscribe(this.path, 'set', (message) => {
         cb(PushDataType.decode(message, this.datatype))
       }, onComplete)
     } else if (event === 'send') {
-      this.root._get_pubsub().subscribe(this.path, 'send', (message) => {
+      this.root._getPubsub().subscribe(this.path, 'send', (message) => {
         cb(SendDataType.decode(message, this.datatype))
       }, onComplete)
     }
@@ -38,7 +38,7 @@ export default class {
     // let op = '_p';
     // if(event == 'push') op = '_p';
     // else if(event == 'send') op = '_s';
-    this.root._get_pubsub().unsubscribe(this.path, event)
+    this.root._getPubsub().unsubscribe(this.path, event)
   }
 
   push (value, options, cb) {
@@ -47,7 +47,7 @@ export default class {
     } else if (typeof options === 'undefined') {
       cb = function () {}
     }
-    this.root._get_pubsub().publish(this.path, 'push', value, (err, message) => {
+    this.root._getPubsub().publish(this.path, 'push', value, (err, message) => {
       if (err) return cb(err)
       cb(null, PushDataType.decode(message, this.datatype))
     })
@@ -59,18 +59,18 @@ export default class {
     } else if (typeof options === 'undefined') {
       cb = function () {}
     }
-    this.root._get_pubsub().publish(this.path, 'set', value, cb, {id: id})
+    this.root._getPubsub().publish(this.path, 'set', value, cb, {id: id})
   }
 
   send (value, cb) {
     if (typeof cb === 'undefined') {
       cb = function () {}
     }
-    this.root._get_pubsub().publish(this.path, 'send', value, cb)
+    this.root._getPubsub().publish(this.path, 'send', value, cb)
   }
 
   history (options, cb) {
-    let apiUrl = this.root._get_api_url('history')
+    let apiUrl = this.root._getApiUrl('history')
     let params = {
       c: this.path
     }
@@ -89,7 +89,7 @@ export default class {
       }
     }
 
-    this.root._get_remote().get(apiUrl, params).then((result) => {
+    this.root._getRemote().get(apiUrl, params).then((result) => {
       if (result.err) {
         cb(result.err)
       } else {
