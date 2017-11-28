@@ -19,20 +19,20 @@ const keepaliveHttpsAgent = new HttpsAgent({
 })
 
 /*
-method
-utl
-params
-callback
-secure
+  method
+  utl
+  params
+  callback
+  secure
 */
 function request (method, secure, host, port, path, qs, payload, headers, callback) {
   var http_client = secure ? https : http
-// headers['Content-Type'] = 'application/x-www-form-urlencoded';
+  // headers['Content-Type'] = 'application/x-www-form-urlencoded';
 
   if (qs) {
     path += '?' + querystring.stringify(qs)
   }
-// console.log('path', method, path, payload);
+  // console.log('path', method, path, payload);
 
   var options = {
     hostname: host,
@@ -45,9 +45,9 @@ function request (method, secure, host, port, path, qs, payload, headers, callba
 
   if (method === 'GET') {
     return http_client.get(options, process_response)
-.on('error', function (e) {
-  callback(e)
-})
+            .on('error', function (e) {
+              callback(e)
+            })
   } else {
     var req = http_client.request(options, process_response)
     req.setTimeout(120000)
@@ -101,7 +101,7 @@ function requestBrowser (method, secure, host, _port, path, qs, payload, headers
   xhr.onerror = function () {
     callback(xhr.statusText || 'unknown error')
   }
-// xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  // xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   for (var header_key in headers) {
     xhr.setRequestHeader(header_key, headers[header_key])
   }
