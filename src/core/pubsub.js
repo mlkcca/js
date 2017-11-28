@@ -16,7 +16,7 @@ class SubscriberManager extends EventEmitter {
     this._startSubscribe(onComplete)
   }
 
-  _get_path_list () {
+  _getPathList () {
     return Object.keys(this.subscribers).map((topic) => {
       return [topic, this.subscribers[topic].timestamp]
     })
@@ -25,7 +25,7 @@ class SubscriberManager extends EventEmitter {
   _startSubscribe (onComplete) {
     this._stopSubscribe()
     let apiUrl = this.root._get_on_url(this.op || 'push')
-    let pathList = this._get_path_list()
+    let pathList = this._getPathList()
     if (pathList.length === 0) return
     let path = JSON.stringify(pathList)
     this.caller = this.root._get_remote().get2(apiUrl, {c: path}, (err, res) => {
@@ -43,11 +43,11 @@ class SubscriberManager extends EventEmitter {
           if (onComplete) onComplete(res.err)
         }
       } else {
-        let min_ts = Infinity
+        let minTs = Infinity
         Object.keys(res).forEach((key) => {
           let ts = res[key][0][0]
           this.subscribers[key].timestamp = ts
-          if (min_ts > ts) min_ts = ts
+          if (minTs > ts) minTs = ts
           res[key].reverse().map((m) => {
             if (m.length === 2) {
               return {
@@ -67,7 +67,7 @@ class SubscriberManager extends EventEmitter {
         })
         for (var t in this.subscribers) {
           if (this.subscribers[t].timestamp === 0) {
-            this.subscribers[t].timestamp = min_ts
+            this.subscribers[t].timestamp = minTs
           }
         }
         this._startSubscribe()

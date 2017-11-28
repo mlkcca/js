@@ -5752,7 +5752,7 @@ var keepaliveHttpsAgent = new HttpsAgent({
 });
 
 function request(method, secure, host, port, path, qs, payload, headers, callback) {
-  var http_client = secure ? https : http;
+  var httpClient = secure ? https : http;
 
 
   if (qs) {
@@ -5770,11 +5770,11 @@ function request(method, secure, host, port, path, qs, payload, headers, callbac
   };
 
   if (method === 'GET') {
-    return http_client.get(options, process_response).on('error', function (e) {
+    return httpClient.get(options, processResponse).on('error', function (e) {
       callback(e);
     });
   } else {
-    var req = http_client.request(options, process_response);
+    var req = httpClient.request(options, processResponse);
     req.setTimeout(120000);
     req.on('timeout', function () {
       if (callback) callback(new Error('timed out'), null);
@@ -5788,7 +5788,7 @@ function request(method, secure, host, port, path, qs, payload, headers, callbac
     return req;
   }
 
-  function process_response(res) {
+  function processResponse(res) {
     if (callback) {
       var content = '';
       res.on('data', function (str) {
@@ -5829,8 +5829,8 @@ function requestBrowser(method, secure, host, _port, path, qs, payload, headers,
     callback(xhr.statusText || 'unknown error');
   };
 
-  for (var header_key in headers) {
-    xhr.setRequestHeader(header_key, headers[header_key]);
+  for (var headerKey in headers) {
+    xhr.setRequestHeader(headerKey, headers[headerKey]);
   }
 
   xhr.send(payload);
@@ -5982,9 +5982,9 @@ var _class = function () {
       }
 
       if (options.useCache && options.ts && params.order === 'desc') {
-        var decoded_messages = this.cache.query(options.ts, params.limit);
-        if (decoded_messages) {
-          cb(null, decoded_messages);
+        var decodedMessages = this.cache.query(options.ts, params.limit);
+        if (decodedMessages) {
+          cb(null, decodedMessages);
           return;
         }
       }
@@ -5994,13 +5994,13 @@ var _class = function () {
           cb(result.err);
         } else {
           var messages = result.content;
-          var _decoded_messages = messages.map(function (m) {
+          var _decodedMessages = messages.map(function (m) {
             return _push2.default.decode(m, _this3.datatype);
           });
           if (options.useCache && options.ts && params.order === 'desc' && messages.length > 0) {
-            _this3.cache.add(options.ts, _decoded_messages);
+            _this3.cache.add(options.ts, _decodedMessages);
           }
-          cb(null, _decoded_messages);
+          cb(null, _decodedMessages);
         }
       }).catch(function (err) {
         cb(err);
@@ -6185,8 +6185,8 @@ var SubscriberManager = function (_EventEmitter) {
       this._startSubscribe(onComplete);
     }
   }, {
-    key: '_get_path_list',
-    value: function _get_path_list() {
+    key: '_getPathList',
+    value: function _getPathList() {
       var _this2 = this;
 
       return Object.keys(this.subscribers).map(function (topic) {
@@ -6200,7 +6200,7 @@ var SubscriberManager = function (_EventEmitter) {
 
       this._stopSubscribe();
       var apiUrl = this.root._get_on_url(this.op || 'push');
-      var pathList = this._get_path_list();
+      var pathList = this._getPathList();
       if (pathList.length === 0) return;
       var path = JSON.stringify(pathList);
       this.caller = this.root._get_remote().get2(apiUrl, { c: path }, function (err, res) {
@@ -6218,11 +6218,11 @@ var SubscriberManager = function (_EventEmitter) {
             if (onComplete) onComplete(res.err);
           }
         } else {
-          var min_ts = Infinity;
+          var minTs = Infinity;
           Object.keys(res).forEach(function (key) {
             var ts = res[key][0][0];
             _this3.subscribers[key].timestamp = ts;
-            if (min_ts > ts) min_ts = ts;
+            if (minTs > ts) minTs = ts;
             res[key].reverse().map(function (m) {
               if (m.length === 2) {
                 return {
@@ -6242,7 +6242,7 @@ var SubscriberManager = function (_EventEmitter) {
           });
           for (var t in _this3.subscribers) {
             if (_this3.subscribers[t].timestamp === 0) {
-              _this3.subscribers[t].timestamp = min_ts;
+              _this3.subscribers[t].timestamp = minTs;
             }
           }
           _this3._startSubscribe();
@@ -6535,7 +6535,7 @@ module.exports = exports['default'];
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6545,99 +6545,100 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var ajax = __webpack_require__(27);
 
 var _class = function () {
-	function _class(host, port, secure, headers) {
-		_classCallCheck(this, _class);
+  function _class(host, port, secure, headers) {
+    _classCallCheck(this, _class);
 
-		this.host = host;
-		this.port = port, this.secure = secure;
-		this.headers = headers;
-	}
+    this.host = host;
+    this.port = port;
+    this.secure = secure;
+    this.headers = headers;
+  }
 
-	_createClass(_class, [{
-		key: 'post',
-		value: function post(path, params, _qs, _headers) {
-			var _this = this;
+  _createClass(_class, [{
+    key: 'post',
+    value: function post(path, params, _qs, _headers) {
+      var _this = this;
 
-			var qs = _qs || null;
-			var headers = Object.assign({}, this.headers, _headers);
-			return new Promise(function (resolve, reject) {
-				ajax.request('POST', _this.secure, _this.host, _this.port, path, qs, JSON.stringify(params), headers, function (err, data) {
-					if (err) {
-						return reject(err);
-					}
-					if (data.err) {
-						return reject(data.err);
-					}
-					resolve(data.content);
-				});
-			});
-		}
-	}, {
-		key: 'get',
-		value: function get(path, params) {
-			var _this2 = this;
+      var qs = _qs || null;
+      var headers = Object.assign({}, this.headers, _headers);
+      return new Promise(function (resolve, reject) {
+        ajax.request('POST', _this.secure, _this.host, _this.port, path, qs, JSON.stringify(params), headers, function (err, data) {
+          if (err) {
+            return reject(err);
+          }
+          if (data.err) {
+            return reject(data.err);
+          }
+          resolve(data.content);
+        });
+      });
+    }
+  }, {
+    key: 'get',
+    value: function get(path, params) {
+      var _this2 = this;
 
-			return new Promise(function (resolve, reject) {
-				ajax.request('GET', _this2.secure, _this2.host, _this2.port, path, params, null, _this2.headers, function (err, data) {
-					if (err) {
-						return reject(err);
-					}
+      return new Promise(function (resolve, reject) {
+        ajax.request('GET', _this2.secure, _this2.host, _this2.port, path, params, null, _this2.headers, function (err, data) {
+          if (err) {
+            return reject(err);
+          }
 
-					resolve(data);
-				});
-			});
-		}
-	}, {
-		key: 'get2',
-		value: function get2(path, params, cb) {
-			return ajax.request('GET', this.secure, this.host, this.port, path, params, null, this.headers, function (err, data) {
-				if (err) {
-					return cb(err);
-				}
-				cb(null, data);
-			});
-		}
-	}, {
-		key: 'put',
-		value: function put(path, params) {
-			var _this3 = this;
+          resolve(data);
+        });
+      });
+    }
+  }, {
+    key: 'get2',
+    value: function get2(path, params, cb) {
+      return ajax.request('GET', this.secure, this.host, this.port, path, params, null, this.headers, function (err, data) {
+        if (err) {
+          return cb(err);
+        }
+        cb(null, data);
+      });
+    }
+  }, {
+    key: 'put',
+    value: function put(path, params) {
+      var _this3 = this;
 
-			return new Promise(function (resolve, reject) {
-				ajax.request('PUT', _this3.secure, _this3.host, _this3.port, path, null, JSON.stringify(params), _this3.headers, function (err, data) {
-					if (err) {
-						return reject(err);
-					}
-					if (data.err) {
-						return reject(data.err);
-					}
-					resolve(data.content);
-				});
-			});
-		}
-	}, {
-		key: 'delete',
-		value: function _delete(path, params) {
-			var _this4 = this;
+      return new Promise(function (resolve, reject) {
+        ajax.request('PUT', _this3.secure, _this3.host, _this3.port, path, null, JSON.stringify(params), _this3.headers, function (err, data) {
+          if (err) {
+            return reject(err);
+          }
+          if (data.err) {
+            return reject(data.err);
+          }
+          resolve(data.content);
+        });
+      });
+    }
+  }, {
+    key: 'delete',
+    value: function _delete(path, params) {
+      var _this4 = this;
 
-			var qs = {};
-			Object.keys(params).forEach(function (k) {
-				qs[k] = JSON.stringify(params[k]);
-			});
-			return new Promise(function (resolve, reject) {
-				ajax.request('DELETE', _this4.secure, _this4.host, _this4.port, path, qs, null, _this4.headers, function (err, data) {
-					if (err) {
-						return reject(err);
-					}
-					if (data.err) {
-						return reject(data.err);
-					}
-					resolve(data.content);
-				});
-			});
-		}
-	}]);
+      var qs = {};
+      Object.keys(params).forEach(function (k) {
+        qs[k] = JSON.stringify(params[k]);
+      });
+      return new Promise(function (resolve, reject) {
+        ajax.request('DELETE', _this4.secure, _this4.host, _this4.port, path, qs, null, _this4.headers, function (err, data) {
+          if (err) {
+            return reject(err);
+          }
+          if (data.err) {
+            return reject(data.err);
+          }
+          resolve(data.content);
+        });
+      });
+    }
+  }]);
 
-	return _class;
+  return _class;
 }();
 
 exports.default = _class;

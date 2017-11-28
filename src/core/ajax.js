@@ -26,7 +26,7 @@ const keepaliveHttpsAgent = new HttpsAgent({
   secure
 */
 function request (method, secure, host, port, path, qs, payload, headers, callback) {
-  var http_client = secure ? https : http
+  var httpClient = secure ? https : http
   // headers['Content-Type'] = 'application/x-www-form-urlencoded';
 
   if (qs) {
@@ -44,12 +44,12 @@ function request (method, secure, host, port, path, qs, payload, headers, callba
   }
 
   if (method === 'GET') {
-    return http_client.get(options, process_response)
+    return httpClient.get(options, processResponse)
             .on('error', function (e) {
               callback(e)
             })
   } else {
-    var req = http_client.request(options, process_response)
+    var req = httpClient.request(options, processResponse)
     req.setTimeout(120000)
     req.on('timeout', function () {
       if (callback) callback(new Error('timed out'), null)
@@ -63,7 +63,7 @@ function request (method, secure, host, port, path, qs, payload, headers, callba
     return req
   }
 
-  function process_response (res) {
+  function processResponse (res) {
     if (callback) {
       var content = ''
       res.on('data', function (str) {
@@ -102,8 +102,8 @@ function requestBrowser (method, secure, host, _port, path, qs, payload, headers
     callback(xhr.statusText || 'unknown error')
   }
   // xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  for (var header_key in headers) {
-    xhr.setRequestHeader(header_key, headers[header_key])
+  for (var headerKey in headers) {
+    xhr.setRequestHeader(headerKey, headers[headerKey])
   }
 
   xhr.send(payload)
