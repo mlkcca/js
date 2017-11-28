@@ -38,6 +38,7 @@
       "expect",
       "XMLHttpRequest",
       "XDomainRequest",
+      "localStorage",
       "test"
     ]
   },

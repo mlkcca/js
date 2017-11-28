@@ -1,38 +1,39 @@
-import MilkcocoaCore from '../core';
-import {authWithMilkcocoa} from './auth';
+import MilkcocoaCore from '../core'
+import {authWithMilkcocoa} from './auth'
+const packageJSON = require('../../package.json')
 
 let store = {
-  get(key) {
+  get (key) {
     try {
-      return localStorage.getItem(key);
+      return localStorage.getItem(key)
     } catch (e) {
-      return null;
+      return null
     }
   },
 
-  set(key, data) {
+  set (key, data) {
     try {
-      return localStorage.setItem(key, data);
+      return localStorage.setItem(key, data)
     } catch (e) {
-      return null;
+      return null
     }
   }
-};
+}
 
 export default class Milkcocoa extends MilkcocoaCore {
-	constructor(options) {
-		options.store = store;
-		super(options);
-	}
+  constructor (options) {
+    options.store = store
+    super(options)
+  }
 
-	version() {
-		return packageJSON.version;
-	}
+  version () {
+    return packageJSON.version
+  }
 
-	static authWithMilkcocoa(options, callback) {
-		authWithMilkcocoa(Object.assign({}, options.authOptions, {appId: options.appId, callback: function(accessToken) {
-			console.log(accessToken);
-			callback(null, new Milkcocoa(Object.assign({}, options, {accessToken:accessToken})));
-		}}))
-	}
+  static authWithMilkcocoa (options, callback) {
+    authWithMilkcocoa(Object.assign({}, options.authOptions, {appId: options.appId,
+      callback: function (accessToken) {
+        callback(null, new Milkcocoa(Object.assign({}, options, {accessToken: accessToken})))
+      }}))
+  }
 }
