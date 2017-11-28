@@ -1,13 +1,15 @@
-const history = require('./history')
+const uuidv4 = require('uuid/v4')
+
+const datatype = require('./datatype')
 const push = require('./push')
 const send = require('./send')
 const set = require('./set')
 const onoff = require('./onoff')
-const datatype = require('./datatype')
-const uuidv4 = require('uuid/v4')
+const history = require('./history')
 
 describe('DataStore', function () {
   const uuid = uuidv4()
+
   describe('DataType', function () {
     datatype(uuid)
   })
@@ -23,5 +25,7 @@ describe('DataStore', function () {
   describe('On/Off', function () {
     onoff(uuid)
   })
-  // history()
+  describe('History', function () {
+    history(uuid)
+  })
 })

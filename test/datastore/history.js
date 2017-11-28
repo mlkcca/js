@@ -1,44 +1,86 @@
 const assert = require('assert')
 const Milkcocoa = require('../../lib/node')
 
-var milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid1', apiKey: 'demo'})
+function History (uuid) {
+  const milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid-' + uuid, apiKey: 'demo'})
+  var dataTime1 = 0
+  var pushedDataTime1 = 0
+  var dataTime2 = 0
+  var pushedDataTime2 = 0
 
-function History () {
   describe('history()', function () {
-    this.timeout(3000)
+    this.timeout(10000)
 
-    it('no option', function (done) {
-      var ds = milkcocoa.dataStore('demo')
-
-      ds.history({}, function (err, messages) {
-        assert.equal(null, err)
-        assert.equal(true, messages.length > 0)
-        done()
-      })
+    before(function (done) {
+      let ds = milkcocoa.dataStore(uuid + '/history')
+      dataTime1 = new Date().getTime()
+      setTimeout(function () {
+        ds.push(1, function (err, result) {
+          if (!err) pushedDataTime1 = result.timestamp
+        })
+      }, 1000)
+      setTimeout(function () {
+        dataTime2 = new Date().getTime()
+        setTimeout(function () {
+          ds.push(2, function (err, result) {
+            if (!err) {
+              pushedDataTime2 = result.timestamp
+              if (dataTime1 * 1000 < pushedDataTime1 &&
+                  pushedDataTime1 < dataTime2 * 1000 &&
+                  dataTime2 * 1000 < pushedDataTime2) {
+                done()
+              }
+            }
+          })
+        }, 1000)
+      }, 2000)
     })
 
-    it('ts', function (done) {
-      var ds = milkcocoa.dataStore('demo')
-
-      ds.history({ts: 1493027628099, limit: 2}, function (err, messages) {
-        console.log(err, messages)
+    it('should retrieve all data without options', function (done) {
+      let ds = milkcocoa.dataStore(uuid + '/history')
+      ds.history({}, function (err, messages) {
         assert.equal(null, err)
         assert.equal(true, messages.length === 2)
         done()
       })
     })
 
-    it('cache', function (done) {
-      var ds = milkcocoa.dataStore('demo')
+    it('should retrieve the data before ts', function (done) {
+      let ds = milkcocoa.dataStore(uuid + '/history')
+      ds.history({ts: dataTime2}, function (err, messages) {
+        assert.equal(null, err)
+        assert.equal(true, messages.length === 1)
+        assert.equal(true, messages[0].timestamp < dataTime2)
+        done()
+      })
+    })
 
-      ds.history({ts: 1493027628099, limit: 2, useCache: true}, function (err1, messages1) {
-        ds.history({ts: 1493027628099, limit: 2, useCache: true}, function (err2, messages2) {
-          console.log(err2, messages2)
-          assert.equal(null, err2)
-          assert.equal(true, messages2.length === 2)
-          assert.equal(true, messages2[0].hasOwnProperty('value'))
-          done()
-        })
+    it('should retrieve a data when limit === 1', function (done) {
+      let ds = milkcocoa.dataStore(uuid + '/history')
+      ds.history({limit: 1}, function (err, messages) {
+        assert.equal(null, err)
+        assert.equal(true, messages.length === 1)
+        done()
+      })
+    })
+
+    it('should retrieve the latest data when order === "desc" && limit === 1', function (done) {
+      let ds = milkcocoa.dataStore(uuid + '/history')
+      ds.history({order: 'desc', limit: 1}, function (err, messages) {
+        assert.equal(null, err)
+        assert.equal(true, messages.length === 1)
+        assert.equal(true, messages[0].timestamp > dataTime2)
+        done()
+      })
+    })
+
+    it('should retrieve the oldest data when order === "asc" && limit === 1', function (done) {
+      let ds = milkcocoa.dataStore(uuid + '/history')
+      ds.history({order: 'asc', limit: 1}, function (err, messages) {
+        assert.equal(null, err)
+        assert.equal(true, messages.length === 1)
+        assert.equal(true, messages[0].timestamp < dataTime2)
+        done()
       })
     })
   })
