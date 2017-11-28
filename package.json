@@ -36,6 +36,8 @@
       "it",
       "before",
       "expect",
+      "XMLHttpRequest",
+      "XDomainRequest",
       "test"
     ]
   },
