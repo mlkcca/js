@@ -1,7 +1,4 @@
 export default class {
-  constructor () {
-  }
-
   static decode (message, type) {
     if (type === 'json') return this.json(message)
     else if (type === 'text') return this.text(message)
