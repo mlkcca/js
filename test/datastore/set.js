@@ -6,7 +6,7 @@ function Set (uuid) {
 
   describe('set()', function () {
     it('should call the onCompleteCallback whose err is null.', function (done) {
-      let ds = milkcocoa.dataStore(uuid + '/set', {datatype: 'json'})
+      let ds = milkcocoa.dataStore(uuid + '/set')
       ds.set('set-test', {message: 'Hello set!'}, function (err) {
         if (err) done()
         assert.equal(null, err)
@@ -18,21 +18,23 @@ function Set (uuid) {
   describe('on(set)', function () {
     this.timeout(3000)
     it('should be called by set() and have the set data.', function (done) {
-      let ds = milkcocoa.dataStore(uuid + '/set', {datatype: 'json'})
+      let ds = milkcocoa.dataStore(uuid + '/set')
       ds.on('set', function (payload) {
         assert.equal('set-test-on', payload.id)
         assert.deepEqual({message: 'Hello onset!'}, payload.value)
         assert.equal('number', typeof payload.timestamp)
         done()
       })
-      ds.set('set-test-on', {message: 'Hello onset!'})
+      setTimeout(function () {
+        ds.set('set-test-on', {message: 'Hello onset!'})
+      }, 100)
     })
   })
 
   describe('history()', function () {
     this.timeout(3000)
     it('should retrieve set data.', function (done) {
-      let ds = milkcocoa.dataStore(uuid + '/set', {datatype: 'json'})
+      let ds = milkcocoa.dataStore(uuid + '/set')
       ds.history({}, function (err, messages) {
         assert.equal(null, err)
         assert.equal('set-test-on', messages[0].id)

@@ -7,18 +7,20 @@ function OnOff (uuid) {
   describe('on()', function () {
     this.timeout(3000)
     it('should be called by publishing.', function (done) {
-      let ds = milkcocoa.dataStore(uuid + '/on', {datatype: 'text'})
+      let ds = milkcocoa.dataStore(uuid + '/on')
       ds.on('send', function (payload) {
         done()
       })
-      ds.send(1)
+      setTimeout(function () {
+        ds.send(1)
+      }, 100)
     })
   })
 
   describe('off()', function () {
     this.timeout(5000)
     it('should cancel all on().', function (done) {
-      let ds = milkcocoa.dataStore(uuid + '/off', {datatype: 'text'})
+      let ds = milkcocoa.dataStore(uuid + '/off')
       ds.on('send', function (payload) {
         assert.fail(1)
         done()

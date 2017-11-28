@@ -8,7 +8,7 @@ function History () {
     this.timeout(3000)
 
     it('no option', function (done) {
-      var ds = milkcocoa.dataStore('demo', {datatype: 'json'})
+      var ds = milkcocoa.dataStore('demo')
 
       ds.history({}, function (err, messages) {
         assert.equal(null, err)
@@ -18,7 +18,7 @@ function History () {
     })
 
     it('ts', function (done) {
-      var ds = milkcocoa.dataStore('demo', {datatype: 'json'})
+      var ds = milkcocoa.dataStore('demo')
 
       ds.history({ts: 1493027628099, limit: 2}, function (err, messages) {
         console.log(err, messages)
@@ -29,7 +29,7 @@ function History () {
     })
 
     it('cache', function (done) {
-      var ds = milkcocoa.dataStore('demo', {datatype: 'json'})
+      var ds = milkcocoa.dataStore('demo')
 
       ds.history({ts: 1493027628099, limit: 2, useCache: true}, function (err1, messages1) {
         ds.history({ts: 1493027628099, limit: 2, useCache: true}, function (err2, messages2) {
