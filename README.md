@@ -5,4 +5,4 @@
 [Docs here](https://v3.mlkcca.com).
 
 - `dist/milkcocoa.js` is for browser
-- `lib/node/index.js` is entry of Node.JS library
+- `lib/node/index.js` is entry of Node.js library
