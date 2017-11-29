@@ -9,7 +9,7 @@ function MilkcocoaTest (uuid) {
       assert.equal('demo', milkcocoa.getAppId())
     })
   })
-  describe('get_uuid()', function () {
+  describe('getUUID()', function () {
     it('should get current uuid.', function () {
       assert.equal('uuid-' + uuid + '-milkcocoa', milkcocoa.getUUID())
     })
