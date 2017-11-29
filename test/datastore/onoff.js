@@ -1,5 +1,6 @@
 const assert = require('assert')
 const Milkcocoa = require('../../lib/node')
+const uuidv4 = require('uuid/v4')
 
 function OnOff (uuid) {
   const milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid-' + uuid + '-onoff', apiKey: 'demo'})
@@ -9,6 +10,7 @@ function OnOff (uuid) {
     it('should be called by publishing.', function (done) {
       let ds = milkcocoa.dataStore(uuid + '/on')
       ds.on('send', function (payload) {
+        assert.ok(true)
         done()
       })
       setTimeout(function () {
@@ -52,5 +54,7 @@ function OnOff (uuid) {
     })
   })
 }
+
+OnOff(global.uuid || uuidv4())
 
 module.exports = OnOff

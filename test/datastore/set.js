@@ -1,5 +1,6 @@
 const assert = require('assert')
 const Milkcocoa = require('../../lib/node')
+const uuidv4 = require('uuid/v4')
 
 function Set (uuid) {
   const milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid-' + uuid + '-set', apiKey: 'demo'})
@@ -47,5 +48,7 @@ function Set (uuid) {
     })
   })
 }
+
+Set(global.uuid || uuidv4())
 
 module.exports = Set

@@ -29,4 +29,6 @@ function CacheTest () {
   })
 }
 
+CacheTest()
+
 module.exports = CacheTest

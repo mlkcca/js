@@ -1,5 +1,6 @@
 const assert = require('assert')
 const Milkcocoa = require('../../lib/node')
+const uuidv4 = require('uuid/v4')
 
 function DataType (uuid) {
   const milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid-' + uuid + '-datatype', apiKey: 'demo'})
@@ -72,5 +73,7 @@ function DataType (uuid) {
     })
   })
 }
+
+DataType(global.uuid || uuidv4())
 
 module.exports = DataType

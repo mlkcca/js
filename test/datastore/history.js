@@ -1,5 +1,6 @@
 const assert = require('assert')
 const Milkcocoa = require('../../lib/node')
+const uuidv4 = require('uuid/v4')
 
 function History (uuid) {
   const milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid-' + uuid + '-history', apiKey: 'demo'})
@@ -85,5 +86,7 @@ function History (uuid) {
     })
   })
 }
+
+History(global.uuid || uuidv4())
 
 module.exports = History

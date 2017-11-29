@@ -1,29 +1,27 @@
-const datatype = require('./datatype')
-const push = require('./push')
-const send = require('./send')
-const set = require('./set')
-const onoff = require('./onoff')
-const history = require('./history')
+const uuidv4 = require('uuid/v4')
+global.uuid = global.uuid || uuidv4()
 
-function DataStore (uuid) {
+function DataStore () {
   describe('DataType', function () {
-    datatype(uuid)
+    require('./datatype')
   })
   describe('Push', function () {
-    push(uuid)
+    require('./push')
   })
   describe('Send', function () {
-    send(uuid)
+    require('./send')
   })
   describe('Set', function () {
-    set(uuid)
+    require('./set')
   })
   describe('On/Off', function () {
-    onoff(uuid)
+    require('./onoff')
   })
   describe('History', function () {
-    history(uuid)
+    require('./history')
   })
 }
+
+DataStore()
 
 module.exports = DataStore

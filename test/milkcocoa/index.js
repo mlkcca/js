@@ -1,5 +1,6 @@
 const assert = require('assert')
 const Milkcocoa = require('../../lib/node')
+const uuidv4 = require('uuid/v4')
 
 function MilkcocoaTest (uuid) {
   const milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid-' + uuid + '-milkcocoa', apiKey: 'demo'})
@@ -15,6 +16,13 @@ function MilkcocoaTest (uuid) {
     })
   })
   describe('listDataStores()', function () {
+    before(function (done) {
+      let ds = milkcocoa.dataStore(uuid + '/listDataStores')
+      ds.push(1)
+      setTimeout(function () {
+        done()
+      }, 1000)
+    })
     it('should get a dataStore list.', function (done) {
       milkcocoa.listDataStores({}, function (err, dss) {
         if (err) done()
@@ -42,5 +50,7 @@ function MilkcocoaTest (uuid) {
     })
   })
 }
+
+MilkcocoaTest(global.uuid || uuidv4())
 
 module.exports = MilkcocoaTest
