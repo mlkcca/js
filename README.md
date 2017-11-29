@@ -1,4 +1,4 @@
-# Milkcocoa JS SDK(Browser)
+# Milkcocoa JS SDK
 
 [![CircleCI](https://circleci.com/gh/mlkcca/js.svg?style=svg)](https://circleci.com/gh/mlkcca/js)
 
