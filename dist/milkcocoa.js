@@ -6344,7 +6344,7 @@ var _class = function (_EventEmitter2) {
           currentState: this.state,
           nextState: result.nextState
         });
-        this.logger.log('state changed from ' + this.state + ' to ' + result.nextState);
+
         this.state = result.nextState;
       }
     }
