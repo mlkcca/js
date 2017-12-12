@@ -13,11 +13,14 @@ export default class {
       timestamp = Math.floor(message.t)
     }
     let value = null
-    try {
-      value = JSON.parse(message.v)
-    } catch (e) {
-      // JSON parse error
-      value = 'invalid json'
+    if (typeof message.v === 'string') {
+      try {
+        value = JSON.parse(message.v)
+      } catch (e) {
+        value = message.v
+      }
+    } else {
+      value = message.v
     }
     return {
       value: value,

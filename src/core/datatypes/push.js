@@ -9,11 +9,14 @@ export default class {
   static json (message) {
     if (!message) return null
     let value = null
-    try {
-      value = JSON.parse(message.v)
-    } catch (e) {
-      // JSON parse error
-      value = 'invalid json'
+    if (typeof message.v === 'string') {
+      try {
+        value = JSON.parse(message.v)
+      } catch (e) {
+        value = message.v
+      }
+    } else {
+      value = message.v
     }
     return {
       id: message.id,

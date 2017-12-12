@@ -2806,7 +2806,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
 /* 10 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"mlkcca","version":"1.0.0","description":"mlkcca js sdk","main":"./lib/node/index.js","engines":{"node":">=6.x"},"scripts":{"build":"gulp compile","build:web":"webpack","build:node":"gulp babel","test":"mocha test/index.js","test:file":"mocha","lint":"standard","lint:fix":"standard --fix"},"repository":{"type":"git","url":"git+https://github.com/mlkcca/js.git"},"keywords":["milkcocoa","IoT","pubsub","js"],"author":"Uhuru, Inc","license":"MIT","bugs":{"url":"https://github.com/mlkcca/js/issues"},"standard":{"globals":["describe","it","before","expect","XMLHttpRequest","XDomainRequest","localStorage","test"]},"homepage":"https://github.com/mlkcca/js#readme","dependencies":{"agentkeepalive":"^3.1.0","reinterval":"^1.1.0","uuid":"^3.0.1"},"devDependencies":{"assert":"^1.4.1","babel-core":"^6.23.1","babel-loader":"^6.3.2","babel-plugin-add-module-exports":"^0.2.1","babel-preset-es2015":"^6.22.0","babel-preset-es2017":"^6.22.0","gulp":"^3.9.1","gulp-babel":"^6.1.2","gulp-clean":"^0.3.2","gulp-rename":"^1.2.2","gulp-sourcemaps":"^2.4.1","gulp-uglify":"^2.0.1","mocha":"^3.2.0","run-sequence":"^1.2.2","standard":"^10.0.3","stats-webpack-plugin":"^0.5.0","webpack":"^2.2.1"}}
+module.exports = {"name":"mlkcca","version":"1.0.0","description":"mlkcca js sdk","main":"./lib/node/index.js","engines":{"node":">=6.x"},"scripts":{"build":"gulp compile","build:web":"webpack","build:node":"gulp babel","test":"mocha test/index.js && standard src/**/*.js && standard test/**/*.js","test:file":"mocha","lint":"standard","lint:fix":"standard --fix"},"repository":{"type":"git","url":"git+https://github.com/mlkcca/js.git"},"keywords":["milkcocoa","IoT","pubsub","js"],"author":"Uhuru, Inc","license":"MIT","bugs":{"url":"https://github.com/mlkcca/js/issues"},"standard":{"globals":["describe","it","before","expect","XMLHttpRequest","XDomainRequest","localStorage","test"]},"homepage":"https://github.com/mlkcca/js#readme","dependencies":{"agentkeepalive":"^3.1.0","reinterval":"^1.1.0","uuid":"^3.0.1"},"devDependencies":{"assert":"^1.4.1","babel-core":"^6.23.1","babel-loader":"^6.3.2","babel-plugin-add-module-exports":"^0.2.1","babel-preset-es2015":"^6.22.0","babel-preset-es2017":"^6.22.0","gulp":"^3.9.1","gulp-babel":"^6.1.2","gulp-clean":"^0.3.2","gulp-rename":"^1.2.2","gulp-sourcemaps":"^2.4.1","gulp-uglify":"^2.0.1","mocha":"^3.2.0","run-sequence":"^1.2.2","standard":"^10.0.3","stats-webpack-plugin":"^0.5.0","webpack":"^2.2.1"}}
 
 /***/ }),
 /* 11 */
@@ -6053,10 +6053,14 @@ var _class = function () {
     value: function json(message) {
       if (!message) return null;
       var value = null;
-      try {
-        value = JSON.parse(message.v);
-      } catch (e) {
-        value = 'invalid json';
+      if (typeof message.v === 'string') {
+        try {
+          value = JSON.parse(message.v);
+        } catch (e) {
+          value = message.v;
+        }
+      } else {
+        value = message.v;
       }
       return {
         id: message.id,
@@ -6116,10 +6120,14 @@ var _class = function () {
         timestamp = Math.floor(message.t);
       }
       var value = null;
-      try {
-        value = JSON.parse(message.v);
-      } catch (e) {
-        value = 'invalid json';
+      if (typeof message.v === 'string') {
+        try {
+          value = JSON.parse(message.v);
+        } catch (e) {
+          value = message.v;
+        }
+      } else {
+        value = message.v;
       }
       return {
         value: value,
@@ -6452,7 +6460,13 @@ var _class = function (_EventEmitter2) {
     value: function publish(path, op, _v, cb, _options) {
       var options = _options || {};
 
-      var v = JSON.stringify(_v);
+      var v = void 0;
+
+      if (typeof v === 'number' || typeof v === 'string') {
+        v = _v;
+      } else {
+        v = JSON.stringify(_v);
+      }
 
       var apiUrl = this.root._getApiUrl(op || 'push');
 

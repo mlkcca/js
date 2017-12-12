@@ -264,7 +264,13 @@ export default class extends EventEmitter {
   publish (path, op, _v, cb, _options) {
     let options = _options || {}
 
-    let v = JSON.stringify(_v)
+    let v
+
+    if (typeof v === 'number' || typeof v === 'string') {
+      v = _v
+    } else {
+      v = JSON.stringify(_v)
+    }
     // let rid = this.messageStore.add({path:path,op:op,v:v,options:_options}, cb);
     let apiUrl = this.root._getApiUrl(op || 'push')
     /*
