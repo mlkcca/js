@@ -17,7 +17,7 @@ function Set (uuid) {
   })
 
   describe('on(set)', function () {
-    this.timeout(3000)
+    this.timeout(5000)
     it('should be called by set() and have the set data.', function (done) {
       let ds = milkcocoa.dataStore(uuid + '/set')
       ds.on('set', function (payload) {
@@ -28,7 +28,7 @@ function Set (uuid) {
       })
       setTimeout(function () {
         ds.set('set-test-on', {message: 'Hello onset!'})
-      }, 100)
+      }, 500)
     })
   })
 

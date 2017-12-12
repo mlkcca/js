@@ -17,7 +17,7 @@ function Send (uuid) {
   })
 
   describe('on(send)', function () {
-    this.timeout(3000)
+    this.timeout(5000)
     it('should be called by send() and have the sent data.', function (done) {
       let ds = milkcocoa.dataStore(uuid + '/send')
       ds.on('send', function (payload) {
@@ -25,7 +25,9 @@ function Send (uuid) {
         assert.equal('number', typeof payload.timestamp)
         done()
       })
-      ds.send({message: 'Hello onsend!'})
+      setTimeout(function () {
+        ds.send({message: 'Hello onsend!'})
+      })
     })
   })
 }

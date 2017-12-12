@@ -20,7 +20,7 @@ function Push (uuid) {
   })
 
   describe('on(push)', function () {
-    this.timeout(3000)
+    this.timeout(5000)
     it('should be called by push() and have the pushed data.', function (done) {
       let ds = milkcocoa.dataStore(uuid + '/push')
       ds.on('push', function (payload) {
@@ -31,7 +31,7 @@ function Push (uuid) {
       })
       setTimeout(function () {
         ds.push({message: 'Hello onpush!'})
-      }, 100)
+      }, 500)
     })
   })
 
