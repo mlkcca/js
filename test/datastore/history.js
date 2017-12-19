@@ -4,36 +4,22 @@ const uuidv4 = require('uuid/v4')
 
 function History (uuid) {
   const milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid-' + uuid + '-history', apiKey: 'demo'})
-  var dataTime1 = 0
-  var pushedDataTime1 = 0
-  var dataTime2 = 0
-  var pushedDataTime2 = 0
+  var median = 0
 
   describe('history()', function () {
     this.timeout(10000)
 
     before(function (done) {
       let ds = milkcocoa.dataStore(uuid + '/history')
-      dataTime1 = new Date().getTime()
       setTimeout(function () {
         ds.push(1, function (err, result) {
-          if (!err) pushedDataTime1 = result.timestamp
+          if (err) throw err
         })
       }, 1000)
       setTimeout(function () {
-        dataTime2 = new Date().getTime()
-        setTimeout(function () {
-          ds.push(2, function (err, result) {
-            if (!err) {
-              pushedDataTime2 = result.timestamp
-              if (dataTime1 * 1000 < pushedDataTime1 &&
-                  pushedDataTime1 < dataTime2 * 1000 &&
-                  dataTime2 * 1000 < pushedDataTime2) {
-                done()
-              }
-            }
-          })
-        }, 1000)
+        ds.push(2, function (err, result) {
+          if (!err) done()
+        })
       }, 2000)
     })
 
@@ -41,6 +27,7 @@ function History (uuid) {
       let ds = milkcocoa.dataStore(uuid + '/history')
       ds.history({}, function (err, messages) {
         assert.equal(null, err)
+        median = (messages[0].timestamp + messages[1].timestamp) / 2
         assert.equal(true, messages.length === 2)
         done()
       })
@@ -48,10 +35,10 @@ function History (uuid) {
 
     it('should retrieve the data before ts', function (done) {
       let ds = milkcocoa.dataStore(uuid + '/history')
-      ds.history({ts: dataTime2}, function (err, messages) {
+      ds.history({ts: median}, function (err, messages) {
         assert.equal(null, err)
         assert.equal(true, messages.length === 1)
-        assert.equal(true, messages[0].timestamp < dataTime2)
+        assert.equal(true, messages[0].timestamp < median)
         done()
       })
     })
@@ -70,7 +57,7 @@ function History (uuid) {
       ds.history({order: 'desc', limit: 1}, function (err, messages) {
         assert.equal(null, err)
         assert.equal(true, messages.length === 1)
-        assert.equal(true, messages[0].timestamp > dataTime2)
+        assert.equal(true, messages[0].timestamp > median)
         done()
       })
     })
@@ -80,7 +67,7 @@ function History (uuid) {
       ds.history({order: 'asc', limit: 1}, function (err, messages) {
         assert.equal(null, err)
         assert.equal(true, messages.length === 1)
-        assert.equal(true, messages[0].timestamp < dataTime2)
+        assert.equal(true, messages[0].timestamp < median)
         done()
       })
     })
