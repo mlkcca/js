@@ -15,7 +15,7 @@ function OnOff (uuid) {
       })
       setTimeout(function () {
         ds.send(1)
-      }, 100)
+      }, 1000)
     })
   })
 
@@ -49,8 +49,8 @@ function OnOff (uuid) {
             assert.ok(true)
             done()
           }, 2000)
-        }, 100)
-      }, 100)
+        }, 500)
+      }, 500)
     })
   })
 }

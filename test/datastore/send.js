@@ -27,7 +27,7 @@ function Send (uuid) {
       })
       setTimeout(function () {
         ds.send({message: 'Hello onsend!'})
-      })
+      }, 1000)
     })
   })
 }

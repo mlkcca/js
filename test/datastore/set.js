@@ -28,7 +28,7 @@ function Set (uuid) {
       })
       setTimeout(function () {
         ds.set('set-test-on', {message: 'Hello onset!'})
-      }, 500)
+      }, 1000)
     })
   })
 

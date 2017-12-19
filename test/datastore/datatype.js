@@ -25,7 +25,7 @@ function DataType (uuid) {
       })
       setTimeout(function () {
         ds.push(2)
-      }, 100)
+      }, 1000)
     })
     it('should receive on(send) callback data as object.', function (done) {
       this.timeout(3000)
@@ -37,7 +37,7 @@ function DataType (uuid) {
       })
       setTimeout(function () {
         ds.send(3)
-      }, 100)
+      }, 1000)
     })
     it('should receive on(set) callback data as object.', function (done) {
       this.timeout(3000)
@@ -49,7 +49,7 @@ function DataType (uuid) {
       })
       setTimeout(function () {
         ds.set('datatype-set-on', 4)
-      }, 100)
+      }, 1000)
     })
     it('should retrieve pushed data as object.', function (done) {
       this.timeout(3000)

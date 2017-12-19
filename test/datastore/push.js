@@ -31,7 +31,7 @@ function Push (uuid) {
       })
       setTimeout(function () {
         ds.push({message: 'Hello onpush!'})
-      }, 500)
+      }, 1000)
     })
   })
 
