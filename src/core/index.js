@@ -80,12 +80,14 @@ export default class {
   _getApiUrl (api) {
     let appOptions = this._getOptions()
     if (appOptions.apiKey) return `/api/${api}/${appOptions.appId}/${appOptions.apiKey}`
+    else if (appOptions.accessToken) return `/api/${api}/${appOptions.appId}?at=${appOptions.accessToken}`
     else return `/api/${api}/${appOptions.appId}`
   }
 
   _getOnUrl (api) {
     let appOptions = this._getOptions()
     if (appOptions.apiKey) return `/on/${api}/${appOptions.appId}/${appOptions.apiKey}`
+    else if (appOptions.accessToken) return `/on/${api}/${appOptions.appId}?at=${appOptions.accessToken}`
     else return `/on/${api}/${appOptions.appId}`
   }
 
