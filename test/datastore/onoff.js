@@ -6,7 +6,7 @@ function OnOff (uuid) {
   const milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid-' + uuid + '-onoff', apiKey: 'demo'})
 
   describe('on()', function () {
-    this.timeout(3000)
+    this.timeout(5000)
     it('should be called by publishing.', function (done) {
       let ds = milkcocoa.dataStore(uuid + '/on')
       ds.on('send', function (payload) {

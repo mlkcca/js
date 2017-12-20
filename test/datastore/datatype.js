@@ -16,7 +16,7 @@ function DataType (uuid) {
       })
     })
     it('should receive on(push) callback data as object.', function (done) {
-      this.timeout(3000)
+      this.timeout(5000)
       let ds = milkcocoa.dataStore(uuid + '/datatype/json/push/on', {datatype: 'json'})
       ds.on('push', function (payload) {
         assert.equal('object', typeof payload)
@@ -28,7 +28,7 @@ function DataType (uuid) {
       }, 1000)
     })
     it('should receive on(send) callback data as object.', function (done) {
-      this.timeout(3000)
+      this.timeout(5000)
       let ds = milkcocoa.dataStore(uuid + '/datatype/json/send/on', {datatype: 'json'})
       ds.on('send', function (payload) {
         assert.equal('object', typeof payload)
@@ -40,7 +40,7 @@ function DataType (uuid) {
       }, 1000)
     })
     it('should receive on(set) callback data as object.', function (done) {
-      this.timeout(3000)
+      this.timeout(5000)
       let ds = milkcocoa.dataStore(uuid + '/datatype/json/set/on', {datatype: 'json'})
       ds.on('set', function (payload) {
         assert.equal('object', typeof payload)
@@ -52,7 +52,7 @@ function DataType (uuid) {
       }, 1000)
     })
     it('should retrieve pushed data as object.', function (done) {
-      this.timeout(3000)
+      this.timeout(5000)
       let ds = milkcocoa.dataStore(uuid + '/datatype/json/push/callback', {datatype: 'json'})
       ds.history({}, function (err, messages) {
         if (err) done()
@@ -62,7 +62,7 @@ function DataType (uuid) {
       })
     })
     it('should retrieve set data as object.', function (done) {
-      this.timeout(3000)
+      this.timeout(5000)
       let ds = milkcocoa.dataStore(uuid + '/datatype/json/set/on', {datatype: 'json'})
       ds.history({}, function (err, messages) {
         if (err) done()
