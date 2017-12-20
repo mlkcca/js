@@ -6613,6 +6613,7 @@ var _class = function () {
         if (path.match(/(\?.*$)/)) {
           var matched = path.match(/(\?.*$)/)[0];
           pureURL = path.replace(matched, '');
+          matched = matched.replace(/\+/g, '%2B');
           var newQ = _querystring2.default.parse(matched.replace('?', ''));
           newParams = Object.assign({}, newParams, newQ);
         }
@@ -6634,6 +6635,7 @@ var _class = function () {
       if (path.match(/(\?.*$)/)) {
         var matched = path.match(/(\?.*$)/)[0];
         pureURL = path.replace(matched, '');
+        matched = matched.replace(/\+/g, '%2B');
         var newQ = _querystring2.default.parse(matched.replace('?', ''));
         newParams = Object.assign({}, newParams, newQ);
       }
