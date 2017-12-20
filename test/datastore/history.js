@@ -27,7 +27,7 @@ function History (uuid) {
       let ds = milkcocoa.dataStore(uuid + '/history')
       ds.history({}, function (err, messages) {
         assert.equal(null, err)
-        median = (messages[0].timestamp + messages[1].timestamp) / 2
+        median = Math.floor((messages[0].timestamp + messages[1].timestamp) / 2)
         assert.equal(true, messages.length === 2)
         done()
       })
