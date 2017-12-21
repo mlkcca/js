@@ -1,9 +1,10 @@
 const assert = require('assert')
 const Milkcocoa = require('../../lib/node')
 const uuidv4 = require('uuid/v4')
+const settings = require('../../settings')[process.env.NODE_ENV || 'production']
 
 function History (uuid) {
-  const milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid-' + uuid + '-history', apiKey: 'demo'})
+  const milkcocoa = new Milkcocoa(settings.jsOptions)
   var median = 0
 
   describe('history()', function () {

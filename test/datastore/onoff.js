@@ -1,9 +1,10 @@
 const assert = require('assert')
 const Milkcocoa = require('../../lib/node')
 const uuidv4 = require('uuid/v4')
+const settings = require('../../settings')[process.env.NODE_ENV || 'production']
 
 function OnOff (uuid) {
-  const milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid-' + uuid + '-onoff', apiKey: 'demo'})
+  const milkcocoa = new Milkcocoa(settings.jsOptions)
 
   describe('on()', function () {
     this.timeout(5000)

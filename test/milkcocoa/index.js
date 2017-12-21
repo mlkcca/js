@@ -1,13 +1,15 @@
 const assert = require('assert')
 const Milkcocoa = require('../../lib/node')
 const uuidv4 = require('uuid/v4')
+const settings = require('../../settings')[process.env.NODE_ENV || 'production']
 
 function MilkcocoaTest (uuid) {
-  const milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid-' + uuid + '-milkcocoa', apiKey: 'demo'})
+  settings.jsOptions.uuid = 'uuid-' + uuid + '-milkcocoa'
+  const milkcocoa = new Milkcocoa(settings.jsOptions)
 
   describe('getAppId()', function () {
-    it('should get appId "demo".', function () {
-      assert.equal('demo', milkcocoa.getAppId())
+    it('should get current appId.', function () {
+      assert.equal(settings.jsOptions.appId, milkcocoa.getAppId())
     })
   })
   describe('getUUID()', function () {

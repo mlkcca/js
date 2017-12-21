@@ -1,9 +1,10 @@
 const assert = require('assert')
 const Milkcocoa = require('../../lib/node')
 const uuidv4 = require('uuid/v4')
+const settings = require('../../settings')[process.env.NODE_ENV || 'production']
 
 function Set (uuid) {
-  const milkcocoa = new Milkcocoa({appId: 'demo', uuid: 'uuid-' + uuid + '-set', apiKey: 'demo'})
+  const milkcocoa = new Milkcocoa(settings.jsOptions)
 
   describe('set()', function () {
     it('should call the onCompleteCallback whose err is null.', function (done) {
