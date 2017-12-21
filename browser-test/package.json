@@ -1,0 +1,24 @@
+{
+  "name": "browser-test",
+  "version": "1.0.0",
+  "description": "browser-test for milkcocoa js sdk",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mlkcca/js.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "parcel": "parcel index.html -d public"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-preset-env": "^1.6.1",
+    "dotenv": "^4.0.0",
+    "parcel-bundler": "^1.2.1"
+  },
+  "dependencies": {
+    "jquery": "^3.2.1"
+  }
+}
