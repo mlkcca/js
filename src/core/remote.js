@@ -38,7 +38,6 @@ export default class {
       if (path.match(/(\?.*$)/)) {
         var matched = path.match(/(\?.*$)/)[0]
         pureURL = path.replace(matched, '')
-        matched = matched.replace(/\+/g, '%2B')
         var newQ = querystring.parse(matched.replace('?', ''))
         newParams = Object.assign({}, newParams, newQ)
       }
@@ -63,7 +62,6 @@ export default class {
     if (path.match(/(\?.*$)/)) {
       var matched = path.match(/(\?.*$)/)[0]
       pureURL = path.replace(matched, '')
-      matched = matched.replace(/\+/g, '%2B')
       var newQ = querystring.parse(matched.replace('?', ''))
       newParams = Object.assign({}, newParams, newQ)
     }
