@@ -2806,7 +2806,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
 /* 10 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"mlkcca","version":"1.0.0","description":"mlkcca js sdk","main":"./lib/node/index.js","engines":{"node":">=6.x"},"scripts":{"build":"gulp compile","build:web":"webpack","build:node":"gulp babel","test":"mocha test/index.js && standard src/**/*.js && standard test/**/*.js","test:file":"mocha","lint":"standard","lint:fix":"standard --fix"},"repository":{"type":"git","url":"git+https://github.com/mlkcca/js.git"},"keywords":["milkcocoa","IoT","pubsub","js"],"author":"Uhuru, Inc","license":"MIT","bugs":{"url":"https://github.com/mlkcca/js/issues"},"standard":{"globals":["describe","it","before","expect","XMLHttpRequest","XDomainRequest","localStorage","test"]},"homepage":"https://github.com/mlkcca/js#readme","dependencies":{"agentkeepalive":"^3.1.0","reinterval":"^1.1.0","uuid":"^3.0.1"},"devDependencies":{"assert":"^1.4.1","babel-core":"^6.23.1","babel-loader":"^6.3.2","babel-plugin-add-module-exports":"^0.2.1","babel-preset-es2015":"^6.22.0","babel-preset-es2017":"^6.22.0","gulp":"^3.9.1","gulp-babel":"^6.1.2","gulp-clean":"^0.3.2","gulp-rename":"^1.2.2","gulp-sourcemaps":"^2.4.1","gulp-uglify":"^2.0.1","mocha":"^3.2.0","run-sequence":"^1.2.2","standard":"^10.0.3","stats-webpack-plugin":"^0.5.0","webpack":"^2.2.1"}}
+module.exports = {"name":"mlkcca","version":"1.0.0","description":"mlkcca js sdk","main":"./lib/node/index.js","engines":{"node":">=6.x"},"scripts":{"build":"gulp compile","build:web":"webpack","build:node":"gulp babel","test":"mocha test/index.js && standard src/**/*.js && standard test/**/*.js","test:file":"mocha","lint":"standard","lint:fix":"standard --fix"},"repository":{"type":"git","url":"git+https://github.com/mlkcca/js.git"},"keywords":["milkcocoa","IoT","pubsub","js"],"author":"Uhuru, Inc","license":"MIT","bugs":{"url":"https://github.com/mlkcca/js/issues"},"standard":{"globals":["describe","it","before","expect","XMLHttpRequest","XDomainRequest","localStorage","test"]},"homepage":"https://github.com/mlkcca/js#readme","dependencies":{"agentkeepalive":"^3.1.0","reinterval":"^1.1.0","uuid":"^3.0.1"},"devDependencies":{"assert":"^1.4.1","axios":"^0.17.1","babel-core":"^6.23.1","babel-loader":"^6.3.2","babel-plugin-add-module-exports":"^0.2.1","babel-preset-es2015":"^6.22.0","babel-preset-es2017":"^6.22.0","gulp":"^3.9.1","gulp-babel":"^6.1.2","gulp-clean":"^0.3.2","gulp-rename":"^1.2.2","gulp-sourcemaps":"^2.4.1","gulp-uglify":"^2.0.1","mocha":"^3.2.0","run-sequence":"^1.2.2","standard":"^10.0.3","stats-webpack-plugin":"^0.5.0","webpack":"^2.2.1"}}
 
 /***/ }),
 /* 11 */
@@ -5360,6 +5360,7 @@ var _class = function () {
     this.wsOptions = {
       headers: headers
     };
+
     this.websocket = new _pubsub2.default({
       host: this._getPubsubUrl(this.useSSL, this.host, this.port, this.appId, this.apiKey, this.accessToken, this.uuid),
       logger: console,
@@ -5415,7 +5416,7 @@ var _class = function () {
     key: '_getPubsubUrl',
     value: function _getPubsubUrl(ssl, host, port, appId, apikey, accessToken, uuid) {
       var base = 'ws' + (ssl ? 's' : '') + '://' + host + ':' + port + '/ws2/' + appId + '/';
-      if (apikey) return base + apikey + '?' + _querystring2.default.stringify({ uuid: uuid });else if (accessToken) return base + '?' + _querystring2.default.stringify({ at: accessToken, uuid: uuid });else return base + '?' + _querystring2.default.stringify({ uuid: uuid });
+      if (apikey) return base + apikey + '?' + _querystring2.default.stringify({ uuid: uuid });else return base + '?' + _querystring2.default.stringify({ uuid: uuid });
     }
   }, {
     key: '_getApiUrl',

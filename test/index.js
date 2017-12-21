@@ -12,3 +12,7 @@ describe('DataStore', function () {
 describe('Milkcocoa', function () {
   require('./milkcocoa')
 })
+
+describe('AccessToken', function () {
+  require('./accesstoken')
+})
