@@ -1,4 +1,3 @@
-import querystring from 'querystring'
 var ajax = require('./ajax')
 
 export default class {
@@ -33,16 +32,7 @@ export default class {
     })
     */
     return new Promise((resolve, reject) => {
-      var pureURL = path
-      var newParams = params
-      if (path.match(/(\?.*$)/)) {
-        var matched = path.match(/(\?.*$)/)[0]
-        pureURL = path.replace(matched, '')
-        var newQ = querystring.parse(matched.replace('?', ''))
-        newParams = Object.assign({}, newParams, newQ)
-      }
-
-      ajax.request('GET', this.secure, this.host, this.port, pureURL, newParams, null, this.headers, function (err, data) {
+      ajax.request('GET', this.secure, this.host, this.port, path, params, null, this.headers, function (err, data) {
         if (err) {
           return reject(err)
         }
@@ -57,15 +47,7 @@ export default class {
   }
 
   get2 (path, params, cb) {
-    var pureURL = path
-    var newParams = params
-    if (path.match(/(\?.*$)/)) {
-      var matched = path.match(/(\?.*$)/)[0]
-      pureURL = path.replace(matched, '')
-      var newQ = querystring.parse(matched.replace('?', ''))
-      newParams = Object.assign({}, newParams, newQ)
-    }
-    return ajax.request('GET', this.secure, this.host, this.port, pureURL, newParams, null, this.headers, function (err, data) {
+    return ajax.request('GET', this.secure, this.host, this.port, path, params, null, this.headers, function (err, data) {
       if (err) {
         return cb(err)
       }

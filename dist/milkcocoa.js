@@ -2417,17 +2417,6 @@ function nextTick(fn, arg1, arg2, arg3) {
 
 /***/ }),
 /* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.decode = exports.parse = __webpack_require__(41);
-exports.encode = exports.stringify = __webpack_require__(42);
-
-
-/***/ }),
-/* 8 */
 /***/ (function(module, exports) {
 
 // Copyright Joyent, Inc. and other Node contributors.
@@ -2732,6 +2721,17 @@ function isObject(arg) {
 function isUndefined(arg) {
   return arg === void 0;
 }
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.decode = exports.parse = __webpack_require__(41);
+exports.encode = exports.stringify = __webpack_require__(42);
 
 
 /***/ }),
@@ -3044,7 +3044,7 @@ var Duplex;
 Readable.ReadableState = ReadableState;
 
 /*<replacement>*/
-var EE = __webpack_require__(8).EventEmitter;
+var EE = __webpack_require__(7).EventEmitter;
 
 var EElistenerCount = function (emitter, type) {
   return emitter.listeners(type).length;
@@ -4985,7 +4985,7 @@ module.exports = {
 /* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(8).EventEmitter;
+module.exports = __webpack_require__(7).EventEmitter;
 
 
 /***/ }),
@@ -5310,7 +5310,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _querystring = __webpack_require__(7);
+var _querystring = __webpack_require__(8);
 
 var _querystring2 = _interopRequireDefault(_querystring);
 
@@ -5742,7 +5742,7 @@ module.exports = exports["default"];
 
 var http = __webpack_require__(12);
 var https = __webpack_require__(38);
-var querystring = __webpack_require__(7);
+var querystring = __webpack_require__(8);
 var Agent = __webpack_require__(25);
 var HttpsAgent = Agent.HttpsAgent;
 
@@ -6177,7 +6177,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var EventEmitter = __webpack_require__(8).EventEmitter;
+var EventEmitter = __webpack_require__(7).EventEmitter;
 
 var SubscriberManager = function (_EventEmitter) {
   _inherits(SubscriberManager, _EventEmitter);
@@ -6563,12 +6563,6 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _querystring = __webpack_require__(7);
-
-var _querystring2 = _interopRequireDefault(_querystring);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ajax = __webpack_require__(28);
@@ -6608,16 +6602,7 @@ var _class = function () {
       var _this2 = this;
 
       return new Promise(function (resolve, reject) {
-        var pureURL = path;
-        var newParams = params;
-        if (path.match(/(\?.*$)/)) {
-          var matched = path.match(/(\?.*$)/)[0];
-          pureURL = path.replace(matched, '');
-          var newQ = _querystring2.default.parse(matched.replace('?', ''));
-          newParams = Object.assign({}, newParams, newQ);
-        }
-
-        ajax.request('GET', _this2.secure, _this2.host, _this2.port, pureURL, newParams, null, _this2.headers, function (err, data) {
+        ajax.request('GET', _this2.secure, _this2.host, _this2.port, path, params, null, _this2.headers, function (err, data) {
           if (err) {
             return reject(err);
           }
@@ -6629,15 +6614,7 @@ var _class = function () {
   }, {
     key: 'get2',
     value: function get2(path, params, cb) {
-      var pureURL = path;
-      var newParams = params;
-      if (path.match(/(\?.*$)/)) {
-        var matched = path.match(/(\?.*$)/)[0];
-        pureURL = path.replace(matched, '');
-        var newQ = _querystring2.default.parse(matched.replace('?', ''));
-        newParams = Object.assign({}, newParams, newQ);
-      }
-      return ajax.request('GET', this.secure, this.host, this.port, pureURL, newParams, null, this.headers, function (err, data) {
+      return ajax.request('GET', this.secure, this.host, this.port, path, params, null, this.headers, function (err, data) {
         if (err) {
           return cb(err);
         }
@@ -8900,7 +8877,7 @@ var protocolPattern = /^([a-z0-9.+-]+:)/i,
       'gopher:': true,
       'file:': true
     },
-    querystring = __webpack_require__(7);
+    querystring = __webpack_require__(8);
 
 function urlParse(url, parseQueryString, slashesDenoteHost) {
   if (url && util.isObject(url) && url instanceof Url) return url;
