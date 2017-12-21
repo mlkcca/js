@@ -25,6 +25,7 @@ export default class {
     this.wsOptions = {
       headers: headers
     }
+    // websocket is unused
     this.websocket = new Pubsub({
       host: this._getPubsubUrl(this.useSSL, this.host, this.port, this.appId, this.apiKey, this.accessToken, this.uuid),
       logger: console,
@@ -70,10 +71,10 @@ export default class {
     this.websocket.on(event, fn)
   }
 
+  // unused
   _getPubsubUrl (ssl, host, port, appId, apikey, accessToken, uuid) {
     let base = `ws${ssl ? 's' : ''}://${host}:${port}/ws2/${appId}/`
     if (apikey) return base + apikey + '?' + querystring.stringify({uuid: uuid})
-    else if (accessToken) return base + '?' + querystring.stringify({at: accessToken, uuid: uuid})
     else return base + '?' + querystring.stringify({uuid: uuid})
   }
 
