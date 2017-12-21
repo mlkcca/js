@@ -10,19 +10,10 @@ export default class {
   }
 
   post (path, params, _qs, _headers) {
-    let qs = _qs || {}
+    let qs = _qs || null
     let headers = Object.assign({}, this.headers, _headers)
     return new Promise((resolve, reject) => {
-      var pureURL = path
-      var newQs = qs
-      if (path.match(/(\?.*$)/)) {
-        var matched = path.match(/(\?.*$)/)[0]
-        pureURL = path.replace(matched, '')
-        matched = matched.replace(/\+/g, '%2B')
-        var newQ = querystring.parse(matched.replace('?', ''))
-        newQs = Object.assign({}, newQs, newQ)
-      }
-      ajax.request('POST', this.secure, this.host, this.port, pureURL, newQs, JSON.stringify(params), headers, function (err, data) {
+      ajax.request('POST', this.secure, this.host, this.port, path, qs, JSON.stringify(params), headers, function (err, data) {
         if (err) {
           return reject(err)
         }
