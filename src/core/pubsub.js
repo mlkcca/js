@@ -149,7 +149,6 @@ export default class extends EventEmitter {
         currentState: this.state,
         nextState: result.nextState
       })
-      // this.logger.log('state changed from ' + this.state + ' to ' + result.nextState)
       this.state = result.nextState
     }
   }
